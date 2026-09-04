@@ -1,28 +1,53 @@
-// Tramos ordenados de mayor a menor precio: se aplica el primero en el que encaja la carta.
-// Las cartas de bulk no se pagan por porcentaje sino a tanto alzado por unidad, porque el
+// Cortes de tramo por precio de carta. No se configuran: mueven la forma del calculo,
+// no su agresividad, y esa es la parte que casi nunca cambia.
+// Las cartas de bulk se pagan a tanto alzado por unidad y no por porcentaje, porque el
 // porcentaje sobre céntimos no compensa el trabajo de clasificarlas.
 const TRAMOS = [
-  { id: 'premium', desde: 20, porcentaje: 0.60, etiqueta: 'Cartas de 20 € o más' },
-  { id: 'alta', desde: 5, porcentaje: 0.50, etiqueta: 'Cartas de 5 a 20 €' },
-  { id: 'media', desde: 1, porcentaje: 0.35, etiqueta: 'Cartas de 1 a 5 €' },
-  { id: 'baja', desde: 0.3, porcentaje: 0.20, etiqueta: 'Cartas de 0,30 a 1 €' },
-  { id: 'bulk', desde: 0, porUnidad: 0.02, etiqueta: 'Bulk (menos de 0,30 €)' }
+  { id: 'premium', desde: 20, variable: 'TRAMO_PREMIUM_PCT', porDefecto: 60, etiqueta: 'Cartas de 20 € o más' },
+  { id: 'alta', desde: 5, variable: 'TRAMO_ALTA_PCT', porDefecto: 50, etiqueta: 'Cartas de 5 a 20 €' },
+  { id: 'media', desde: 1, variable: 'TRAMO_MEDIA_PCT', porDefecto: 35, etiqueta: 'Cartas de 1 a 5 €' },
+  { id: 'baja', desde: 0.3, variable: 'TRAMO_BAJA_PCT', porDefecto: 20, etiqueta: 'Cartas de 0,30 a 1 €' },
+  { id: 'bulk', desde: 0, variable: 'TRAMO_BULK_EUR', porDefecto: 0.02, porUnidad: true, etiqueta: 'Bulk (menos de 0,30 €)' }
 ];
 
-const OFERTA_MINIMA = Number(process.env.OFERTA_MINIMA ?? 50);
+const OFERTA_MINIMA_POR_DEFECTO = 50;
+const PORCENTAJE_MAXIMO = 100;
+
+// Una variable mal escrita no debe cambiar la oferta sin avisar: se ignora y se avisa por el log.
+const numeroValido = (bruto, porDefecto, maximo) => {
+  if (bruto === undefined || String(bruto).trim() === '') return porDefecto;
+
+  const valor = Number(bruto);
+  if (!Number.isFinite(valor) || valor < 0 || valor > maximo) {
+    console.warn(`Valor no válido para la configuración del presupuesto: ${bruto}. Se usa ${porDefecto}`);
+    return porDefecto;
+  }
+
+  return valor;
+};
+
+const leerTramos = (entorno = process.env) =>
+  TRAMOS.map(({ id, desde, variable, porDefecto, porUnidad, etiqueta }) => {
+    const valor = numeroValido(entorno[variable], porDefecto, porUnidad ? Infinity : PORCENTAJE_MAXIMO);
+    return porUnidad
+      ? { id, desde, etiqueta, porUnidad: valor }
+      : { id, desde, etiqueta, porcentaje: valor / 100 };
+  });
+
+const leerOfertaMinima = (entorno = process.env) =>
+  numeroValido(entorno.OFERTA_MINIMA, OFERTA_MINIMA_POR_DEFECTO, Infinity);
 
 const redondear = (valor) => Math.round(valor * 100) / 100;
-
-const tramoDe = (precio) => TRAMOS.find(({ desde }) => precio >= desde);
 
 const ofertaPorCarta = (tramo, precio) =>
   tramo.porUnidad !== undefined ? tramo.porUnidad : precio * tramo.porcentaje;
 
-const calcularPresupuesto = (cartas) => {
-  const acumulado = new Map(TRAMOS.map(({ id }) => [id, { cartas: 0, valorMercado: 0, oferta: 0 }]));
+const calcularPresupuesto = (cartas, entorno = process.env) => {
+  const tramos = leerTramos(entorno);
+  const acumulado = new Map(tramos.map(({ id }) => [id, { cartas: 0, valorMercado: 0, oferta: 0 }]));
 
   cartas.forEach(({ precio, cantidad }) => {
-    const tramo = tramoDe(precio);
+    const tramo = tramos.find(({ desde }) => precio >= desde);
     const fila = acumulado.get(tramo.id);
     fila.cartas += cantidad;
     fila.valorMercado += precio * cantidad;
@@ -35,11 +60,11 @@ const calcularPresupuesto = (cartas) => {
   return {
     valorMercado,
     oferta,
-    bajoMinimo: oferta < OFERTA_MINIMA,
+    bajoMinimo: oferta < leerOfertaMinima(entorno),
     totalCartas: cartas.reduce((s, c) => s + c.cantidad, 0),
     totalFoils: cartas.filter((c) => c.esFoil).reduce((s, c) => s + c.cantidad, 0),
     masCaras: [...cartas].sort((a, b) => b.precio - a.precio),
-    tramos: TRAMOS.map(({ id, etiqueta }) => {
+    tramos: tramos.map(({ id, etiqueta }) => {
       const fila = acumulado.get(id);
       return {
         id,
@@ -52,4 +77,4 @@ const calcularPresupuesto = (cartas) => {
   };
 };
 
-module.exports = { calcularPresupuesto, OFERTA_MINIMA };
+module.exports = { calcularPresupuesto, leerTramos, leerOfertaMinima };
