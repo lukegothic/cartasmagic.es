@@ -5,3 +5,6 @@ node_modules/
 *.log
 .DS_Store
 Thumbs.db
+
+# Datos personales de trabajo, no forman parte del producto
+DATOS-LEGALES.md
