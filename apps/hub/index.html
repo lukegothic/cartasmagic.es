@@ -191,26 +191,29 @@
            hereda currentColor y los cinco simbolos salen del mismo tono. */
         .mana-symbols .ms {
             font-size: 1.4rem;
-            opacity: 0.55;
+            opacity: 0.2;
             /* La escala necesita un contexto propio: .ms trae su transform y el
                vertical-align de inline dejaba el simbolo bailando al crecer. */
             display: block;
             transform-origin: center;
-            animation: mana-pulse 3s ease-in-out infinite;
+            animation: mana-pulse 4s ease-in-out infinite;
         }
 
-        /* El barrido reparte los cinco simbolos por el ciclo entero, sin hueco muerto. */
+        /* Medio segundo entre simbolos: la onda cruza la fila en dos segundos y los dos
+           restantes el grupo descansa. Repartir los cinco por el ciclo entero deja
+           siempre alguno encendido y el conjunto se lee como agitado. */
         .mana-symbols .ms:nth-child(1) { animation-delay: 0s; }
-        .mana-symbols .ms:nth-child(2) { animation-delay: 0.6s; }
-        .mana-symbols .ms:nth-child(3) { animation-delay: 1.2s; }
-        .mana-symbols .ms:nth-child(4) { animation-delay: 1.8s; }
-        .mana-symbols .ms:nth-child(5) { animation-delay: 2.4s; }
+        .mana-symbols .ms:nth-child(2) { animation-delay: 0.5s; }
+        .mana-symbols .ms:nth-child(3) { animation-delay: 1s; }
+        .mana-symbols .ms:nth-child(4) { animation-delay: 1.5s; }
+        .mana-symbols .ms:nth-child(5) { animation-delay: 2s; }
 
-        /* Respiracion: la subida y la bajada ocupan medio ciclo cada una, sin meseta ni
-           salto. Cada simbolo entra desfasado, asi que la onda recorre la fila. */
+        /* Sube y baja en el primer 40% y descansa el resto: el reposo largo es lo que
+           hace que respire en vez de parpadear. */
         @keyframes mana-pulse {
-            0%, 100% { opacity: 0.55; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.15); }
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            20% { opacity: 0.9; transform: scale(1.15); }
+            40% { opacity: 0.2; transform: scale(1); }
         }
 
         /* Enlace por defecto: sin esto el navegador pinta el azul y el morado de visitado,
@@ -516,7 +519,7 @@
 
         <nav class="cards" aria-label="Nuestros servicios">
             <a href="https://vendercartasmagic.es" class="card card-sell" rel="noopener">
-                <i class="ms ms-cost ms-loyalty-up card-icon" aria-hidden="true"></i>
+                <i class="ms ms-loyalty-up card-icon" aria-hidden="true"></i>
                 <span class="card-domain">vendercartasmagic.es</span>
                 <h3>Vende tu colección de cartas Magic</h3>
                 <p>
