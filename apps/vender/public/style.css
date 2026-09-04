@@ -59,6 +59,28 @@ h1, h2, h3 {
     transform: translateY(-2px);
 }
 
+/* Enlace por defecto: sin esto el navegador pinta el azul y el morado de visitado,
+   que sobre el fondo oscuro no se leen. */
+a {
+    color: var(--mtg-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: var(--transition);
+}
+
+a:visited {
+    color: var(--mtg-primary);
+}
+
+a:hover {
+    color: #ffaa45;
+}
+
+a:focus-visible {
+    outline: 2px solid var(--mtg-primary);
+    outline-offset: 2px;
+}
+
 /* Componente de Link "Mítico" */
 .link-mythic {
     color: var(--mtg-primary);
@@ -642,9 +664,10 @@ ol.plain-list li::before {
 /* Atajo para quien ya ha decidido vender: la direccion solo aparece al marcar la casilla,
    asi no se pide una direccion postal a quien todavia esta mirando. Sin JavaScript. */
 .atajo-envio {
-    background: #fff8e1;
-    border: 1px solid #f5901e;
-    border-radius: 6px;
+    background: rgba(245, 144, 30, 0.08);
+    border: 1px solid var(--mtg-primary);
+    border-radius: var(--radius-md);
+    color: var(--mtg-text-main);
     padding: 14px;
     margin: 8px 0 16px;
 }
@@ -664,6 +687,7 @@ ol.plain-list li::before {
     margin: 2px 0 0;
     flex-shrink: 0;
     cursor: pointer;
+    accent-color: var(--mtg-primary);
 }
 
 .atajo-campo {

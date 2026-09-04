@@ -1,37 +1,37 @@
 # CartasMagic.es
 
 > Portada del ecosistema CartasMagic. La actividad activa es la compra de colecciones
-> de cartas Magic: The Gathering a particulares en toda Espana, que se gestiona en
+> de cartas Magic: The Gathering a particulares en toda España, que se gestiona en
 > vendercartasmagic.es.
 
-## Que hacemos
+## Qué hacemos
 
-Compramos colecciones completas de Magic: The Gathering a particulares en Espana.
-Esta dirigido a ex jugadores que dejaron el juego y quieren vender la coleccion
+Compramos colecciones completas de Magic: The Gathering a particulares en España.
+Está dirigido a ex jugadores que dejaron el juego y quieren vender la colección
 entera de una vez, sin listarla ni fotografiarla.
 
-El proceso: el vendedor describe que tiene, recibe una etiqueta de Correos prepagada
-que pagamos nosotros, envia el paquete, y en un dia laborable desde la llegada recibe
+El proceso: el vendedor describe qué tiene, recibe una etiqueta de Correos prepagada
+que pagamos nosotros, envía el paquete, y en un día laborable desde la llegada recibe
 un precio cerrado por el lote completo. Si lo acepta, cobra por transferencia en 24
-horas. Si lo rechaza, la devolucion cuesta 11,90 euros a su cargo.
+horas. Si lo rechaza, la devolución cuesta 11,90 euros a su cargo.
 
 ## Titular
 
-- Nombre: Ivan Perez
+- Nombre: Iván Pérez
 - NIF: 72808254Y
-- Domicilio: Calle Manuel Iribarren 10, 31008 Pamplona (Navarra), Espana
+- Domicilio: Calle Manuel Iribarren 10, 31008 Pamplona (Navarra), España
 - Correo: contacto@vendercartasmagic.es
-- Vendedor en Cardmarket desde 2011 con mas de 3.200 valoraciones positivas
+- Vendedor en Cardmarket desde 2011 con más de 3.200 valoraciones positivas
 
 ## Dominios
 
 - https://cartasmagic.es - portada de marca
 - https://vendercartasmagic.es - servicio de compra de colecciones, con el proceso,
   las condiciones completas y el formulario de contacto
-- comprarcartasmagic.es - venta de cartas sueltas sin gastos de envio, en preparacion,
-  todavia no operativo
+- comprarcartasmagic.es - venta de cartas sueltas sin gastos de envío, en preparación,
+  todavía no operativo
 
-## Que no hacemos todavia
+## Qué no hacemos todavía
 
-No vendemos cartas sueltas. La tienda de compra esta en preparacion y no tiene fecha
+No vendemos cartas sueltas. La tienda de compra está en preparación y no tiene fecha
 de apertura anunciada.
