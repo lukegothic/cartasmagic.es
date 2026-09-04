@@ -1,7 +1,6 @@
 const { extraerIdMazo } = require('./manabox');
 const { leerDireccion } = require('./direccion');
 const { componerCorreoPostal } = require('./correo-postal');
-const { componerCorreoMazo } = require('./correo-manabox');
 
 const TIPOS = {
   'coleccion-completa': 'Una colección completa',
@@ -61,4 +60,4 @@ const validarLeadMazo = (body) => {
   return { lead: { nombre, email, mensaje, url, idMazo, direccion: leerDireccion(body) } };
 };
 
-module.exports = { validarLead, componerCorreo, validarLeadMazo, componerCorreoMazo };
+module.exports = { validarLead, componerCorreo, validarLeadMazo };

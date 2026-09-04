@@ -1,0 +1,6 @@
+{
+  "entry": ["server.js", "scripts/**/*.js", "test/**/*.test.js"],
+  "ignorePatterns": ["node_modules/", "docs/", "public/*.html", "public/*.csv"],
+  "dynamicallyLoaded": ["public/style.css"],
+  "ignoreDependencies": ["ejs"]
+}

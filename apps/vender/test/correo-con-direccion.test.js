@@ -1,6 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { componerCorreo, componerCorreoMazo } = require('../lib/lead');
+const { componerCorreo } = require('../lib/lead');
+const { componerCorreoMazo } = require('../lib/correo-manabox');
 
 const postal = (extra = {}) => componerCorreo({
   nombre: 'Jordi', email: 'jordi@correo.com', provincia: 'Valencia',

@@ -1,7 +1,9 @@
-const { validarLead, componerCorreo, validarLeadMazo, componerCorreoMazo } = require('../lib/lead');
+const { validarLead, componerCorreo, validarLeadMazo } = require('../lib/lead');
+const { componerCorreoMazo } = require('../lib/correo-manabox');
 const { descargarMazo } = require('../lib/manabox-fetch');
 const { crearLimitador } = require('../lib/limite');
 const { enviarAviso } = require('../lib/mailer');
+const { mensajeDeError } = require('../lib/mensajes-error');
 
 const PROCESO_FAQ = [
   {
@@ -60,6 +62,10 @@ const NEGOCIO = {
   areaServed: { '@type': 'Country', name: 'España' },
   description: 'Compramos colecciones de cartas Magic: The Gathering en toda España. Envío pagado, valoración en 24 horas y pago por transferencia.'
 };
+
+// El mensaje se deriva del codigo ya fusionado, asi que ninguna llamada puede pintar un
+// aviso vacio por olvidarse de pasarlo.
+const conMensaje = (datos) => ({ ...datos, mensajeError: datos.errorCode ? mensajeDeError(datos.errorCode) : null });
 
 module.exports = (app) => {
   app.get('/', (req, res) => {
@@ -122,7 +128,7 @@ module.exports = (app) => {
   });
 
   const vistaValoracion = (res, extra = {}) =>
-    res.render('valoracion-cartas-magic', {
+    res.render('valoracion-cartas-magic', conMensaje({
       title: 'Cuánto vale mi colección de cartas Magic | Valoración en 24 horas',
       description: 'Te decimos cuánto vale tu colección de cartas Magic en 24 horas desde que llega. Envío pagado, precio cerrado y pago por transferencia.',
       keywords: 'cuanto valen mis cartas magic, valorar coleccion cartas magic, valoracion cartas magic, tasacion cartas magic',
@@ -145,8 +151,10 @@ module.exports = (app) => {
       }),
       enviado: false,
       errorCode: null,
+      etiquetaConversion: 'valoracion',
+      textoRecibido: 'Te escribimos a tu correo con la etiqueta de envío prepagada y la dirección. Si no lo ves en unas horas, mira la carpeta de spam.',
       ...extra
-    });
+    }));
 
   app.get('/valoracion-cartas-magic', (req, res) => vistaValoracion(res));
 
@@ -165,7 +173,7 @@ module.exports = (app) => {
   });
 
   const vistaManabox = (res, extra = {}) =>
-    res.render('presupuesto-manabox', {
+    res.render('presupuesto-manabox', conMensaje({
       title: 'Presupuesto con tu lista de ManaBox | VenderCartasMagic.es',
       description: 'Pega el enlace de tu mazo de ManaBox y recibe un presupuesto por correo en unos minutos. Sin fotos ni listados a mano.',
       keywords: 'vender coleccion manabox, presupuesto cartas magic manabox, vender mazo magic online',
@@ -188,9 +196,11 @@ module.exports = (app) => {
       }),
       enviado: false,
       errorCode: null,
+      etiquetaConversion: 'manabox',
+      textoRecibido: 'Ya tenemos tu lista. Te llegará el presupuesto al correo en unos minutos. Si no lo ves, mira la carpeta de spam.',
       url: '',
       ...extra
-    });
+    }));
 
   const permitirPresupuesto = crearLimitador();
 

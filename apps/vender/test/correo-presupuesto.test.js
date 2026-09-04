@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { componerCorreoMazo } = require('../lib/lead');
+const { componerCorreoMazo } = require('../lib/correo-manabox');
 
 const base = {
   lead: { nombre: 'Pepe', email: 'pepe@correo.com', url: 'https://manabox.app/decks/AZ7', idMazo: 'AZ7', mensaje: 'algunas jugadas' },

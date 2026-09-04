@@ -5,29 +5,7 @@
     </div>
 
     <div class="mtg-card mtg-card-margin">
-        <% if (enviado) { %>
-            <script>
-                if (typeof gtag === 'function') {
-                    gtag('event', 'generate_lead', { event_category: 'formulario', event_label: 'manabox' });
-                }
-            </script>
-            <div class="form-feedback">
-                <h2>Recibido</h2>
-                <p>Ya tenemos tu lista. Te llegará el presupuesto al correo en unos minutos. Si no lo ves, mira la carpeta de spam.</p>
-            </div>
-        <% } %>
-        <% if (errorCode) { %>
-            <div class="form-feedback">
-                <p><%= { CAMPOS_OBLIGATORIOS: 'Falta el nombre',
-                          EMAIL_NO_VALIDO: 'El correo no es válido',
-                          ENLACE_NO_VALIDO: 'El enlace no es de un mazo de ManaBox. Tiene que empezar por manabox.app/decks/',
-                          MAZO_NO_ACCESIBLE: 'No se ha podido abrir el mazo. Comprueba que el enlace es público y vuelve a probar',
-                          MAZO_NO_LEIBLE: 'No se ha podido leer la lista de cartas. Comprueba que el enlace es público y vuelve a probar',
-                          MAZO_VACIO: 'Ese mazo no tiene cartas',
-                          DEMASIADOS_INTENTOS: 'Has pedido varios presupuestos seguidos. Espera un rato y vuelve a probar',
-                          ENVIO_FALLIDO: 'No se ha podido enviar. Prueba otra vez o escribe a contacto@vendercartasmagic.es' }[errorCode] %></p>
-            </div>
-        <% } %>
+        <%- include('partials/feedback') %>
         <form class="lead-form" method="post" action="/presupuesto-manabox">
             <label for="url">Enlace del mazo en ManaBox</label>
             <input type="url" id="url" name="url" required placeholder="ej. https://manabox.app/decks/AZ7lfIfhflqh2vgQaCEtkg" value="<%= typeof url !== 'undefined' ? url : '' %>">
@@ -41,19 +19,10 @@
             <label for="mensaje">Cuéntanos algo más (opcional)</label>
             <textarea id="mensaje" name="mensaje" rows="4" placeholder="ej. tengo también dos mazos de Commander en Manabox, y algunas cartas están usadas"></textarea>
 
-            <div class="atajo-envio">
-                <label class="atajo-check">
-                    <input type="checkbox" id="decidido" name="decidido" value="on">
-                    <span>Lo tengo decidido: quiero vender y prefiero recibir la etiqueta ya</span>
-                </label>
-                <div class="atajo-campo">
-                    <label for="direccion">Dirección para la etiqueta</label>
-                    <textarea id="direccion" name="direccion" rows="3" placeholder="ej. Calle Barón de Santa Bárbara 17, puerta 4&#10;46110 Godella (Valencia)"></textarea>
-                    <p class="form-legal">Se usa solo para generar la etiqueta de envío y la devolución si al final no hay acuerdo. Si prefieres no darla ahora, deja la casilla sin marcar y te la pedimos por correo.</p>
-                </div>
+            <%- include('partials/atajo-envio') %>
             </div>
 
-            <p class="form-legal">Al enviar aceptas que tratemos tus datos para responderte. No se ceden a nadie ni se usan para otra cosa. Puedes pedir que se borren escribiendo a contacto@vendercartasmagic.es. Más detalle en el <a href="/aviso-legal">aviso legal</a>.</p>
+            <%- include('partials/form-legal') %>
 
             <button type="submit" class="btn-mythic">Pedir presupuesto</button>
         </form>
