@@ -187,22 +187,50 @@
             margin-top: 1.25rem;
         }
 
+        /* El simbolo se anima como glifo y no como ficha de coste: .ms-cost pinta un
+           circulo de color claro que, atenuado, se lee como una mancha y no como un mana. */
         .mana-symbols .ms {
             font-size: 1.4rem;
-            opacity: 0.2;
-            animation: mana-pulse 4s ease-in-out infinite;
+            opacity: 0.25;
+            /* La escala necesita un contexto propio: .ms trae su transform y el
+               vertical-align de inline dejaba el simbolo bailando al crecer. */
+            display: block;
+            transform-origin: center;
+            animation: mana-pulse 2.5s ease-in-out infinite;
         }
 
+        /* El barrido reparte los cinco simbolos por el ciclo entero, sin hueco muerto. */
         .mana-symbols .ms:nth-child(1) { animation-delay: 0s; }
-        .mana-symbols .ms:nth-child(2) { animation-delay: 0.5s; }
-        .mana-symbols .ms:nth-child(3) { animation-delay: 1s; }
-        .mana-symbols .ms:nth-child(4) { animation-delay: 1.5s; }
-        .mana-symbols .ms:nth-child(5) { animation-delay: 2s; }
+        .mana-symbols .ms:nth-child(2) { animation-delay: 0.18s; }
+        .mana-symbols .ms:nth-child(3) { animation-delay: 0.36s; }
+        .mana-symbols .ms:nth-child(4) { animation-delay: 0.54s; }
+        .mana-symbols .ms:nth-child(5) { animation-delay: 0.72s; }
 
         @keyframes mana-pulse {
-            0%, 100% { opacity: 0.2; transform: scale(1); }
-            20% { opacity: 0.9; transform: scale(1.15); }
-            40% { opacity: 0.2; transform: scale(1); }
+            0%, 45%, 100% { opacity: 0.25; transform: scale(1); }
+            15% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Enlace por defecto: sin esto el navegador pinta el azul y el morado de visitado,
+           que sobre el fondo oscuro no se leen. Las tarjetas llevan su propio color. */
+        a:not(.card) {
+            color: var(--accent-2);
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            transition: color 0.2s ease;
+        }
+
+        a:not(.card):visited {
+            color: var(--accent-2);
+        }
+
+        a:not(.card):hover {
+            color: var(--accent-1);
+        }
+
+        a:focus-visible {
+            outline: 2px solid var(--accent-1);
+            outline-offset: 2px;
         }
 
         /* Section */
@@ -383,8 +411,11 @@
                 font-size: 0.95rem;
             }
 
+            /* Las columnas se cuentan solas y la rejilla se centra: con una sola tarjeta
+               queda en medio, y al añadir la segunda se reparten sin tocar nada. */
             .cards {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: repeat(auto-fit, minmax(0, 22rem));
+                justify-content: center;
                 gap: 1.25rem;
             }
 
@@ -464,11 +495,11 @@
             <h1 class="logo-text">CartasMagic<span class="logo-tld">.es</span></h1>
             <p class="tagline">Compramos colecciones de cartas Magic en toda España</p>
             <div class="mana-symbols" aria-label="Los cinco colores de maná de Magic">
-                <i class="ms ms-w ms-cost" title="Maná blanco"></i>
-                <i class="ms ms-u ms-cost" title="Maná azul"></i>
-                <i class="ms ms-b ms-cost" title="Maná negro"></i>
-                <i class="ms ms-r ms-cost" title="Maná rojo"></i>
-                <i class="ms ms-g ms-cost" title="Maná verde"></i>
+                <i class="ms ms-w" title="Maná blanco"></i>
+                <i class="ms ms-u" title="Maná azul"></i>
+                <i class="ms ms-b" title="Maná negro"></i>
+                <i class="ms ms-r" title="Maná rojo"></i>
+                <i class="ms ms-g" title="Maná verde"></i>
             </div>
         </header>
 
@@ -477,8 +508,7 @@
             <p>
                 Te la compramos entera. Mandas los mazos y los álbumes con una
                 etiqueta de envío que pagamos nosotros, en 24 horas tienes un precio
-                cerrado y cobras por transferencia. Sin listar las cartas, sin
-                fotografiarlas y sin negociar.
+                cerrado y cobras por transferencia. Sin tener que listar las cartas, fotografiarlas ni negociar.
             </p>
         </section>
 

@@ -8,7 +8,7 @@ const { mensajeDeError } = require('../lib/mensajes-error');
 const PROCESO_FAQ = [
   {
     q: '¿Cómo vendo mi colección de cartas Magic?',
-    a: 'Escribes contando qué tienes, te mandamos una etiqueta de Correos prepagada que pagamos nosotros, envías el paquete y en 24 horas desde que llega recibes un precio por correo. Si lo aceptas, cobras por transferencia en 24 horas. No hay listados que preparar ni negociación.'
+    a: 'Rellenas el formulario contando qué tienes, te mandamos una etiqueta de Correos prepagada que pagamos nosotros, envías el paquete y en 24 horas desde que llega recibes un precio por correo. Si lo aceptas, cobras por transferencia en 24 horas. No hay listados que preparar ni negociación.'
   },
   {
     q: '¿Tengo que hacer un listado de mis cartas?',
@@ -71,7 +71,7 @@ module.exports = (app) => {
   app.get('/', (req, res) => {
     res.render('index', {
       title: 'Vender cartas Magic: mándalas y cobra sin listar nada | VenderCartasMagic.es',
-      description: 'Compramos tu colección de cartas Magic. Te mandamos la etiqueta de envío pagada, valoramos en 24 horas y cobras por transferencia. Sin listados ni negociación.',
+      description: 'Compramos tu colección de cartas Magic. Te mandamos la etiqueta de envío prepagada, valoramos en 24 horas y cobras por transferencia. Sin listados ni negociación.',
       keywords: 'vender cartas magic, vender coleccion cartas magic, donde vender cartas magic, vender cartas magic españa, comprar colecciones magic',
       canonical: 'https://vendercartasmagic.es',
       og_title: 'Vender cartas Magic: mándalas y cobra sin listar nada',
@@ -115,7 +115,7 @@ module.exports = (app) => {
             description: 'Proceso para vender una colección de cartas Magic sin prepararla ni listarla.',
             totalTime: 'P3D',
             step: [
-              { '@type': 'HowToStep', position: 1, name: 'Cuenta qué tienes', text: 'Escribes un correo o rellenas el formulario contando qué mazos, álbumes o colecciones tienes.' },
+              { '@type': 'HowToStep', position: 1, name: 'Cuenta qué tienes', text: 'Rellenas el formulario contando qué mazos, álbumes o colecciones tienes. Si ya lo tienes decidido, dejas ahí la dirección y te saltas un paso.' },
               { '@type': 'HowToStep', position: 2, name: 'Recibe la etiqueta', text: 'Te mandamos una etiqueta de Correos prepagada. El envío lo pagamos nosotros.' },
               { '@type': 'HowToStep', position: 3, name: 'Envía la caja', text: 'Metes las cartas en una caja, pegas la etiqueta y la dejas en una oficina de Correos.' },
               { '@type': 'HowToStep', position: 4, name: 'Recibe el precio', text: 'En un día laborable desde que llega el paquete recibes un precio cerrado por correo.' },

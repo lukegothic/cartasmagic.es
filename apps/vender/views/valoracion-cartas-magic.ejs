@@ -1,14 +1,14 @@
-<div class="main-container">
+<div class="main-container main-container-narrow">
     <div class="center-text">
         <h1>¿Cuánto vale tu colección de cartas Magic?</h1>
-        <p class="contact-intro">Cuéntanos qué tienes. Te mandamos la etiqueta de envío pagada y, un día laborable después de que llegue el paquete, tienes un precio cerrado por correo.</p>
+        <p class="contact-intro">Cuéntanos qué tienes. Te mandamos la etiqueta de envío prepagada y, un día laborable después de que llegue el paquete, tienes un precio cerrado en tu correo.</p>
     </div>
 
     <div class="mtg-card mtg-card-margin">
         <%- include('partials/feedback') %>
         <form class="lead-form" method="post" action="/valoracion-cartas-magic">
             <label for="nombre">Nombre</label>
-            <input type="text" id="nombre" name="nombre" required autocomplete="name" placeholder="ej. Iván Pérez">
+            <input type="text" id="nombre" name="nombre" required autocomplete="name" placeholder="ej. Juan García">
 
             <label for="email">Correo electrónico</label>
             <input type="email" id="email" name="email" required autocomplete="email" placeholder="ej. nombre@correo.com">
@@ -32,7 +32,7 @@
             </select>
 
             <label for="provincia">Provincia</label>
-            <input type="text" id="provincia" name="provincia" required placeholder="ej. Navarra">
+            <input type="text" id="provincia" name="provincia" required placeholder="ej. Madrid">
 
             <label for="mensaje">Cuéntanos algo más (opcional)</label>
             <textarea id="mensaje" name="mensaje" rows="4" placeholder="ej. lo dejé en 2018, tengo cuatro mazos de Commander y dos álbumes llenos"></textarea>

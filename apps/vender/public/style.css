@@ -709,3 +709,9 @@ ol.plain-list li::before {
 .atajo-campo .form-legal {
     margin-top: 6px;
 }
+
+/* Columna estrecha para las paginas de formulario: sin esto los bloques de despues
+   del formulario ocupan los 800px del contenedor y no cuadran con el ancho del form. */
+.main-container-narrow {
+    max-width: 40rem;
+}
