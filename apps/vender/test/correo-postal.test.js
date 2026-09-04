@@ -28,8 +28,8 @@ test('explica el proceso y pide la direccion, que es lo que bloquea la etiqueta'
 
 test('lleva los limites del paquete, para que no se pase de peso', () => {
   const { html } = componerCorreo(base);
-  assert.match(html, /3\s*kg/i);
-  assert.match(html, /40/);
+  assert.match(html, /2\s*kg/i);
+  assert.match(html, /30 x 20 x 20/);
 });
 
 test('deja claro que la devolucion la paga quien rechaza', () => {

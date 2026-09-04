@@ -1,4 +1,5 @@
 const { extraerIdMazo } = require('./manabox');
+const { leerDireccion } = require('./direccion');
 const { componerCorreoPostal } = require('./correo-postal');
 const { componerCorreoMazo } = require('./correo-manabox');
 
@@ -31,15 +32,16 @@ const validarLead = (body) => {
   if (!EMAIL_VALIDO.test(email)) return { error: 'EMAIL_NO_VALIDO' };
   if (!TIPOS[tipo] || !VOLUMENES[volumen]) return { error: 'OPCION_NO_VALIDA' };
 
-  return { lead: { nombre, email, provincia, mensaje, tipo, volumen } };
+  return { lead: { nombre, email, provincia, mensaje, tipo, volumen, direccion: leerDireccion(body) } };
 };
 
-const componerCorreo = ({ nombre, email, provincia, mensaje, tipo, volumen }) =>
+const componerCorreo = ({ nombre, email, provincia, mensaje, tipo, volumen, direccion }) =>
   componerCorreoPostal({
     nombre,
     email,
     provincia,
     mensaje,
+    direccion,
     queTiene: TIPOS[tipo],
     volumen: VOLUMENES[volumen]
   });
@@ -56,7 +58,7 @@ const validarLeadMazo = (body) => {
   const idMazo = extraerIdMazo(url);
   if (!idMazo) return { error: 'ENLACE_NO_VALIDO' };
 
-  return { lead: { nombre, email, mensaje, url, idMazo } };
+  return { lead: { nombre, email, mensaje, url, idMazo, direccion: leerDireccion(body) } };
 };
 
 module.exports = { validarLead, componerCorreo, validarLeadMazo, componerCorreoMazo };

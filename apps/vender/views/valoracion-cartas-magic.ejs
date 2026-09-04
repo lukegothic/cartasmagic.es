@@ -13,7 +13,7 @@
             </script>
             <div class="form-feedback">
                 <h2>Recibido</h2>
-                <p>Te escribimos a tu correo con la etiqueta de env&iacute;o prepagada y la direcci&oacute;n. Si no lo ves en unas horas, mira la carpeta de spam.</p>
+                <p>Te escribimos a tu correo con la etiqueta de envío prepagada y la dirección. Si no lo ves en unas horas, mira la carpeta de spam.</p>
             </div>
         <% } %>
         <% if (errorCode) { %>
@@ -54,6 +54,18 @@
 
             <label for="mensaje">Cuéntanos algo más (opcional)</label>
             <textarea id="mensaje" name="mensaje" rows="4" placeholder="ej. lo dejé en 2018, tengo cuatro mazos de Commander y dos álbumes llenos"></textarea>
+
+            <div class="atajo-envio">
+                <label class="atajo-check">
+                    <input type="checkbox" id="decidido" name="decidido" value="on">
+                    <span>Lo tengo decidido: quiero vender y prefiero recibir la etiqueta ya</span>
+                </label>
+                <div class="atajo-campo">
+                    <label for="direccion">Dirección para la etiqueta</label>
+                    <textarea id="direccion" name="direccion" rows="3" placeholder="ej. Calle Barón de Santa Bárbara 17, puerta 4&#10;46110 Godella (Valencia)"></textarea>
+                    <p class="form-legal">Se usa solo para generar la etiqueta de envío y la devolución si al final no hay acuerdo. Si prefieres no darla ahora, deja la casilla sin marcar y te la pedimos por correo.</p>
+                </div>
+            </div>
 
             <p class="form-legal">Al enviar aceptas que tratemos tus datos para responderte. No se ceden a nadie ni se usan para otra cosa. Puedes pedir que se borren escribiendo a contacto@vendercartasmagic.es. Más detalle en el <a href="/aviso-legal">aviso legal</a>.</p>
 

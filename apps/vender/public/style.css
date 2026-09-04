@@ -638,3 +638,50 @@ ol.plain-list li::before {
     line-height: 1.7;
     margin-top: 1.5rem;
 }
+
+/* Atajo para quien ya ha decidido vender: la direccion solo aparece al marcar la casilla,
+   asi no se pide una direccion postal a quien todavia esta mirando. Sin JavaScript. */
+.atajo-envio {
+    background: #fff8e1;
+    border: 1px solid #f5901e;
+    border-radius: 6px;
+    padding: 14px;
+    margin: 8px 0 16px;
+}
+
+.atajo-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    margin: 0;
+}
+
+.atajo-check input {
+    width: 18px;
+    height: 18px;
+    margin: 2px 0 0;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.atajo-campo {
+    margin-top: 12px;
+}
+
+/* Solo se esconde si el navegador entiende :has(). Si no, se queda visible, que es
+   preferible a que quien marque la casilla no pueda escribir la direccion. */
+@supports selector(.x:has(.y)) {
+    .atajo-campo {
+        display: none;
+    }
+}
+
+.atajo-envio:has(input:checked) .atajo-campo {
+    display: block;
+}
+
+.atajo-campo .form-legal {
+    margin-top: 6px;
+}
