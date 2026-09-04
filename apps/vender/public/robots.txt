@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Disallow: /calculator.html
+Disallow: /efecto_foil.html
+
+Sitemap: https://vendercartasmagic.es/sitemap.xml
