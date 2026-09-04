@@ -12,8 +12,8 @@ const TIPOS = {
 
 const VOLUMENES = {
   'menos-500': 'Menos de 500 cartas',
-  '500-1200': 'Entre 500 y 1.200 cartas',
-  'mas-1200': 'Más de 1.200 cartas (más de 2 kg, hay que avisar antes)',
+  '500-1000': 'Entre 500 y 1.000 cartas',
+  'mas-1000': 'Más de 1.000 cartas (pasa de 2 kg, hay que avisar antes)',
   'ni-idea': 'Ni idea'
 };
 

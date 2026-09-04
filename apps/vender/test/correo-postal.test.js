@@ -4,7 +4,7 @@ const { componerCorreo } = require('../lib/lead');
 
 const base = {
   nombre: 'Jordi', email: 'jordi@correo.com', provincia: 'Valencia',
-  tipo: 'mazos-albumes', volumen: '500-1200', mensaje: 'varios mazos de Commander'
+  tipo: 'mazos-albumes', volumen: '500-1000', mensaje: 'varios mazos de Commander'
 };
 
 test('el asunto identifica al cliente y su provincia', () => {
