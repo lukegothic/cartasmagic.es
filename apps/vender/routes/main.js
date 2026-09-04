@@ -198,12 +198,15 @@ module.exports = (app) => {
   app.get('/presupuesto-manabox', (req, res) => vistaManabox(res));
 
   app.post('/presupuesto-manabox', async (req, res) => {
-    if (!permitirPresupuesto(req.ip)) {
-      return vistaManabox(res.status(429), { errorCode: 'DEMASIADOS_INTENTOS', url: req.body.url });
-    }
-
     const { error, lead } = validarLeadMazo(req.body);
     if (error) return vistaManabox(res.status(400), { errorCode: error, url: req.body.url });
+
+    // Se limita por mazo y no por ip: detrás de un proxy, de un operador móvil o de una red
+    // compartida, muchos visitantes distintos llegan con la misma ip, y un limite por ip
+    // bloquearía a gente que no ha hecho nada. Repetir el mismo mazo si es abuso.
+    if (!permitirPresupuesto(`mazo:${lead.idMazo}`)) {
+      return vistaManabox(res.status(429), { errorCode: 'DEMASIADOS_INTENTOS', url: lead.url });
+    }
 
     let mazo;
     try {

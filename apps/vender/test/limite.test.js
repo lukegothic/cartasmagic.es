@@ -35,3 +35,20 @@ test('no acumula origenes caducados en memoria', () => {
   permitido('3.3.3.3');
   assert.equal(permitido('1.1.1.1'), true, 'el origen caducado debe haberse olvidado');
 });
+
+test('un origen sin identificar no comparte cubo con los demas', () => {
+  // Si Express esta expuesto directo, req.ip es el mismo valor para todos los visitantes.
+  // Cayendo al cubo compartido, cinco envios dejarian la pagina bloqueada para todo el mundo.
+  const permitido = crearLimitador({ maximo: 2, ventanaMs: 60000 });
+  assert.equal(permitido(undefined), true);
+  assert.equal(permitido(undefined), true);
+  assert.equal(permitido(undefined), true, 'sin origen fiable no se puede limitar por origen');
+});
+
+test('el mismo mazo no se puede presupuestar en bucle', () => {
+  const permitido = crearLimitador({ maximo: 2, ventanaMs: 60000 });
+  assert.equal(permitido('mazo:ABC'), true);
+  assert.equal(permitido('mazo:ABC'), true);
+  assert.equal(permitido('mazo:ABC'), false);
+  assert.equal(permitido('mazo:OTRO'), true, 'otro mazo lleva su propia cuenta');
+});
