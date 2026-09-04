@@ -187,28 +187,30 @@
             margin-top: 1.25rem;
         }
 
-        /* El simbolo se anima como glifo y no como ficha de coste: .ms-cost pinta un
-           circulo de color claro que, atenuado, se lee como una mancha y no como un mana. */
+        /* .ms-cost pinta la ficha con el color real de cada mana: sin ella el glifo
+           hereda currentColor y los cinco simbolos salen del mismo tono. */
         .mana-symbols .ms {
             font-size: 1.4rem;
-            opacity: 0.25;
+            opacity: 0.55;
             /* La escala necesita un contexto propio: .ms trae su transform y el
                vertical-align de inline dejaba el simbolo bailando al crecer. */
             display: block;
             transform-origin: center;
-            animation: mana-pulse 2.5s ease-in-out infinite;
+            animation: mana-pulse 3s ease-in-out infinite;
         }
 
         /* El barrido reparte los cinco simbolos por el ciclo entero, sin hueco muerto. */
         .mana-symbols .ms:nth-child(1) { animation-delay: 0s; }
-        .mana-symbols .ms:nth-child(2) { animation-delay: 0.18s; }
-        .mana-symbols .ms:nth-child(3) { animation-delay: 0.36s; }
-        .mana-symbols .ms:nth-child(4) { animation-delay: 0.54s; }
-        .mana-symbols .ms:nth-child(5) { animation-delay: 0.72s; }
+        .mana-symbols .ms:nth-child(2) { animation-delay: 0.6s; }
+        .mana-symbols .ms:nth-child(3) { animation-delay: 1.2s; }
+        .mana-symbols .ms:nth-child(4) { animation-delay: 1.8s; }
+        .mana-symbols .ms:nth-child(5) { animation-delay: 2.4s; }
 
+        /* Respiracion: la subida y la bajada ocupan medio ciclo cada una, sin meseta ni
+           salto. Cada simbolo entra desfasado, asi que la onda recorre la fila. */
         @keyframes mana-pulse {
-            0%, 45%, 100% { opacity: 0.25; transform: scale(1); }
-            15% { opacity: 1; transform: scale(1.2); }
+            0%, 100% { opacity: 0.55; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.15); }
         }
 
         /* Enlace por defecto: sin esto el navegador pinta el azul y el morado de visitado,
@@ -495,11 +497,11 @@
             <h1 class="logo-text">CartasMagic<span class="logo-tld">.es</span></h1>
             <p class="tagline">Compramos colecciones de cartas Magic en toda España</p>
             <div class="mana-symbols" aria-label="Los cinco colores de maná de Magic">
-                <i class="ms ms-w" title="Maná blanco"></i>
-                <i class="ms ms-u" title="Maná azul"></i>
-                <i class="ms ms-b" title="Maná negro"></i>
-                <i class="ms ms-r" title="Maná rojo"></i>
-                <i class="ms ms-g" title="Maná verde"></i>
+                <i class="ms ms-cost ms-w" title="Maná blanco"></i>
+                <i class="ms ms-cost ms-u" title="Maná azul"></i>
+                <i class="ms ms-cost ms-b" title="Maná negro"></i>
+                <i class="ms ms-cost ms-r" title="Maná rojo"></i>
+                <i class="ms ms-cost ms-g" title="Maná verde"></i>
             </div>
         </header>
 
@@ -514,7 +516,7 @@
 
         <nav class="cards" aria-label="Nuestros servicios">
             <a href="https://vendercartasmagic.es" class="card card-sell" rel="noopener">
-                <i class="ms ms-loyalty-up card-icon" aria-hidden="true"></i>
+                <i class="ms ms-cost ms-loyalty-up card-icon" aria-hidden="true"></i>
                 <span class="card-domain">vendercartasmagic.es</span>
                 <h3>Vende tu colección de cartas Magic</h3>
                 <p>
