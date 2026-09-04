@@ -19,7 +19,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <meta name="description" content="<%= description %>">
     <meta name="keywords" content="<%= keywords %>">
-    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="robots" content="<%= typeof noindex !== 'undefined' && noindex ? 'noindex, follow' : 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1' %>">
     <link rel="canonical" href="<%= canonical %>">
     <meta name="theme-color" content="#f5901e">
     <meta name="author" content="contacto@vendercartasmagic.es">
@@ -55,8 +55,13 @@
                 <a href="Certified_ProfessionalSeller_ES.pdf" target="_blank" title="Certificado Professional Seller de Cardmarket">
                     <img src="Certified_ProfessionalSeller_ES.jpg" alt="Certified Professional Seller" class="certification-badge">
                 </a>
-                <p><a href="https://www.cardmarket.com/es/Magic/Users/ivan-the-seller" target="_blank">Ver perfil en Cardmarket</a></p>
+                <p><a href="https://www.cardmarket.com/es/Magic/Users/ivan-the-seller" target="_blank" rel="noopener">Ver perfil en Cardmarket</a></p>
             </div>
+            <p class="footer-legal">
+                Iván Pérez &middot; NIF 72808254Y &middot; Pamplona (Navarra)<br>
+                <a href="mailto:contacto@vendercartasmagic.es">contacto@vendercartasmagic.es</a> &middot;
+                <a href="/aviso-legal">Aviso legal y condiciones</a>
+            </p>
         </div>
     </footer>
 </body>

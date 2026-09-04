@@ -1,0 +1,37 @@
+# CartasMagic.es
+
+> Portada del ecosistema CartasMagic. La actividad activa es la compra de colecciones
+> de cartas Magic: The Gathering a particulares en toda Espana, que se gestiona en
+> vendercartasmagic.es.
+
+## Que hacemos
+
+Compramos colecciones completas de Magic: The Gathering a particulares en Espana.
+Esta dirigido a ex jugadores que dejaron el juego y quieren vender la coleccion
+entera de una vez, sin listarla ni fotografiarla.
+
+El proceso: el vendedor describe que tiene, recibe una etiqueta de Correos prepagada
+que pagamos nosotros, envia el paquete, y en un dia laborable desde la llegada recibe
+un precio cerrado por el lote completo. Si lo acepta, cobra por transferencia en 24
+horas. Si lo rechaza, la devolucion cuesta 11,90 euros a su cargo.
+
+## Titular
+
+- Nombre: Ivan Perez
+- NIF: 72808254Y
+- Domicilio: Calle Manuel Iribarren 10, 31008 Pamplona (Navarra), Espana
+- Correo: contacto@vendercartasmagic.es
+- Vendedor en Cardmarket desde 2011 con mas de 3.200 valoraciones positivas
+
+## Dominios
+
+- https://cartasmagic.es - portada de marca
+- https://vendercartasmagic.es - servicio de compra de colecciones, con el proceso,
+  las condiciones completas y el formulario de contacto
+- comprarcartasmagic.es - venta de cartas sueltas sin gastos de envio, en preparacion,
+  todavia no operativo
+
+## Que no hacemos todavia
+
+No vendemos cartas sueltas. La tienda de compra esta en preparacion y no tiene fecha
+de apertura anunciada.

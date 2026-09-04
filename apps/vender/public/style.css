@@ -522,3 +522,119 @@ button:hover {
         text-align: center;
     }
 }
+/* Formulario de captación y textos de las páginas reescritas */
+.hero-claim {
+    font-size: 1.15rem;
+    color: var(--mtg-text-muted);
+    max-width: 44rem;
+    margin: 1rem auto 2rem;
+    line-height: 1.6;
+}
+
+.plain-list {
+    list-style: none;
+    padding: 0;
+}
+
+.plain-list li {
+    padding: 0.6rem 0 0.6rem 1.4rem;
+    position: relative;
+    line-height: 1.6;
+}
+
+.plain-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 1.15rem;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--mtg-primary);
+}
+
+ol.plain-list {
+    counter-reset: paso;
+}
+
+ol.plain-list li {
+    counter-increment: paso;
+}
+
+ol.plain-list li::before {
+    content: counter(paso);
+    width: auto;
+    height: auto;
+    background: none;
+    color: var(--mtg-primary);
+    font-weight: 700;
+    top: 0.6rem;
+}
+
+.lead-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    text-align: left;
+    max-width: 34rem;
+    margin: 0 auto;
+}
+
+.lead-form label {
+    font-weight: 600;
+    margin-top: 0.8rem;
+}
+
+.lead-form input,
+.lead-form select,
+.lead-form textarea {
+    width: 100%;
+    padding: 0.7rem 0.8rem;
+    background: var(--mtg-bg-dark);
+    color: var(--mtg-text-main);
+    border: 1px solid var(--mtg-border);
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-size: 1rem;
+}
+
+.lead-form input:focus,
+.lead-form select:focus,
+.lead-form textarea:focus {
+    outline: none;
+    border-color: var(--mtg-primary);
+    box-shadow: 0 0 0 3px var(--mtg-primary-glow);
+}
+
+.lead-form textarea {
+    resize: vertical;
+}
+
+.lead-form button {
+    margin-top: 1.4rem;
+    border: none;
+    cursor: pointer;
+    font-size: 1.05rem;
+}
+
+.form-legal {
+    font-size: 0.82rem;
+    color: var(--mtg-text-muted);
+    line-height: 1.5;
+    margin-top: 1.2rem;
+}
+
+.form-feedback {
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--mtg-primary);
+    background: rgba(245, 144, 30, 0.08);
+    margin-bottom: 1.5rem;
+}
+
+.footer-legal {
+    font-size: 0.82rem;
+    color: var(--mtg-text-muted);
+    line-height: 1.7;
+    margin-top: 1.5rem;
+}

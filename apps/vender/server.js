@@ -8,6 +8,8 @@ app.set('view engine', 'ejs');
 app.set('views', 'views');
 app.use(expressLayouts);
 
+app.use(express.urlencoded({ extended: false }));
+
 // Serve static files
 app.use(express.static('public'));
 

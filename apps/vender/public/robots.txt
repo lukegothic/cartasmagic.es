@@ -3,5 +3,6 @@ Allow: /
 
 Disallow: /calculator.html
 Disallow: /efecto_foil.html
+Disallow: /aviso-legal
 
 Sitemap: https://vendercartasmagic.es/sitemap.xml

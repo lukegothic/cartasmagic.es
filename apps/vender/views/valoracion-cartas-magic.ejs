@@ -1,45 +1,99 @@
-<div class="main-container center-text">
-    <h1>Vender mis Cartas Magic</h1>
-    <p class="contact-intro">Contacta con nosotros y te haremos una oferta por tus cartas en menos de 24 horas.</p>
-
-    <div class="contact-buttons">
-        <div class="contact-btn whatsapp-btn contact-btn-disabled" aria-disabled="true">
-            <svg class="contact-icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-            </svg>
-            <span class="btn-text">
-                <span class="btn-label">WhatsApp no disponible</span>
-                <span class="btn-number">Debido al alto volumen de solicitudes, solo atendemos por correo</span>
-            </span>
-        </div>
-
-        <a href="mailto:contacto@vendercartasmagic.es?subject=Quiero%20vender%20mis%20cartas%20Magic" class="contact-btn email-btn">
-            <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="4" width="20" height="16" rx="2"/>
-                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-            </svg>
-            <span class="btn-text">
-                <span class="btn-label">Email</span>
-                <span class="btn-number">contacto@vendercartasmagic.es</span>
-            </span>
-        </a>
+<div class="main-container">
+    <div class="center-text">
+        <h1>¿Cuánto vale tu colección de cartas Magic?</h1>
+        <p class="contact-intro">Cuéntanos qué tienes. Te mandamos la etiqueta de envío pagada y, un día laborable después de que llegue el paquete, tienes un precio cerrado por correo.</p>
     </div>
 
     <div class="mtg-card mtg-card-margin">
-        <h2>Proceso sencillo</h2>
+        <% if (enviado) { %>
+            <script>
+                if (typeof gtag === 'function') {
+                    gtag('event', 'generate_lead', { event_category: 'formulario', event_label: 'valoracion' });
+                }
+            </script>
+            <div class="form-feedback">
+                <h2>Recibido</h2>
+                <p>Te escribimos a tu correo con la etiqueta de env&iacute;o prepagada y la direcci&oacute;n. Si no lo ves en unas horas, mira la carpeta de spam.</p>
+            </div>
+        <% } %>
+        <% if (errorCode) { %>
+            <div class="form-feedback">
+                <p><%= { CAMPOS_OBLIGATORIOS: 'Faltan campos por rellenar',
+                          EMAIL_NO_VALIDO: 'El correo no es válido',
+                          OPCION_NO_VALIDA: 'Elige una opción en las dos listas',
+                          ENVIO_FALLIDO: 'No se ha podido enviar. Prueba otra vez o escribe a contacto@vendercartasmagic.es' }[errorCode] %></p>
+            </div>
+        <% } %>
+        <form class="lead-form" method="post" action="/valoracion-cartas-magic">
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" name="nombre" required autocomplete="name" placeholder="ej. Iván Pérez">
+
+            <label for="email">Correo electrónico</label>
+            <input type="email" id="email" name="email" required autocomplete="email" placeholder="ej. nombre@correo.com">
+
+            <label for="tipo">¿Qué tienes?</label>
+            <select id="tipo" name="tipo" required>
+                <option value="">Elige una opción</option>
+                <option value="coleccion-completa">Una colección completa</option>
+                <option value="mazos-albumes">Mazos montados y álbumes</option>
+                <option value="cartas-valor">Solo las cartas que sé que valen algo</option>
+                <option value="no-lo-se">No lo sé, lo heredé o me lo dejaron</option>
+            </select>
+
+            <label for="volumen">¿Cuántas cartas, más o menos?</label>
+            <select id="volumen" name="volumen" required>
+                <option value="">Elige una opción</option>
+                <option value="menos-500">Menos de 500</option>
+                <option value="500-1200">Entre 500 y 1.200</option>
+                <option value="mas-1200">Más de 1.200 (más de 2 kg)</option>
+                <option value="ni-idea">Ni idea</option>
+            </select>
+
+            <label for="provincia">Provincia</label>
+            <input type="text" id="provincia" name="provincia" required placeholder="ej. Navarra">
+
+            <label for="mensaje">Cuéntanos algo más (opcional)</label>
+            <textarea id="mensaje" name="mensaje" rows="4" placeholder="ej. lo dejé en 2018, tengo cuatro mazos de Commander y dos álbumes llenos"></textarea>
+
+            <p class="form-legal">Al enviar aceptas que tratemos tus datos para responderte. No se ceden a nadie ni se usan para otra cosa. Puedes pedir que se borren escribiendo a contacto@vendercartasmagic.es. Más detalle en el <a href="/aviso-legal">aviso legal</a>.</p>
+
+            <button type="submit" class="btn-mythic">Enviar y recibir la etiqueta</button>
+        </form>
+
+        <p class="center-text text-muted">¿Prefieres escribir directamente?
+            <a href="mailto:contacto@vendercartasmagic.es?subject=Quiero%20vender%20mi%20coleccion%20de%20cartas%20Magic">contacto@vendercartasmagic.es</a>
+        </p>
+    </div>
+
+    <div class="mtg-card mtg-card-margin">
+        <h2>Qué pasa después de darle a enviar</h2>
         <div class="simple-steps">
             <div class="step">
                 <div class="step-number">1</div>
-                <p>Contacta con nosotros</p>
+                <p>Te contestamos con la etiqueta de Correos prepagada y la dirección de envío</p>
             </div>
             <div class="step">
                 <div class="step-number">2</div>
-                <p>Te hacemos una oferta</p>
+                <p>Mandas la caja y la valoramos en un día laborable desde que llega</p>
             </div>
             <div class="step">
                 <div class="step-number">3</div>
-                <p>Pago en 24-48h</p>
+                <p>Recibes un precio cerrado y, si lo aceptas, cobras por transferencia en 24 horas</p>
             </div>
         </div>
+        <p class="text-muted center-text">Todo por escrito y por correo, para que quede constancia de la oferta y de lo que enviaste.</p>
+    </div>
+
+    <div class="mtg-card mtg-card-margin">
+        <h2>Las condiciones, sin letra pequeña</h2>
+        <ul class="plain-list">
+            <li>El envío de ida lo pagamos nosotros.</li>
+            <li>El precio es un número cerrado por el lote entero. No hay negociación ni contraoferta.</li>
+            <li>Si rechazas el precio, la devolución cuesta 11,90 € y la paga quien rechaza, por transferencia, antes de devolver el paquete.</li>
+            <li>Si decidimos no valorar tu colección, la devolución la pagamos nosotros.</li>
+            <li>Compramos mazos, álbumes y colecciones. No compramos bulk sin clasificar, otros juegos ni falsificaciones.</li>
+            <li>Hasta 2 kg por paquete. Si tienes más, avísanos antes de enviar.</li>
+        </ul>
+        <p class="center-text"><a href="/aviso-legal" class="link-mythic">Leer las condiciones completas</a></p>
     </div>
 </div>
