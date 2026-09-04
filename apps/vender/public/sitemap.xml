@@ -11,6 +11,11 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://vendercartasmagic.es/presupuesto-manabox</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://vendercartasmagic.es/como-vender-cartas-magic</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

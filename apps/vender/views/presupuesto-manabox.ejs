@@ -1,0 +1,84 @@
+<div class="main-container">
+    <div class="center-text">
+        <h1>Presupuesto al momento con tu lista de ManaBox</h1>
+        <p class="contact-intro">Si tienes la colección en ManaBox, pega el enlace del mazo y te mandamos un presupuesto por correo en unos minutos. Sin fotos, sin contar cartas y sin esperar a que llegue el paquete.</p>
+    </div>
+
+    <div class="mtg-card mtg-card-margin">
+        <% if (enviado) { %>
+            <script>
+                if (typeof gtag === 'function') {
+                    gtag('event', 'generate_lead', { event_category: 'formulario', event_label: 'manabox' });
+                }
+            </script>
+            <div class="form-feedback">
+                <h2>Recibido</h2>
+                <p>Ya tenemos tu lista. Te llega el presupuesto al correo en unos minutos. Si no lo ves, mira la carpeta de spam.</p>
+            </div>
+        <% } %>
+        <% if (errorCode) { %>
+            <div class="form-feedback">
+                <p><%= { CAMPOS_OBLIGATORIOS: 'Falta el nombre',
+                          EMAIL_NO_VALIDO: 'El correo no es válido',
+                          ENLACE_NO_VALIDO: 'El enlace no es de un mazo de ManaBox. Tiene que empezar por manabox.app/decks/',
+                          MAZO_NO_ACCESIBLE: 'No se ha podido abrir el mazo. Comprueba que el enlace es público y vuelve a probar',
+                          MAZO_NO_LEIBLE: 'No se ha podido leer la lista de cartas. Comprueba que el enlace es público y vuelve a probar',
+                          MAZO_VACIO: 'Ese mazo no tiene cartas',
+                          DEMASIADOS_INTENTOS: 'Has pedido varios presupuestos seguidos. Espera un rato y vuelve a probar',
+                          ENVIO_FALLIDO: 'No se ha podido enviar. Prueba otra vez o escribe a contacto@vendercartasmagic.es' }[errorCode] %></p>
+            </div>
+        <% } %>
+        <form class="lead-form" method="post" action="/presupuesto-manabox">
+            <label for="url">Enlace del mazo en ManaBox</label>
+            <input type="url" id="url" name="url" required placeholder="ej. https://manabox.app/decks/AZ7lfIfhflqh2vgQaCEtkg" value="<%= typeof url !== 'undefined' ? url : '' %>">
+
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" name="nombre" required autocomplete="name" placeholder="ej. Iván Pérez">
+
+            <label for="email">Correo electrónico</label>
+            <input type="email" id="email" name="email" required autocomplete="email" placeholder="ej. nombre@correo.com">
+
+            <label for="mensaje">Cuéntanos algo más (opcional)</label>
+            <textarea id="mensaje" name="mensaje" rows="4" placeholder="ej. tengo dos listas más en ManaBox, y algunas cartas están jugadas"></textarea>
+
+            <p class="form-legal">Al enviar aceptas que tratemos tus datos para responderte. No se ceden a nadie ni se usan para otra cosa. Puedes pedir que se borren escribiendo a contacto@vendercartasmagic.es. Más detalle en el <a href="/aviso-legal">aviso legal</a>.</p>
+
+            <button type="submit" class="btn-mythic">Pedir presupuesto</button>
+        </form>
+
+        <p class="center-text text-muted">¿No usas ManaBox?
+            <a href="/valoracion-cartas-magic" class="link-mythic">Mándanos la colección sin listar nada</a>
+        </p>
+    </div>
+
+    <div class="mtg-card mtg-card-margin">
+        <h2>Cómo sacar el enlace en ManaBox</h2>
+        <div class="simple-steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <p>Abre el mazo o la colección que quieras vender en la app de ManaBox</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <p>Dale a compartir y copia el enlace que empieza por manabox.app/decks/</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <p>Pégalo aquí arriba con tu correo y recibes el presupuesto en unos minutos</p>
+            </div>
+        </div>
+        <p class="text-muted center-text">El enlace tiene que ser público. Si está en privado no podemos leer la lista.</p>
+    </div>
+
+    <div class="mtg-card mtg-card-margin">
+        <h2>Qué precio sale y por qué</h2>
+        <ul class="plain-list">
+            <li>Partimos del precio de Cardmarket que la propia ManaBox asigna a cada carta.</li>
+            <li>Se paga mejor porcentaje cuanto más vale la carta. Las cartas de más de 20 € son las que mandan en el precio.</li>
+            <li>Las cartas de menos de 0,30 € se pagan a tanto alzado por unidad, no por porcentaje.</li>
+            <li>El presupuesto es orientativo y sale de la lista que nos mandas. El precio en firme se cierra cuando llegan las cartas y se comprueba el estado.</li>
+            <li>Si la lista no refleja el estado real de las cartas, el precio cambia.</li>
+        </ul>
+        <p class="center-text"><a href="/aviso-legal" class="link-mythic">Leer las condiciones completas</a></p>
+    </div>
+</div>

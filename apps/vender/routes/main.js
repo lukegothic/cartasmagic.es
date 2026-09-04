@@ -1,4 +1,7 @@
-const { validarLead, componerCorreo } = require('../lib/lead');
+const { validarLead, componerCorreo, validarLeadMazo, componerCorreoMazo } = require('../lib/lead');
+const { descargarMazo } = require('../lib/manabox-fetch');
+const { calcularPresupuesto } = require('../lib/presupuesto');
+const { crearLimitador } = require('../lib/limite');
 const { enviarAviso } = require('../lib/mailer');
 
 const PROCESO_FAQ = [
@@ -160,6 +163,64 @@ module.exports = (app) => {
     }
 
     vistaValoracion(res, { enviado: true });
+  });
+
+  const vistaManabox = (res, extra = {}) =>
+    res.render('presupuesto-manabox', {
+      title: 'Presupuesto con tu lista de ManaBox | VenderCartasMagic.es',
+      description: 'Pega el enlace de tu mazo de ManaBox y recibe un presupuesto por correo en unos minutos. Sin fotos ni listados a mano.',
+      keywords: 'vender coleccion manabox, presupuesto cartas magic manabox, vender mazo magic online',
+      canonical: 'https://vendercartasmagic.es/presupuesto-manabox',
+      og_title: 'Presupuesto con tu lista de ManaBox',
+      og_description: 'Pega el enlace de tu mazo de ManaBox y recibe un presupuesto por correo en unos minutos.',
+      og_url: 'https://vendercartasmagic.es/presupuesto-manabox',
+      faq: null,
+      ld_json: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@graph': [
+          NEGOCIO,
+          {
+            '@type': 'ContactPage',
+            name: 'Presupuesto a partir de una lista de ManaBox',
+            url: 'https://vendercartasmagic.es/presupuesto-manabox',
+            mainEntity: { '@id': 'https://vendercartasmagic.es/#negocio' }
+          }
+        ]
+      }),
+      enviado: false,
+      errorCode: null,
+      url: '',
+      ...extra
+    });
+
+  const permitirPresupuesto = crearLimitador();
+
+  app.get('/presupuesto-manabox', (req, res) => vistaManabox(res));
+
+  app.post('/presupuesto-manabox', async (req, res) => {
+    if (!permitirPresupuesto(req.ip)) {
+      return vistaManabox(res.status(429), { errorCode: 'DEMASIADOS_INTENTOS', url: req.body.url });
+    }
+
+    const { error, lead } = validarLeadMazo(req.body);
+    if (error) return vistaManabox(res.status(400), { errorCode: error, url: req.body.url });
+
+    let mazo;
+    try {
+      mazo = await descargarMazo(lead.idMazo);
+    } catch (err) {
+      // Un fallo aquí es casi siempre un mazo privado o borrado, así que es un 400 y no un 500.
+      return vistaManabox(res.status(400), { errorCode: err.code ?? 'MAZO_NO_ACCESIBLE', url: lead.url });
+    }
+
+    try {
+      await enviarAviso(componerCorreoMazo({ lead, mazo, presupuesto: calcularPresupuesto(mazo.cartas) }));
+    } catch (err) {
+      console.error('Fallo al enviar el presupuesto de ManaBox:', err);
+      return vistaManabox(res.status(500), { errorCode: 'ENVIO_FALLIDO', url: lead.url });
+    }
+
+    vistaManabox(res, { enviado: true });
   });
 
   app.get('/aviso-legal', (req, res) => {

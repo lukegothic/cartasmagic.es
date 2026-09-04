@@ -4,6 +4,7 @@ const app = express();
 const port = process.env.PORT || process.argv[2] || 3000;
 
 // Configurar motor de plantillas EJS
+app.set('trust proxy', true);
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 app.use(expressLayouts);
