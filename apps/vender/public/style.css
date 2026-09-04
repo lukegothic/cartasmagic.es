@@ -1,0 +1,524 @@
+/* Importar fuentes de estilo similar a MTG */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;500&display=swap');
+
+:root {
+    /* Paleta de Colores */
+    --mtg-bg-dark: #0a0a0a;
+    --mtg-bg-card: #1a1a1a;
+    --mtg-primary: #f5901e;
+    --mtg-primary-glow: rgba(245, 144, 30, 0.4);
+    --mtg-text-main: #ffffff;
+    --mtg-text-muted: #b0b0b0;
+    --mtg-border: #333333;
+    
+    /* Tipografía */
+    --font-heading: 'Cinzel', serif;
+    --font-body: 'Inter', sans-serif;
+    
+    /* Espaciado y Bordes */
+    --radius-md: 8px;
+    --transition: all 0.3s ease;
+}
+
+/* Estilos Globales */
+body {
+    background-color: var(--mtg-bg-dark);
+    color: var(--mtg-text-main);
+    font-family: var(--font-body);
+    margin: 0;
+    line-height: 1.6;
+}
+
+h1, h2, h3 {
+    font-family: var(--font-heading);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--mtg-text-main);
+}
+
+/* Componente de Botón "Mítico" */
+.btn-mythic {
+    background-color: var(--mtg-primary);
+    color: #000;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-weight: 700;
+    font-family: var(--font-body);
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    display: inline-block;
+    text-decoration: none;
+}
+
+.btn-mythic:hover {
+    background-color: #ffaa45;
+    box-shadow: 0 0 20px var(--mtg-primary-glow);
+    transform: translateY(-2px);
+}
+
+/* Componente de Link "Mítico" */
+.link-mythic {
+    color: var(--mtg-primary);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.link-mythic:hover {
+    text-decoration: underline;
+}
+
+/* Contenedor tipo "Carta" o Sección */
+.mtg-card {
+    background-color: var(--mtg-bg-card);
+    border: 1px solid var(--mtg-border);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    transition: var(--transition);
+}
+
+.mtg-card:hover {
+    border-color: var(--mtg-primary);
+}
+
+/* Utilidades de texto */
+.text-muted {
+    color: var(--mtg-text-muted);
+    font-size: 0.9rem;
+}
+
+/* Contenedor principal */
+.main-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Texto centrado */
+.center-text {
+    text-align: center;
+}
+
+/* Margen superior para mtg-card */
+.mtg-card-margin {
+    margin-top: 40px;
+}
+
+/* Formulario de valoración */
+form {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: var(--mtg-bg-card);
+    border-radius: var(--radius-md);
+    position: relative;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+    color: var(--mtg-text-main);
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    background-color: var(--mtg-bg-dark);
+    color: var(--mtg-text-main);
+    border: 1px solid var(--mtg-border);
+    border-radius: 4px;
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: var(--mtg-primary);
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #ffaa45;
+}
+
+.example-table {
+    margin: 20px 0;
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 600px;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+.example-table th, .example-table td {
+    border: 1px solid var(--mtg-border);
+    padding: 4px 6px;
+    text-align: left;
+    font-size: 0.9em;
+}
+
+.example-table th {
+    background-color: var(--mtg-bg-dark);
+}
+
+#loader {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    justify-content: center;
+    align-items: center;
+}
+
+#loader .spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid var(--mtg-primary);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#success-message {
+    display: none;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: var(--mtg-bg-card);
+    border-radius: var(--radius-md);
+    text-align: center;
+    color: var(--mtg-text-main);
+}
+
+#example-section {
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+/* Botón mítico para enlaces */
+.btn-mythic {
+    display: inline-block;
+    text-decoration: none;
+}
+
+/* Estilos para las estadísticas de la colección */
+.stats-container {
+    margin: 20px 0;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.stat-item {
+    text-align: center;
+    flex: 1;
+}
+
+.stat-value {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: var(--mtg-primary);
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 1em;
+    color: var(--mtg-text-main);
+    margin-bottom: 5px;
+}
+
+.stat-percent {
+    font-size: 0.9em;
+    color: var(--mtg-text-muted);
+}
+
+/* Header styles */
+.site-header {
+    background-color: var(--mtg-bg-dark);
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--mtg-border);
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.magic-logo {
+    height: 40px;
+    filter: invert(1);
+}
+
+.certification-badge {
+    height: 160px;
+    border-radius: 4px;
+}
+
+.certification-container a {
+    text-decoration: none;
+}
+
+/* Footer styles */
+.site-footer {
+    background-color: var(--mtg-bg-dark);
+    padding: 20px;
+    border-top: 1px solid var(--mtg-border);
+    margin-top: 50px;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.certification-container p {
+    margin: 10px 0 0 0;
+    font-size: 0.9em;
+    color: var(--mtg-text-muted);
+}
+
+.certification-container p a {
+    color: var(--mtg-primary);
+    text-decoration: none;
+}
+
+.certification-container p a:hover {
+    text-decoration: underline;
+}
+
+/* Estilos para opciones de tipo de venta */
+.tipo-venta-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.tipo-venta-option {
+    cursor: pointer;
+    flex: 1;
+    min-width: 200px;
+}
+
+
+.tipo-venta-option input {
+    display: none;
+}
+
+.tipo-venta-option label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: var(--transition);
+    text-align: center;
+}
+
+.tipo-venta-option i {
+    width: 48px;
+    height: 48px;
+}
+
+.tipo-venta-option input:checked + label {
+    border-color: var(--mtg-primary);
+    background-color: rgba(245, 144, 30, 0.1);
+    box-shadow: 0 0 10px var(--mtg-primary-glow);
+}
+
+/* =============================================
+   CONTACT BUTTONS - Mobile First
+   ============================================= */
+
+.contact-intro {
+    font-size: 1.1rem;
+    color: var(--mtg-text-muted);
+    margin-bottom: 2rem;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.contact-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.contact-btn {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.contact-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.contact-btn:active {
+    transform: translateY(-1px);
+}
+
+/* WhatsApp Button */
+.whatsapp-btn {
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+    color: #fff;
+}
+
+.whatsapp-btn:hover {
+    border-color: #25D366;
+    box-shadow: 0 10px 30px rgba(37, 211, 102, 0.3);
+}
+
+.contact-btn-disabled {
+    background: #6b7280;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.contact-btn-disabled:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: transparent;
+}
+
+/* Email Button */
+.email-btn {
+    background: linear-gradient(135deg, var(--mtg-primary) 0%, #d47a15 100%);
+    color: #000;
+}
+
+.email-btn:hover {
+    border-color: var(--mtg-primary);
+    box-shadow: 0 10px 30px var(--mtg-primary-glow);
+}
+
+.contact-icon {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+}
+
+.btn-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.btn-label {
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-number {
+    font-size: 0.85rem;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+/* Simple Steps */
+.simple-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1rem 0;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-align: left;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    background: var(--mtg-primary);
+    color: #000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.step p {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--mtg-text-main);
+}
+
+/* Tablet and Desktop */
+@media (min-width: 480px) {
+    .contact-buttons {
+        max-width: 500px;
+        padding: 0;
+    }
+
+    .contact-btn {
+        padding: 1.5rem 2rem;
+    }
+
+    .contact-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .btn-label {
+        font-size: 1.5rem;
+    }
+
+    .btn-number {
+        font-size: 0.95rem;
+    }
+
+    .simple-steps {
+        flex-direction: row;
+        justify-content: center;
+        gap: 2rem;
+    }
+
+    .step {
+        flex-direction: column;
+        text-align: center;
+    }
+}

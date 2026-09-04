@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MTG Collection Buying Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        @media (min-width: 768px) {
+            body {
+                padding: 20px;
+            }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            padding: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                padding: 30px;
+            }
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        @media (min-width: 768px) {
+            h1 {
+                margin-bottom: 30px;
+                font-size: 24px;
+            }
+        }
+
+        .section {
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .section {
+                margin-bottom: 30px;
+                padding-bottom: 20px;
+            }
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: #667eea;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        @media (min-width: 768px) {
+            .section-title {
+                font-size: 14px;
+                margin-bottom: 15px;
+            }
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        @media (min-width: 768px) {
+            .row {
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+        }
+
+        .row.full {
+            grid-template-columns: 1fr;
+        }
+
+        .group {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        @media (min-width: 768px) {
+            .group {
+                padding: 15px;
+            }
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        @media (min-width: 768px) {
+            label {
+                font-size: 13px;
+                margin-bottom: 6px;
+            }
+        }
+
+        input[type="number"], input[type="text"] {
+            padding: 8px 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            height: 40px;
+            box-sizing: border-box;
+        }
+
+        @media (min-width: 768px) {
+            input[type="number"], input[type="text"] {
+                padding: 10px 12px;
+                font-size: 14px;
+                height: auto;
+            }
+        }
+
+        input[type="number"]:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .input {
+            background-color: #e3f2fd;
+            border-color: #2196F3 !important;
+        }
+
+        .output {
+            background-color: #f5f5f5;
+            border-color: #ccc !important;
+            padding: 10px 12px;
+            border-radius: 5px;
+            font-weight: 600;
+            color: #333;
+            cursor: default;
+        }
+
+        .output input {
+            background-color: #f5f5f5;
+            border: none !important;
+            cursor: default;
+        }
+
+        .currency::after {
+            content: ' €';
+        }
+
+        .percent::after {
+            content: ' %';
+        }
+
+        .decision-box {
+            background-color: #f0f0f0;
+            border: 3px solid #ccc;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        @media (min-width: 768px) {
+            .decision-box {
+                padding: 20px;
+                margin-top: 20px;
+                font-size: 18px;
+            }
+        }
+
+        .decision-box.compra-todo {
+            background-color: #4caf50;
+            color: white;
+            border-color: #45a049;
+        }
+
+        .decision-box.solo-top {
+            background-color: #ff9800;
+            color: white;
+            border-color: #e68900;
+        }
+
+        .decision-box.no-compres {
+            background-color: #f44336;
+            color: white;
+            border-color: #da190b;
+        }
+
+        .criteria-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            background: #fafafa;
+            border-radius: 5px;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+
+        @media (min-width: 768px) {
+            .criteria-row {
+                padding: 10px;
+                margin-bottom: 8px;
+                font-size: 14px;
+            }
+        }
+
+        .criteria-label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .criteria-result {
+            font-size: 18px;
+            font-weight: bold;
+            min-width: 30px;
+            text-align: right;
+        }
+
+        .criteria-result.yes {
+            color: #4caf50;
+        }
+
+        .criteria-result.no {
+            color: #f44336;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 44px;
+        }
+
+        @media (min-width: 768px) {
+            button {
+                padding: 12px 24px;
+                min-height: auto;
+            }
+        }
+
+        .btn-reset {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .btn-reset:hover {
+            background-color: #0b7dda;
+        }
+
+        .btn-copy {
+            background-color: #009688;
+            color: white;
+        }
+
+        .btn-copy:hover {
+            background-color: #00796b;
+        }
+
+        .info-box {
+            background-color: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 10px 12px;
+            margin-top: 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            color: #555;
+        }
+
+        @media (min-width: 768px) {
+            .info-box {
+                padding: 12px 15px;
+                margin-top: 10px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎴 MTG Collection Buying Calculator</h1>
+
+        <!-- INPUTS SECTION -->
+        <div class="section">
+            <div class="section-title">⚙️ Inputs (Edita aquí)</div>
+
+            <div class="group group-a">
+                <div class="row">
+                    <div class="input-group">
+                        <label>Pila A - Número de cartas (≥20€)</label>
+                        <input type="number" id="pilaA_cartas" class="input" value="10" min="0">
+                    </div>
+                    <div class="input-group">
+                        <label>Pila A - CM low TOTAL (€)</label>
+                        <input type="number" id="pilaA_cm" class="input" value="400" min="0" step="0.01">
+                    </div>
+                </div>
+            </div>
+
+            <div class="group group-b">
+                <div class="row">
+                    <div class="input-group">
+                        <label>Pila B - Número de cartas (5-19.99€)</label>
+                        <input type="number" id="pilaB_cartas" class="input" value="40" min="0">
+                    </div>
+                    <div class="input-group">
+                        <label>Pila B - CM low TOTAL (€)</label>
+                        <input type="number" id="pilaB_cm" class="input" value="200" min="0" step="0.01">
+                    </div>
+                </div>
+            </div>
+
+            <div class="group group-c">
+                <div class="row">
+                    <div class="input-group">
+                        <label>Pila C - Rares/Mythics (est.)</label>
+                        <input type="number" id="pilaC_rm" class="input" value="200" min="0">
+                    </div>
+                    <div class="input-group">
+                        <label>Pila C - Bulk (est.)</label>
+                        <input type="number" id="pilaC_com" class="input" value="800" min="0">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CÁLCULO OFERTA -->
+        <div class="section">
+            <div class="section-title">💰 Cálculo de Oferta</div>
+
+            <div class="row">
+                <div class="input-group">
+                    <label>Oferta A (65% de CM low)</label>
+                    <input type="text" id="ofertaA" class="output" readonly>
+                </div>
+                <div class="input-group">
+                    <label>Oferta B (60% de CM low)</label>
+                    <input type="text" id="ofertaB" class="output" readonly>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-group">
+                    <label>Oferta C (R/M×0.05€ + Comunes÷1000)</label>
+                    <input type="text" id="ofertaC" class="output" readonly>
+                </div>
+                <div class="input-group">
+                    <label>TOTAL OFERTA QUE HACES</label>
+                    <input type="text" id="totalOferta" class="output" readonly style="font-size: 16px; background: #fff59d;">
+                </div>
+            </div>
+        </div>
+
+        <!-- VALOR TASADO -->
+        <div class="section">
+            <div class="section-title">📊 Valor Tasado Total</div>
+
+            <div class="row full">
+                <div class="input-group">
+                    <label>Suma A + B (CM low)</label>
+                    <input type="text" id="valorTasado" class="output" readonly style="font-size: 16px;">
+                </div>
+            </div>
+        </div>
+
+        <!-- INGRESOS PROYECTADOS -->
+        <div class="section">
+            <div class="section-title">📈 Ingresos Proyectados (al vender)</div>
+
+            <div class="row">
+                <div class="input-group">
+                    <label>Ingresos A (95% CM low)</label>
+                    <input type="text" id="ingresosA" class="output" readonly>
+                </div>
+                <div class="input-group">
+                    <label>Ingresos B (95% CM low)</label>
+                    <input type="text" id="ingresosB" class="output" readonly>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-group">
+                    <label>Ingresos C (bundles ~3x oferta)</label>
+                    <input type="text" id="ingresosC" class="output" readonly>
+                </div>
+                <div class="input-group">
+                    <label>TOTAL INGRESOS ESPERADOS</label>
+                    <input type="text" id="totalIngresos" class="output" readonly style="font-size: 16px; background: #c8e6c9;">
+                </div>
+            </div>
+        </div>
+
+        <!-- BENEFICIO -->
+        <div class="section">
+            <div class="section-title">💵 Beneficio</div>
+
+            <div class="row">
+                <div class="input-group">
+                    <label>Beneficio Bruto (Ingresos - Oferta)</label>
+                    <input type="text" id="beneficio" class="output" readonly style="font-size: 16px; background: #ffccbc;">
+                </div>
+                <div class="input-group">
+                    <label>Margen % (del valor tasado)</label>
+                    <input type="text" id="margen" class="output" readonly style="font-size: 16px;">
+                </div>
+            </div>
+        </div>
+
+        <!-- CRITERIOS -->
+        <div class="section">
+            <div class="section-title">✓ Criterios de Decisión</div>
+
+            <div class="criteria-row">
+                <span class="criteria-label">¿Pila A+B ≥ 600€?</span>
+                <span class="criteria-result" id="crit1">?</span>
+            </div>
+
+            <div class="criteria-row">
+                <span class="criteria-label">¿Margen ≥ 25%?</span>
+                <span class="criteria-result" id="crit2">?</span>
+            </div>
+
+            <div class="criteria-row">
+                <span class="criteria-label">¿Pila C < 30% del valor total? (no pesada)</span>
+                <span class="criteria-result" id="crit3">?</span>
+            </div>
+        </div>
+
+        <!-- DECISIÓN FINAL -->
+        <div class="section">
+            <div class="section-title">🎯 Decisión Final</div>
+
+            <div class="decision-box" id="decision">
+                Introduce valores arriba
+            </div>
+
+            <div class="info-box">
+                <strong>Leyenda:</strong><br>
+                ✓ COMPRA TODO: A+B ≥600€ + Margen ≥25% + C no pesada<br>
+                ⚠ COMPRA SOLO TOP: A+B ≥600€ + Margen ≥25% + C pesada (>30%)<br>
+                ✗ NO COMPRES: No cumple criterios
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-reset" onclick="resetToExample()">🔄 Reset a Ejemplo</button>
+            <button class="btn-copy" onclick="copyToClipboard()">📋 Copiar Resultados</button>
+        </div>
+    </div>
+
+    <script>
+        // Elementos del DOM
+        const inputs = {
+            pilaA_cartas: document.getElementById('pilaA_cartas'),
+            pilaA_cm: document.getElementById('pilaA_cm'),
+            pilaB_cartas: document.getElementById('pilaB_cartas'),
+            pilaB_cm: document.getElementById('pilaB_cm'),
+            pilaC_rm: document.getElementById('pilaC_rm'),
+            pilaC_com: document.getElementById('pilaC_com'),
+        };
+
+        const outputs = {
+            ofertaA: document.getElementById('ofertaA'),
+            ofertaB: document.getElementById('ofertaB'),
+            ofertaC: document.getElementById('ofertaC'),
+            totalOferta: document.getElementById('totalOferta'),
+            valorTasado: document.getElementById('valorTasado'),
+            ingresosA: document.getElementById('ingresosA'),
+            ingresosB: document.getElementById('ingresosB'),
+            ingresosC: document.getElementById('ingresosC'),
+            totalIngresos: document.getElementById('totalIngresos'),
+            beneficio: document.getElementById('beneficio'),
+            margen: document.getElementById('margen'),
+        };
+
+        const criteria = {
+            crit1: document.getElementById('crit1'),
+            crit2: document.getElementById('crit2'),
+            crit3: document.getElementById('crit3'),
+        };
+
+        const decisionBox = document.getElementById('decision');
+
+        // Función de formateación
+        function formatCurrency(value) {
+            return Math.round(value).toLocaleString('es-ES', {minimumFractionDigits: 0, maximumFractionDigits: 0}) + ' €';
+        }
+
+        function formatPercent(value) {
+            return (value * 100).toFixed(1) + ' %';
+        }
+
+        // Función principal de cálculo
+        function calculate() {
+            // Obtener valores
+            const aCartas = parseFloat(inputs.pilaA_cartas.value) || 0;
+            const aCm = parseFloat(inputs.pilaA_cm.value) || 0;
+            const bCartas = parseFloat(inputs.pilaB_cartas.value) || 0;
+            const bCm = parseFloat(inputs.pilaB_cm.value) || 0;
+            const cRm = parseFloat(inputs.pilaC_rm.value) || 0;
+            const cCom = parseFloat(inputs.pilaC_com.value) || 0;
+
+            // Calcular ofertas
+            const ofA = aCm * 0.65;
+            const ofB = bCm * 0.60;
+            const ofC = Math.round(cRm * 0.05 + cCom / 1000);
+            const totalOf = ofA + ofB + ofC;
+
+            // Valor tasado
+            const valTasado = aCm + bCm;
+
+            // Ingresos proyectados
+            const ingA = aCm * 0.95;
+            const ingB = bCm * 0.95;
+            const ingC = ofC * 3;
+            const totalIng = ingA + ingB + ingC;
+
+            // Beneficio
+            const ben = totalIng - totalOf;
+            const mar = valTasado > 0 ? ben / valTasado : 0;
+
+            // Mostrar resultados
+            outputs.ofertaA.value = formatCurrency(ofA);
+            outputs.ofertaB.value = formatCurrency(ofB);
+            outputs.ofertaC.value = formatCurrency(ofC);
+            outputs.totalOferta.value = formatCurrency(totalOf);
+
+            outputs.valorTasado.value = formatCurrency(valTasado);
+
+            outputs.ingresosA.value = formatCurrency(ingA);
+            outputs.ingresosB.value = formatCurrency(ingB);
+            outputs.ingresosC.value = formatCurrency(ingC);
+            outputs.totalIngresos.value = formatCurrency(totalIng);
+
+            outputs.beneficio.value = formatCurrency(ben);
+            outputs.margen.value = formatPercent(mar);
+
+            // Evaluar criterios
+            const abTotal = aCm + bCm;
+            const cPercent = 0;
+
+            const crit1Pass = abTotal >= 600;
+            const crit2Pass = mar >= 0.25;
+            const crit3Pass = cPercent < 0.30;
+
+            // Mostrar criterios
+            criteria.crit1.textContent = crit1Pass ? '✓' : '✗';
+            criteria.crit1.className = 'criteria-result ' + (crit1Pass ? 'yes' : 'no');
+
+            criteria.crit2.textContent = crit2Pass ? '✓' : '✗';
+            criteria.crit2.className = 'criteria-result ' + (crit2Pass ? 'yes' : 'no');
+
+            criteria.crit3.textContent = crit3Pass ? '✓' : '✗';
+            criteria.crit3.className = 'criteria-result ' + (crit3Pass ? 'yes' : 'no');
+
+            // Decisión final
+            let decision = '';
+            let className = '';
+
+            if (crit1Pass && crit2Pass && crit3Pass) {
+                decision = '✓ COMPRA TODO';
+                className = 'compra-todo';
+            } else if (crit1Pass && crit2Pass && !crit3Pass) {
+                decision = '⚠ COMPRA SOLO TOP (A + mejores B)';
+                className = 'solo-top';
+            } else {
+                decision = '✗ NO COMPRES';
+                className = 'no-compres';
+            }
+
+            decisionBox.textContent = decision;
+            decisionBox.className = 'decision-box ' + className;
+        }
+
+        function resetToExample() {
+            inputs.pilaA_cartas.value = 10;
+            inputs.pilaA_cm.value = 400;
+            inputs.pilaB_cartas.value = 40;
+            inputs.pilaB_cm.value = 200;
+            inputs.pilaC_rm.value = 200;
+            inputs.pilaC_com.value = 800;
+            calculate();
+        }
+
+        function copyToClipboard() {
+            const text = `MTG Buying Calculator Results:\n\nPila A: ${inputs.pilaA_cm.value}€\nPila B: ${inputs.pilaB_cm.value}€\n\nOferta Total: ${outputs.totalOferta.value}\nIngresos Esperados: ${outputs.totalIngresos.value}\nBeneficio: ${outputs.beneficio.value}\nMargen: ${outputs.margen.value}\n\nDecisión: ${decisionBox.textContent}`;
+            navigator.clipboard.writeText(text);
+            alert('✓ Resultados copiados al portapapeles');
+        }
+
+        // Event listeners
+        Object.values(inputs).forEach(input => {
+            input.addEventListener('input', calculate);
+        });
+
+        // Calcular al cargar
+        calculate();
+    </script>
+</body>
+</html>

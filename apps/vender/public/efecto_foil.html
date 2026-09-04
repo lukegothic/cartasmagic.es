@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MTG Foil Overlay Generator</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #2a2a2a;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+            color: white;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .subtitle {
+            color: #999;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .preview-box {
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: inline-block;
+        }
+
+        canvas {
+            border: 2px solid #444;
+            border-radius: 8px;
+        }
+
+        .controls {
+            max-width: 500px;
+            margin: 0 auto 30px;
+        }
+
+        .control {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .control label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 6px;
+            background: #444;
+            border-radius: 3px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #4a9eff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .value {
+            min-width: 50px;
+            text-align: right;
+            color: #4a9eff;
+            font-weight: bold;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: #4a9eff;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #357abd;
+        }
+
+        button.secondary {
+            background: #555;
+        }
+
+        button.secondary:hover {
+            background: #666;
+        }
+
+        .info {
+            max-width: 600px;
+            margin: 30px auto 0;
+            padding: 20px;
+            background: #333;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.8;
+            text-align: left;
+        }
+
+        .info strong {
+            color: #4a9eff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Generador de Overlay Foil MTG</h1>
+        <p class="subtitle">Crea un overlay holográfico simple para tus cartas</p>
+
+        <div class="preview-box">
+            <canvas id="canvas" width="488" height="680"></canvas>
+        </div>
+
+        <div class="controls">
+            <div class="control">
+                <label>Opacidad</label>
+                <div class="slider-container">
+                    <input type="range" id="opacity" min="10" max="100" value="30">
+                    <span class="value" id="opacityValue">30%</span>
+                </div>
+            </div>
+
+            <div class="control">
+                <label>Ángulo del gradiente</label>
+                <div class="slider-container">
+                    <input type="range" id="angle" min="0" max="360" value="45">
+                    <span class="value" id="angleValue">45°</span>
+                </div>
+            </div>
+
+            <div class="control">
+                <label>Intensidad del brillo</label>
+                <div class="slider-container">
+                    <input type="range" id="brightness" min="50" max="150" value="100">
+                    <span class="value" id="brightnessValue">100%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button onclick="downloadPNG()">💾 Descargar PNG (488x680)</button>
+            <button onclick="downloadHQ()">⭐ Descargar HQ (600 DPI)</button>
+            <button class="secondary" onclick="reset()">🔄 Resetear</button>
+        </div>
+
+        <div class="info">
+            <strong>📋 Cómo usar en Photoshop:</strong><br>
+            1. Descarga el overlay PNG<br>
+            2. Abre tu carta en Photoshop<br>
+            3. Arrastra el overlay sobre tu carta<br>
+            4. Cambia el modo de fusión a <strong>"Screen"</strong> o <strong>"Color Dodge"</strong><br>
+            5. Ajusta la opacidad al gusto (20-40% funciona bien)<br>
+            <br>
+            <strong>💡 Consejos:</strong><br>
+            • Usa opacidad baja para un efecto más sutil<br>
+            • El modo "Screen" es más suave, "Color Dodge" más intenso<br>
+            • Puedes enmascarar zonas donde no quieres el efecto<br>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        const opacitySlider = document.getElementById('opacity');
+        const angleSlider = document.getElementById('angle');
+        const brightnessSlider = document.getElementById('brightness');
+
+        const opacityValue = document.getElementById('opacityValue');
+        const angleValue = document.getElementById('angleValue');
+        const brightnessValue = document.getElementById('brightnessValue');
+
+        function drawOverlay() {
+            const opacity = opacitySlider.value / 100;
+            const angle = angleSlider.value;
+            const brightness = brightnessSlider.value / 100;
+
+            // Limpiar canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Convertir ángulo a radianes
+            const rad = (angle * Math.PI) / 180;
+            const x1 = canvas.width / 2 + Math.cos(rad) * canvas.width;
+            const y1 = canvas.height / 2 + Math.sin(rad) * canvas.height;
+            const x2 = canvas.width / 2 - Math.cos(rad) * canvas.width;
+            const y2 = canvas.height / 2 - Math.sin(rad) * canvas.height;
+
+            // Crear gradiente arcoíris
+            const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
+            
+            const colors = [
+                [255, 0, 128],   // Rosa
+                [128, 0, 255],   // Morado
+                [0, 128, 255],   // Azul
+                [0, 255, 255],   // Cian
+                [0, 255, 128],   // Verde
+                [255, 255, 0],   // Amarillo
+                [255, 128, 0],   // Naranja
+                [255, 0, 0],     // Rojo
+                [255, 0, 255],   // Magenta
+                [128, 0, 255]    // Morado
+            ];
+
+            colors.forEach((color, i) => {
+                const [r, g, b] = color.map(c => Math.min(255, c * brightness));
+                const stop = i / (colors.length - 1);
+                gradient.addColorStop(stop, `rgba(${r}, ${g}, ${b}, ${opacity})`);
+            });
+
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Añadir destello sutil en el centro
+            const radial = ctx.createRadialGradient(
+                canvas.width / 2, canvas.height / 2, 0,
+                canvas.width / 2, canvas.height / 2, canvas.width * 0.7
+            );
+            radial.addColorStop(0, `rgba(255, 255, 255, ${opacity * 0.5})`);
+            radial.addColorStop(0.5, `rgba(255, 255, 255, ${opacity * 0.1})`);
+            radial.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            
+            ctx.fillStyle = radial;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        opacitySlider.addEventListener('input', (e) => {
+            opacityValue.textContent = e.target.value + '%';
+            drawOverlay();
+        });
+
+        angleSlider.addEventListener('input', (e) => {
+            angleValue.textContent = e.target.value + '°';
+            drawOverlay();
+        });
+
+        brightnessSlider.addEventListener('input', (e) => {
+            brightnessValue.textContent = e.target.value + '%';
+            drawOverlay();
+        });
+
+        function downloadPNG() {
+            canvas.toBlob((blob) => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'mtg-foil-overlay.png';
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+        }
+
+        function downloadHQ() {
+            // Crear canvas de alta resolución (600 DPI aprox)
+            const hqCanvas = document.createElement('canvas');
+            const hqCtx = hqCanvas.getContext('2d');
+            const scale = 2.5; // Factor de escala para mayor calidad
+            
+            hqCanvas.width = canvas.width * scale;
+            hqCanvas.height = canvas.height * scale;
+
+            const opacity = opacitySlider.value / 100;
+            const angle = angleSlider.value;
+            const brightness = brightnessSlider.value / 100;
+
+            const rad = (angle * Math.PI) / 180;
+            const x1 = hqCanvas.width / 2 + Math.cos(rad) * hqCanvas.width;
+            const y1 = hqCanvas.height / 2 + Math.sin(rad) * hqCanvas.height;
+            const x2 = hqCanvas.width / 2 - Math.cos(rad) * hqCanvas.width;
+            const y2 = hqCanvas.height / 2 - Math.sin(rad) * hqCanvas.height;
+
+            const gradient = hqCtx.createLinearGradient(x1, y1, x2, y2);
+            
+            const colors = [
+                [255, 0, 128], [128, 0, 255], [0, 128, 255], [0, 255, 255],
+                [0, 255, 128], [255, 255, 0], [255, 128, 0], [255, 0, 0],
+                [255, 0, 255], [128, 0, 255]
+            ];
+
+            colors.forEach((color, i) => {
+                const [r, g, b] = color.map(c => Math.min(255, c * brightness));
+                const stop = i / (colors.length - 1);
+                gradient.addColorStop(stop, `rgba(${r}, ${g}, ${b}, ${opacity})`);
+            });
+
+            hqCtx.fillStyle = gradient;
+            hqCtx.fillRect(0, 0, hqCanvas.width, hqCanvas.height);
+
+            const radial = hqCtx.createRadialGradient(
+                hqCanvas.width / 2, hqCanvas.height / 2, 0,
+                hqCanvas.width / 2, hqCanvas.height / 2, hqCanvas.width * 0.7
+            );
+            radial.addColorStop(0, `rgba(255, 255, 255, ${opacity * 0.5})`);
+            radial.addColorStop(0.5, `rgba(255, 255, 255, ${opacity * 0.1})`);
+            radial.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            
+            hqCtx.fillStyle = radial;
+            hqCtx.fillRect(0, 0, hqCanvas.width, hqCanvas.height);
+
+            hqCanvas.toBlob((blob) => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'mtg-foil-overlay-HQ.png';
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+        }
+
+        function reset() {
+            opacitySlider.value = 30;
+            angleSlider.value = 45;
+            brightnessSlider.value = 100;
+            opacityValue.textContent = '30%';
+            angleValue.textContent = '45°';
+            brightnessValue.textContent = '100%';
+            drawOverlay();
+        }
+
+        // Dibujar inicialmente
+        drawOverlay();
+    </script>
+</body>
+</html>

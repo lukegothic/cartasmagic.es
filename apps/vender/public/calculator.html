@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MTG Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        @media (min-width: 768px) {
+            body {
+                padding: 20px;
+            }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            box-sizing: border-box;
+            transition: background 0.5s ease;
+        }
+
+        .container.compra-todo {
+            background: linear-gradient(135deg, #66bb6a 0%, #81c784 50%, #a5d6a7 100%);
+        }
+
+        .container.solo-top {
+            background: linear-gradient(135deg, #ffb74d 0%, #ffcc80 50%, #ffe0b2 100%);
+        }
+
+        .container.no-compres {
+            background: linear-gradient(135deg, #ef5350 0%, #e57373 50%, #ef9a9a 100%);
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                padding: 30px;
+            }
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        @media (min-width: 768px) {
+            h1 {
+                margin-bottom: 30px;
+                font-size: 24px;
+            }
+        }
+
+        .section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .section {
+                margin-bottom: 30px;
+                padding-bottom: 20px;
+            }
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: #667eea;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        @media (min-width: 768px) {
+            .section-title {
+                font-size: 14px;
+                margin-bottom: 15px;
+            }
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        @media (min-width: 768px) {
+            .row {
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (min-width: 768px) {
+            .input-group {
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+            }
+
+            #totalOferta {
+                font-size: 48px !important;
+                height: 80px !important;
+            }
+
+            #oferta-label {
+                font-size: 28px !important;
+            }
+        }
+
+        label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        @media (min-width: 768px) {
+            label {
+                font-size: 13px;
+                margin-bottom: 6px;
+            }
+        }
+
+        input[type="number"], input[type="text"] {
+            padding: 8px 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            height: 40px;
+            box-sizing: border-box;
+        }
+
+        @media (min-width: 768px) {
+            input[type="number"], input[type="text"] {
+                padding: 10px 12px;
+                font-size: 14px;
+                height: auto;
+            }
+        }
+
+        input[type="number"]:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .input {
+            background-color: #e3f2fd;
+            border-color: #2196F3 !important;
+        }
+
+        .output {
+            background-color: #f5f5f5;
+            border-color: #ccc !important;
+            padding: 10px 12px;
+            border-radius: 5px;
+            font-weight: 600;
+            color: #333;
+            cursor: default;
+        }
+
+        .output input {
+            background-color: #f5f5f5;
+            border: none !important;
+            cursor: default;
+        }
+
+        .currency::after {
+            content: ' €';
+        }
+
+        .decision-box {
+            background-color: #f0f0f0;
+            border: 3px solid #ccc;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        @media (min-width: 768px) {
+            .decision-box {
+                padding: 20px;
+                margin-top: 20px;
+                font-size: 18px;
+            }
+        }
+
+        .decision-box.compra-todo {
+            background-color: #4caf50;
+            color: white;
+            border-color: #45a049;
+        }
+
+        .decision-box.solo-top {
+            background-color: #ff9800;
+            color: white;
+            border-color: #e68900;
+        }
+
+        .decision-box.no-compres {
+            background-color: #f44336;
+            color: white;
+            border-color: #da190b;
+        }
+
+        .group {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        @media (min-width: 768px) {
+            .group {
+                padding: 15px;
+            }
+        }
+
+        .group-detail {
+            margin-bottom: 10px;
+        }
+
+        .group-summary {
+            background: #e0e0e0;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+
+        .group-summary:hover {
+            background: #d0d0d0;
+        }
+
+        .offer-section {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .offer-display {
+            text-align: center;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            border: 2px solid #ffd700;
+        }
+
+        #oferta-label {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .offer-amount {
+            margin-top: 0;
+        }
+
+        #totalOferta {
+            font-size: 36px !important;
+            font-weight: 900 !important;
+            text-align: center !important;
+            background: linear-gradient(45deg, #333333, #ffd700) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5) !important;
+            border: none !important;
+            box-shadow: none !important;
+            height: auto !important;
+            padding: 10px !important;
+            border-radius: 10px !important;
+            animation: pulse 2s infinite !important;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+            50% { box-shadow: 0 8px 32px rgba(255, 215, 0, 0.5); }
+            100% { box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Te lo digo directo: tu peligro no es pagar de más por bulk, es comprar bulk que no necesitas "por si acaso hay tesoros".
+
+1. Regla dura sobre bulk (adaptada a tu FOMO)
+Para ti, "demasiado bulk" no es solo porcentaje, es combinación de:
+
+C es >30% del valor tasado Y
+
+tu gut ya te dice "esto es trastero ya vaciado" (caso Mikel).
+
+Te propongo refinar así:
+
+VERDE (compra todo) solo si:
+
+A+B ≥ 600 € y
+
+margen ≥ 30% y
+
+C ≤ 25% del valor tasado y
+
+tu sensación es "esta gente no ha rascado todo, hay chicha".
+
+NARANJA (solo top) si:
+
+A+B ≥ 400 € y
+
+margen A+B ≥ 25–30% y
+
+C está entre 25–50% del valor tasado
+→ Aquí tu lado FOMO quiere coger C "porque es barato"; tu norma debe ser:
+solo compras A y B, C se queda salvo que el perfil vendedor sea obviously "no he tocado nada".
+
+ROJO (no compres / no bulk) si:
+
+C > 50% del valor tasado o
+
+tu gut dice "esto ya está cribado"
+→ Aquí, aunque el Excel diga que hay margen, para ti la norma debe ser:
+no compras bulk, como mucho haces oferta por 4–10 cartas concretas.
+
+2. Cómo frenar al FOMO en la práctica
+Frase que te obligas a usar cuando veas mucho C:
+
+"Por las cartas buenas (A y estas B) te puedo ofrecer X.
+El resto lo dejo fuera, porque mi modelo no es vaciar cajas de bulk."
+
+Si el tío insiste en meter bulk "porque así te llevas todo", tu respuesta estándar:
+
+"Precisamente no quiero llevármelo todo. Prefiero pagarte bien las cartas que se mueven y no llevarme lo que no voy a vender."
+
+Eso hace dos cosas:
+
+Mata el argumento de "profesional = me lo llevo todo".
+
+Desactiva tu script interno de "si digo que no al bulk quedo como tonto".
+
+3. Caso Mikel como regla, no como trauma
+Caso Mikel = manual:
+
+Perfil: jugador que ya ha vendido lo bueno, le quedan restos y cosas raras.
+
+Bulk: mucho volumen, poco valor concentrado, tu gut ya decía "meh" y no le hiciste caso.
+
+Nueva regla brutalmente honesta para ti:
+
+Si el perfil es Mikel-like (huele a que ya ha limpiado lo jugoso):
+
+Nunca compras C.
+
+Solo compras A y B si el margen te vuela la cabeza.
+
+Si no hay A clara, te vas.
+
+4. Resumen brutal para ti, FOMO-man
+Tu sesgo natural es "mejor me lo llevo por si acaso".
+
+Tu protección tiene que ser:
+
+Bulk solo cuando:
+
+C es claramente minoría en valor
+
+y el vendedor no ha cribado nunca (herencia, ex-jugador pasota).
+
+En cualquier otra combinación:
+
+C = rojo, aunque duela.
+
+A y B como máximo.
+
+Si no hay A potente, levantas y te piras. -->
+
+
+    <div class="container">
+
+        <!-- INPUTS SECTION -->
+        <div class="section" id="inputs-section">
+            <details class="group-detail" open>
+                <summary class="group-summary" tabindex="-1">A</summary>
+                <div class="group">
+                    <div class="row">
+                        <div class="input-group">
+                            <label>A Qty</label>
+                            <input type="number" id="pilaA_cartas" class="input" value="">
+                        </div>
+                        <div class="input-group">
+                            <label>A Val</label>
+                            <input type="number" id="pilaA_cm" class="input" value="" step="0.01">
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <details class="group-detail" open>
+                <summary class="group-summary" tabindex="-1">B</summary>
+                <div class="group">
+                    <div class="row">
+                        <div class="input-group">
+                            <label>B Qty</label>
+                            <input type="number" id="pilaB_cartas" class="input" value="">
+                        </div>
+                        <div class="input-group">
+                            <label>B Val</label>
+                            <input type="number" id="pilaB_cm" class="input" value="" step="0.01">
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <details class="group-detail" open>
+                <summary class="group-summary" tabindex="-1">C</summary>
+                <div class="group">
+                    <div class="row">
+                        <div class="input-group">
+                            <label>C Rare</label>
+                            <input type="number" id="pilaC_rm" class="input" value="">
+                        </div>
+                        <div class="input-group">
+                            <label>C Bulk</label>
+                            <input type="number" id="pilaC_com" class="input" value="">
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </div>
+
+        <!-- TOTAL OFFER -->
+        <div class="section offer-section" id="offer-section" style="display: none;">
+            <div class="offer-display">
+                <label id="oferta-label" style="font-size: 20px; font-weight: bold;">OFERTA FINAL</label>
+                <div class="offer-amount">
+                    <input type="text" id="totalOferta" class="output currency" readonly style="font-size: 32px; font-weight: bold; text-align: center; background: #fff59d; border: 3px solid #ffeb3b; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); width: 100%; box-sizing: border-box; height: 70px;">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+
+    <script>
+        // Elementos del DOM
+        const inputs = {
+            pilaA_cartas: document.getElementById('pilaA_cartas'),
+            pilaA_cm: document.getElementById('pilaA_cm'),
+            pilaB_cartas: document.getElementById('pilaB_cartas'),
+            pilaB_cm: document.getElementById('pilaB_cm'),
+            pilaC_rm: document.getElementById('pilaC_rm'),
+            pilaC_com: document.getElementById('pilaC_com'),
+        };
+
+        const outputs = {
+            totalOferta: document.getElementById('totalOferta'),
+        };
+
+        const container = document.querySelector('.container');
+
+        // Función de formateación
+        function formatCurrency(value) {
+            return Math.round(value).toLocaleString('es-ES', {minimumFractionDigits: 0, maximumFractionDigits: 0}) + ' €';
+        }
+
+        // Función principal de cálculo
+        function calculate() {
+            // Mostrar overlay de carga
+            const overlay = document.getElementById('loading-overlay');
+            overlay.style.display = 'flex';
+
+            // Simular carga
+            setTimeout(() => {
+                // Obtener valores
+                const aCm = parseFloat(inputs.pilaA_cm.value) || 0;
+                const bCm = parseFloat(inputs.pilaB_cm.value) || 0;
+                const cRm = parseFloat(inputs.pilaC_rm.value) || 0;
+                const cCom = parseFloat(inputs.pilaC_com.value) || 0;
+
+                // Calcular ofertas
+                const ofA = aCm * 0.65;
+                const ofB = bCm * 0.55;
+                const ofC = Math.round(cRm * 0.05 + cCom / 1000);
+
+                // Evaluar criterios
+                const abTotal = aCm + bCm;
+                const cCm = cRm * 0.2 + cCom * 0.02; // estimated value for C
+                const valTasado = aCm + bCm + cCm;
+                const ben = (aCm * 0.95 + bCm * 0.95 + ofC * 3) - (ofA + ofB + ofC);
+                const mar = valTasado > 0 ? ben / valTasado : 0;
+                const mar_ab = abTotal > 0 ? ((aCm * 0.95 + bCm * 0.95) - (ofA + ofB)) / abTotal : 0;
+                const cPercent = valTasado > 0 ? cCm / valTasado : 0;
+
+                // Decisión final
+                let className = '';
+                let totalOf = 0;
+
+                if (abTotal >= 600 && mar >= 0.30 && cPercent <= 0.25) {
+                    className = 'compra-todo';
+                    totalOf = ofA + ofB + ofC;
+                } else if (abTotal >= 400 && mar_ab >= 0.25 && cPercent > 0.25 && cPercent <= 0.50) {
+                    className = 'solo-top';
+                    totalOf = ofA + ofB;
+                } else {
+                    className = 'no-compres';
+                    totalOf = ofA + ofB;
+                }
+
+                // Mostrar total oferta
+                outputs.totalOferta.value = formatCurrency(totalOf);
+
+                container.className = 'container ' + className;
+                document.getElementById('offer-section').style.display = 'flex';
+
+                // Compactar inputs
+                document.querySelectorAll('.group-detail').forEach(detail => detail.open = false);
+
+                // Ocultar overlay
+                overlay.style.display = 'none';
+            }, 2000); // 2 segundos de carga
+        }
+
+        function resetToExample() {
+            inputs.pilaA_cartas.value = '';
+            inputs.pilaA_cm.value = '';
+            inputs.pilaB_cartas.value = '';
+            inputs.pilaC_rm.value = '';
+            inputs.pilaC_com.value = '';
+            outputs.totalOferta.value = '';
+            container.className = 'container';
+            container.className = 'container';
+            document.getElementById('offer-section').style.display = 'none';
+            document.querySelectorAll('.group-detail').forEach(detail => detail.open = true);
+        }
+
+        // Event listeners
+        Object.values(inputs).forEach(input => {
+            input.addEventListener('blur', () => {
+                const allFilled = Object.values(inputs).every(inp => inp.value.trim() !== '');
+                if (allFilled) {
+                    calculate();
+                } else {
+                    outputs.totalOferta.value = '';
+                    container.className = 'container';
+                    container.className = 'container';
+                    document.getElementById('offer-section').style.display = 'none';
+                    document.querySelectorAll('.group-detail').forEach(detail => detail.open = true);
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
