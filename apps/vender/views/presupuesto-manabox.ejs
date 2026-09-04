@@ -13,7 +13,7 @@
             </script>
             <div class="form-feedback">
                 <h2>Recibido</h2>
-                <p>Ya tenemos tu lista. Te llega el presupuesto al correo en unos minutos. Si no lo ves, mira la carpeta de spam.</p>
+                <p>Ya tenemos tu lista. Te llegará el presupuesto al correo en unos minutos. Si no lo ves, mira la carpeta de spam.</p>
             </div>
         <% } %>
         <% if (errorCode) { %>
@@ -33,13 +33,13 @@
             <input type="url" id="url" name="url" required placeholder="ej. https://manabox.app/decks/AZ7lfIfhflqh2vgQaCEtkg" value="<%= typeof url !== 'undefined' ? url : '' %>">
 
             <label for="nombre">Nombre</label>
-            <input type="text" id="nombre" name="nombre" required autocomplete="name" placeholder="ej. Iván Pérez">
+            <input type="text" id="nombre" name="nombre" required autocomplete="name" placeholder="ej. Juan Pérez">
 
             <label for="email">Correo electrónico</label>
             <input type="email" id="email" name="email" required autocomplete="email" placeholder="ej. nombre@correo.com">
 
             <label for="mensaje">Cuéntanos algo más (opcional)</label>
-            <textarea id="mensaje" name="mensaje" rows="4" placeholder="ej. tengo dos listas más en ManaBox, y algunas cartas están jugadas"></textarea>
+            <textarea id="mensaje" name="mensaje" rows="4" placeholder="ej. tengo también dos mazos de Commander en Manabox, y algunas cartas están usadas"></textarea>
 
             <p class="form-legal">Al enviar aceptas que tratemos tus datos para responderte. No se ceden a nadie ni se usan para otra cosa. Puedes pedir que se borren escribiendo a contacto@vendercartasmagic.es. Más detalle en el <a href="/aviso-legal">aviso legal</a>.</p>
 
@@ -47,7 +47,7 @@
         </form>
 
         <p class="center-text text-muted">¿No usas ManaBox?
-            <a href="/valoracion-cartas-magic" class="link-mythic">Mándanos la colección sin listar nada</a>
+            <a href="/valoracion-cartas-magic" class="link-mythic">Mándanos la colección sin tener que listar nada</a>
         </p>
     </div>
 
@@ -70,15 +70,4 @@
         <p class="text-muted center-text">El enlace tiene que ser público. Si está en privado no podemos leer la lista.</p>
     </div>
 
-    <div class="mtg-card mtg-card-margin">
-        <h2>Qué precio sale y por qué</h2>
-        <ul class="plain-list">
-            <li>Partimos del precio de Cardmarket que la propia ManaBox asigna a cada carta.</li>
-            <li>Se paga mejor porcentaje cuanto más vale la carta. Las cartas de más de 20 € son las que mandan en el precio.</li>
-            <li>Las cartas de menos de 0,30 € se pagan a tanto alzado por unidad, no por porcentaje.</li>
-            <li>El presupuesto es orientativo y sale de la lista que nos mandas. El precio en firme se cierra cuando llegan las cartas y se comprueba el estado.</li>
-            <li>Si la lista no refleja el estado real de las cartas, el precio cambia.</li>
-        </ul>
-        <p class="center-text"><a href="/aviso-legal" class="link-mythic">Leer las condiciones completas</a></p>
-    </div>
 </div>

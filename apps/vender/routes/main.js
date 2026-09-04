@@ -1,6 +1,5 @@
 const { validarLead, componerCorreo, validarLeadMazo, componerCorreoMazo } = require('../lib/lead');
 const { descargarMazo } = require('../lib/manabox-fetch');
-const { calcularPresupuesto } = require('../lib/presupuesto');
 const { crearLimitador } = require('../lib/limite');
 const { enviarAviso } = require('../lib/mailer');
 
@@ -217,7 +216,7 @@ module.exports = (app) => {
     }
 
     try {
-      await enviarAviso(componerCorreoMazo({ lead, mazo, presupuesto: calcularPresupuesto(mazo.cartas) }));
+      await enviarAviso(componerCorreoMazo({ lead, mazo, cartas: mazo.cartas }));
     } catch (err) {
       console.error('Fallo al enviar el presupuesto de ManaBox:', err);
       return vistaManabox(res.status(500), { errorCode: 'ENVIO_FALLIDO', url: lead.url });

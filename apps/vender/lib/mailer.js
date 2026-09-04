@@ -18,13 +18,15 @@ const crearTransporte = (entorno = process.env) => {
   });
 };
 
-const enviarCon = (transporte, entorno, { subject, text, replyTo }) =>
+const enviarCon = (transporte, entorno, { subject, text, html, replyTo, attachments }) =>
   transporte.sendMail({
     from: entorno.EMAIL_FROM,
     to: entorno.EMAIL_TO,
     replyTo,
     subject,
-    text
+    text,
+    html,
+    attachments
   });
 
 let transporte;
