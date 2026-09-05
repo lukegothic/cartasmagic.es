@@ -1,7 +1,7 @@
 <div class="main-container main-container-narrow">
     <div class="center-text">
         <h1>¿Cuánto vale tu colección de cartas Magic?</h1>
-        <p class="contact-intro">Cuéntanos qué tienes. Te mandamos la etiqueta de envío prepagada y, un día laborable después de que llegue el paquete, tienes un precio cerrado en tu correo.</p>
+        <p class="contact-intro">Cuéntanos qué tienes en cuatro campos. Te mandamos la etiqueta de envío, ya pagada, y un día laborable después de que llegue el paquete tienes un precio cerrado en el correo.</p>
     </div>
 
     <div class="mtg-card mtg-card-margin">
@@ -13,44 +13,28 @@
             <label for="email">Correo electrónico</label>
             <input type="email" id="email" name="email" required autocomplete="email" placeholder="ej. nombre@correo.com">
 
-            <label for="tipo">¿Qué tienes?</label>
-            <select id="tipo" name="tipo" required>
-                <option value="">Elige una opción</option>
-                <option value="coleccion-completa">Una colección completa</option>
-                <option value="mazos-albumes">Mazos montados y álbumes</option>
-                <option value="cartas-valor">Solo las cartas que sé que valen algo</option>
-                <option value="no-lo-se">No lo sé, lo heredé o me lo dejaron</option>
-            </select>
-
             <label for="volumen">¿Cuántas cartas, más o menos?</label>
             <select id="volumen" name="volumen" required>
                 <option value="">Elige una opción</option>
                 <option value="menos-500">Menos de 500</option>
                 <option value="500-1000">Entre 500 y 1.000</option>
-                <option value="mas-1000">Más de 1.000 (pasa de 2 kg)</option>
+                <option value="mas-1000">Más de 1.000</option>
                 <option value="ni-idea">Ni idea</option>
             </select>
 
-            <label for="provincia">Provincia</label>
-            <input type="text" id="provincia" name="provincia" required placeholder="ej. Madrid">
-
-            <label for="mensaje">Cuéntanos algo más (opcional)</label>
-            <textarea id="mensaje" name="mensaje" rows="4" placeholder="ej. lo dejé en 2018, tengo cuatro mazos de Commander y dos álbumes llenos"></textarea>
-
             <%- include('partials/atajo-envio') %>
-            </div>
 
-            <%- include('partials/form-legal') %>
+            <label for="mensaje">¿Algo más que debamos saber? (opcional)</label>
+            <textarea id="mensaje" name="mensaje" rows="3" placeholder="ej. lo dejé en 2018, tengo cuatro mazos de Commander y dos álbumes llenos"></textarea>
 
             <button type="submit" class="btn-mythic">Enviar y recibir la etiqueta</button>
+            <p class="form-nota-envio">Sin compromiso: recibir la etiqueta no te obliga a vender</p>
+
+            <%- include('partials/form-legal') %>
         </form>
 
         <p class="center-text text-muted">¿Tienes la colección en ManaBox?
             <a href="/presupuesto-manabox" class="link-mythic">Pega el enlace y te presupuestamos en minutos</a>
-        </p>
-
-        <p class="center-text text-muted">¿Prefieres escribir directamente?
-            <a href="mailto:contacto@vendercartasmagic.es?subject=Quiero%20vender%20mi%20coleccion%20de%20cartas%20Magic">contacto@vendercartasmagic.es</a>
         </p>
     </div>
 
@@ -59,11 +43,11 @@
         <div class="simple-steps">
             <div class="step">
                 <div class="step-number">1</div>
-                <p>Te contestamos con la etiqueta de Correos prepagada y la dirección de envío</p>
+                <p>Te contestamos con la etiqueta de Correos, ya pagada</p>
             </div>
             <div class="step">
                 <div class="step-number">2</div>
-                <p>Mandas la caja y la valoramos en un día laborable desde que llega</p>
+                <p>Dejas la caja en cualquier oficina y la valoramos en un día laborable desde que llega</p>
             </div>
             <div class="step">
                 <div class="step-number">3</div>
@@ -85,4 +69,8 @@
         </ul>
         <p class="center-text"><a href="/aviso-legal" class="link-mythic">Leer las condiciones completas</a></p>
     </div>
+
+    <p class="center-text text-muted">¿Prefieres escribir directamente?
+        <a href="mailto:contacto@vendercartasmagic.es?subject=Quiero%20vender%20mi%20coleccion%20de%20cartas%20Magic">contacto@vendercartasmagic.es</a>
+    </p>
 </div>

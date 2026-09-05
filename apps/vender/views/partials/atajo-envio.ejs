@@ -1,11 +1,5 @@
 <div class="atajo-envio">
-    <label class="atajo-check">
-        <input type="checkbox" id="decidido" name="decidido" value="on">
-        <span>Lo tengo decidido: quiero vender y prefiero recibir la etiqueta ya</span>
-    </label>
-    <div class="atajo-campo">
-        <label for="direccion">Dirección para la etiqueta</label>
-        <textarea id="direccion" name="direccion" rows="3" placeholder="ej. Calle Mayor 1, 3º B&#10;28001 Madrid (Madrid)"></textarea>
-        <p class="form-legal">Se usa solo para generar la etiqueta de envío y la devolución si al final no hay acuerdo. Si prefieres no darla ahora, deja la casilla sin marcar y te la pedimos por correo.</p>
-    </div>
+    <label for="direccion">Dirección para mandarte la etiqueta</label>
+    <textarea id="direccion" name="direccion" rows="3" autocomplete="street-address" placeholder="ej. Calle Mayor 1, 3º B&#10;28001 Madrid (Madrid)"></textarea>
+    <p class="atajo-nota">Si la dejas, te mando la etiqueta ya en el primer correo. Si prefieres no darla todavía, déjala en blanco y te contesto igual</p>
 </div>

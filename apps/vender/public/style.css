@@ -20,6 +20,14 @@
     --transition: all 0.3s ease;
 }
 
+/* Sin esto el padding se suma al ancho: los contenedores y los campos del formulario
+   se salian de la pantalla en movil y el texto quedaba cortado por la derecha. */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 /* Estilos Globales */
 body {
     background-color: var(--mtg-bg-dark);
@@ -661,53 +669,36 @@ ol.plain-list li::before {
     margin-top: 1.5rem;
 }
 
-/* Atajo para quien ya ha decidido vender: la direccion solo aparece al marcar la casilla,
-   asi no se pide una direccion postal a quien todavia esta mirando. Sin JavaScript. */
+/* La direccion se pide junto al resto de campos, no detras de una casilla: es el dato que
+   permite mandar la etiqueta en el primer correo, asi que se ensena y se deja opcional. */
 .atajo-envio {
     background: rgba(245, 144, 30, 0.08);
     border: 1px solid var(--mtg-primary);
     border-radius: var(--radius-md);
     color: var(--mtg-text-main);
     padding: 14px;
-    margin: 8px 0 16px;
+    margin: 1rem 0 0.4rem;
 }
 
-.atajo-check {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    cursor: pointer;
-    font-weight: 600;
-    margin: 0;
-}
-
-.atajo-check input {
-    width: 18px;
-    height: 18px;
-    margin: 2px 0 0;
-    flex-shrink: 0;
-    cursor: pointer;
-    accent-color: var(--mtg-primary);
-}
-
-.atajo-campo {
-    margin-top: 12px;
-}
-
-/* Solo se esconde si el navegador entiende :has(). Si no, se queda visible, que es
-   preferible a que quien marque la casilla no pueda escribir la direccion. */
-@supports selector(.x:has(.y)) {
-    .atajo-campo {
-        display: none;
-    }
-}
-
-.atajo-envio:has(input:checked) .atajo-campo {
+.atajo-envio label {
     display: block;
+    font-weight: 600;
+    margin: 0 0 0.4rem;
 }
 
-.atajo-campo .form-legal {
-    margin-top: 6px;
+.atajo-nota {
+    font-size: 0.82rem;
+    color: var(--mtg-text-muted);
+    line-height: 1.5;
+    margin: 0.5rem 0 0;
+}
+
+/* Va pegada al boton, que es donde se decide si se envia o se abandona. */
+.form-nota-envio {
+    font-size: 0.85rem;
+    color: var(--mtg-text-muted);
+    text-align: center;
+    margin: 0.6rem 0 0;
 }
 
 /* Columna estrecha para las paginas de formulario: sin esto los bloques de despues

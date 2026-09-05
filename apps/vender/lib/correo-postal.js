@@ -30,15 +30,22 @@ const cuerpoTexto = ({ nombre, direccion }) => [
   'vendercartasmagic.es'
 ].join('\n');
 
-const notasHtml = ({ email, provincia, queTiene, volumen, mensaje, direccion }) => [
+const notasHtml = ({ email, volumen, mensaje, direccion }) => [
   direccion ? notaDireccion(direccion) : '',
-  notaHtml(`Correo: ${escaparHtml(email)} &middot; Provincia: ${escaparHtml(provincia)}`),
-  notaHtml(`Qué tiene: ${escaparHtml(queTiene)} &middot; Volumen: ${escaparHtml(volumen)}`),
+  notaHtml(`Correo: ${escaparHtml(email)}`),
+  notaHtml(`Volumen: ${escaparHtml(volumen.largo)}`),
   notaHtml(`Dice el cliente: ${escaparHtml(mensaje || '(nada)')}`)
 ].filter(Boolean).join('\n');
 
+// El asunto es lo unico que se lee antes de decidir si la etiqueta sale ya, asi que lleva
+// el volumen, que marca el tamaño de la etiqueta, y la localidad cuando se puede generar.
+const asunto = ({ nombre, volumen, direccion }) => {
+  const donde = direccion?.localidad ? `, ${direccion.localidad}` : '';
+  return `Nueva colección: ${nombre} (${volumen.corto}${donde})${direccion ? ' - con dirección' : ''}`;
+};
+
 const componerCorreoPostal = (datos) => ({
-  subject: `Nueva colección: ${datos.nombre} (${datos.provincia})${datos.direccion ? ' - con dirección' : ''}`,
+  subject: asunto(datos),
   replyTo: datos.email,
   text: cuerpoTexto(datos),
   html: envolver({ cuerpo: cuerpoHtml(datos), notas: notasHtml(datos) })

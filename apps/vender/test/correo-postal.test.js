@@ -1,16 +1,24 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { componerCorreo } = require('../lib/lead');
+const { leerDireccion } = require('../lib/direccion');
 
 const base = {
-  nombre: 'Jordi', email: 'jordi@correo.com', provincia: 'Valencia',
-  tipo: 'mazos-albumes', volumen: '500-1000', mensaje: 'varios mazos de Commander'
+  nombre: 'Jordi', email: 'jordi@correo.com',
+  volumen: '500-1000', mensaje: 'varios mazos de Commander'
 };
 
-test('el asunto identifica al cliente y su provincia', () => {
+test('el asunto identifica al cliente y el volumen que dice tener', () => {
   const c = componerCorreo(base);
   assert.match(c.subject, /Jordi/);
-  assert.match(c.subject, /Valencia/);
+  assert.match(c.subject, /500/);
+});
+
+test('el asunto lleva la localidad cuando el cliente ha dejado la direccion', () => {
+  const direccion = leerDireccion({ direccion: 'Calle Mayor 1\n46110 Godella (Valencia)' });
+  const c = componerCorreo({ ...base, direccion });
+  assert.match(c.subject, /Godella/);
+  assert.match(c.subject, /con direcci[oó]n/i);
 });
 
 test('el correo va listo para reenviar: replyTo al cliente y cuerpo html', () => {
@@ -42,7 +50,7 @@ test('lo que dijo el cliente va en las notas internas, no en el cuerpo', () => {
   const marca = html.indexOf('id="notas-internas"');
   assert.ok(marca > 0);
   assert.ok(html.indexOf('varios mazos de Commander') > marca);
-  assert.ok(html.indexOf('Mazos montados') > marca, 'el desplegable es informacion para ti');
+  assert.ok(html.indexOf('Entre 500') > marca, 'el volumen es informacion para ti');
 });
 
 test('sigue habiendo texto plano con lo esencial', () => {

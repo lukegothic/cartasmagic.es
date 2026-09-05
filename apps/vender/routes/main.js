@@ -8,7 +8,7 @@ const { mensajeDeError } = require('../lib/mensajes-error');
 const PROCESO_FAQ = [
   {
     q: '¿Cómo vendo mi colección de cartas Magic?',
-    a: 'Rellenas el formulario contando qué tienes, te mandamos una etiqueta de Correos prepagada que pagamos nosotros, envías el paquete y en 24 horas desde que llega recibes un precio por correo. Si lo aceptas, cobras por transferencia en 24 horas. No hay listados que preparar ni negociación.'
+    a: 'Rellenas el formulario en un minuto: nombre, correo y cuántas cartas son. Te mandamos una etiqueta de Correos que pagamos nosotros, envías el paquete y un día laborable después de que llegue recibes un precio por correo. Si lo aceptas, cobras por transferencia en 24 horas. No hay listados que preparar ni negociación.'
   },
   {
     q: '¿Tengo que hacer un listado de mis cartas?',
@@ -20,7 +20,7 @@ const PROCESO_FAQ = [
   },
   {
     q: '¿Quién paga el envío?',
-    a: 'El envío de ida lo pagamos nosotros: te mandamos una etiqueta de Correos prepagada. Solo tienes que imprimirla y dejar el paquete en una oficina.'
+    a: 'El envío de ida lo pagamos nosotros: te mandamos una etiqueta de Correos prepagada. No hace falta ni imprimirla, la enseñas en el móvil en cualquier oficina.'
   },
   {
     q: '¿Y si no me gusta el precio?',
@@ -71,7 +71,7 @@ module.exports = (app) => {
   app.get('/', (req, res) => {
     res.render('index', {
       title: 'Vender cartas Magic: mándalas y cobra sin listar nada | VenderCartasMagic.es',
-      description: 'Compramos tu colección de cartas Magic. Te mandamos la etiqueta de envío prepagada, valoramos en 24 horas y cobras por transferencia. Sin listados ni negociación.',
+      description: 'Compramos tu colección de cartas Magic. Pides la etiqueta en un minuto, la mandas gratis y cobras por transferencia. Sin listados, sin fotos y sin negociación.',
       keywords: 'vender cartas magic, vender coleccion cartas magic, donde vender cartas magic, vender cartas magic españa, comprar colecciones magic',
       canonical: 'https://vendercartasmagic.es',
       og_title: 'Vender cartas Magic: mándalas y cobra sin listar nada',
@@ -115,7 +115,7 @@ module.exports = (app) => {
             description: 'Proceso para vender una colección de cartas Magic sin prepararla ni listarla.',
             totalTime: 'P3D',
             step: [
-              { '@type': 'HowToStep', position: 1, name: 'Cuenta qué tienes', text: 'Rellenas el formulario contando qué mazos, álbumes o colecciones tienes. Si ya lo tienes decidido, dejas ahí la dirección y te saltas un paso.' },
+              { '@type': 'HowToStep', position: 1, name: 'Cuenta qué tienes', text: 'Rellenas el formulario: nombre, correo y cuántas cartas son. Si dejas también la dirección, la etiqueta llega en el primer correo.' },
               { '@type': 'HowToStep', position: 2, name: 'Recibe la etiqueta', text: 'Te mandamos una etiqueta de Correos prepagada. El envío lo pagamos nosotros.' },
               { '@type': 'HowToStep', position: 3, name: 'Envía la caja', text: 'Metes las cartas en una caja, pegas la etiqueta y la dejas en una oficina de Correos.' },
               { '@type': 'HowToStep', position: 4, name: 'Recibe el precio', text: 'En un día laborable desde que llega el paquete recibes un precio cerrado por correo.' },
@@ -130,7 +130,7 @@ module.exports = (app) => {
   const vistaValoracion = (res, extra = {}) =>
     res.render('valoracion-cartas-magic', conMensaje({
       title: 'Cuánto vale mi colección de cartas Magic | Valoración en 24 horas',
-      description: 'Te decimos cuánto vale tu colección de cartas Magic en 24 horas desde que llega. Envío pagado, precio cerrado y pago por transferencia.',
+      description: 'Te decimos cuánto vale tu colección de cartas Magic un día laborable después de que llegue. Envío pagado, precio cerrado y pago por transferencia.',
       keywords: 'cuanto valen mis cartas magic, valorar coleccion cartas magic, valoracion cartas magic, tasacion cartas magic',
       canonical: 'https://vendercartasmagic.es/valoracion-cartas-magic',
       og_title: 'Cuánto vale mi colección de cartas Magic',
@@ -152,7 +152,7 @@ module.exports = (app) => {
       enviado: false,
       errorCode: null,
       etiquetaConversion: 'valoracion',
-      textoRecibido: 'Te escribimos a tu correo con la etiqueta de envío prepagada y la dirección. Si no lo ves en unas horas, mira la carpeta de spam.',
+      textoRecibido: 'Te escribimos a tu correo con la etiqueta de envío y la dirección. Si no lo ves en unas horas, mira la carpeta de spam.',
       ...extra
     }));
 
