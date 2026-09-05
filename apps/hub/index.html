@@ -96,50 +96,8 @@
 
         /* ===== MOBILE-FIRST BASE (< 600px) ===== */
 
-        /* Background effects */
-        .bg-gradient {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
-
-        .bg-gradient::before {
-            content: '';
-            position: absolute;
-            top: -30%;
-            left: -10%;
-            width: 280px;
-            height: 280px;
-            background: radial-gradient(circle, rgba(124, 92, 191, 0.08) 0%, transparent 70%);
-            animation: float 20s ease-in-out infinite;
-        }
-
-        .bg-gradient::after {
-            content: '';
-            position: absolute;
-            bottom: -20%;
-            right: -10%;
-            width: 320px;
-            height: 320px;
-            background: radial-gradient(circle, rgba(91, 143, 217, 0.06) 0%, transparent 70%);
-            animation: float 25s ease-in-out infinite reverse;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0); }
-            33% { transform: translate(15px, -20px); }
-            66% { transform: translate(-10px, 15px); }
-        }
-
         /* Main layout — mobile base */
         .container {
-            position: relative;
-            z-index: 1;
             width: 100%;
             max-width: 800px;
             padding: 2rem 1.25rem;
@@ -179,7 +137,9 @@
             margin-top: 0.5rem;
         }
 
-        /* Mana symbols row — loading bar animation */
+        /* Los cinco colores, quietos: son un adorno de marca, no un indicador de que
+           algo esta cargando. .ms-cost pinta la ficha con el color real de cada mana;
+           sin ella el glifo hereda currentColor y los cinco salen del mismo tono. */
         .mana-symbols {
             display: flex;
             gap: 0.75rem;
@@ -187,32 +147,9 @@
             margin-top: 1.25rem;
         }
 
-        /* .ms-cost pinta la ficha con el color real de cada mana: sin ella el glifo
-           hereda currentColor y los cinco simbolos salen del mismo tono. */
         .mana-symbols .ms {
             font-size: 1.4rem;
-            opacity: 0.2;
-            /* La escala necesita un contexto propio: .ms trae su transform y el
-               vertical-align de inline dejaba el simbolo bailando al crecer. */
-            display: block;
-            transform-origin: center;
-            animation: mana-pulse 4s ease-in-out infinite;
-        }
-
-        /* Cuatro decimas entre simbolos: la onda recorre la fila mientras el primero
-           sigue subiendo, asi el grupo se lee como un solo movimiento y no como cinco
-           parpadeos sueltos. */
-        .mana-symbols .ms:nth-child(1) { animation-delay: 0s; }
-        .mana-symbols .ms:nth-child(2) { animation-delay: 0.4s; }
-        .mana-symbols .ms:nth-child(3) { animation-delay: 0.8s; }
-        .mana-symbols .ms:nth-child(4) { animation-delay: 1.2s; }
-        .mana-symbols .ms:nth-child(5) { animation-delay: 1.6s; }
-
-        /* Sube durante media vuelta y baja durante la otra media: el ciclo simetrico
-           con ease-in-out es lo que hace que respire en vez de parpadear. */
-        @keyframes mana-pulse {
-            0%, 100% { opacity: 0.2; transform: scale(0.9); }
-            50% { opacity: 1; transform: scale(1.25); }
+            opacity: 0.75;
         }
 
         /* Enlace por defecto: sin esto el navegador pinta el azul y el morado de visitado,
@@ -255,114 +192,37 @@
             line-height: 1.7;
         }
 
-        /* Cards grid — single column on mobile */
         .cards {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1rem;
             width: 100%;
         }
 
+        /* El unico destino de la pagina: se pinta como boton, no como tarjeta, para que
+           en movil se lea como algo que se toca. */
         .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 1.5rem 1.25rem;
+            background: var(--accent-sell);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
             text-decoration: none;
-            color: inherit;
+            color: #1a1206;
             display: flex;
             flex-direction: column;
-            gap: 0.6rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            border-radius: 14px 14px 0 0;
-        }
-
-        .card-sell::before { background: linear-gradient(90deg, var(--accent-sell), #d4943a); }
-        .card-buy::before { background: linear-gradient(90deg, var(--accent-buy), #2ea060); }
-
-        .card-icon {
-            font-size: 1.75rem;
-            line-height: 1;
-            opacity: 0.85;
-        }
-
-        .card-sell .card-icon { color: var(--accent-sell); }
-        .card-buy .card-icon { color: var(--accent-buy); }
-
-        .card-domain {
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .card-sell .card-domain { color: var(--accent-sell); }
-        .card-buy .card-domain { color: var(--accent-buy); }
-
-        .card h3 {
-            font-size: 1rem;
-            font-weight: 700;
-            line-height: 1.3;
-        }
-
-        .card p {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        .card-arrow {
-            margin-top: auto;
-            padding-top: 0.5rem;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.15rem;
+            text-align: center;
+            font-weight: 700;
         }
-
-        .card-sell .card-arrow { color: var(--accent-sell); }
-        .card-buy .card-arrow { color: var(--accent-buy); }
 
         .card-nota {
             font-size: 0.78rem;
-            color: var(--text-secondary);
-            opacity: 0.8;
+            font-weight: 400;
+            opacity: 0.75;
         }
 
         .cards-nota {
-            grid-column: 1 / -1;
             text-align: center;
             font-size: 0.85rem;
             color: var(--text-secondary);
-            margin-top: 0.25rem;
-        }
-
-        /* Coming soon state */
-        .card-coming-soon {
-            opacity: 0.55;
-            cursor: default;
-        }
-
-        .card-badge {
-            margin-top: auto;
-            padding-top: 0.5rem;
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--accent-buy);
-            opacity: 0.8;
+            margin-top: 1rem;
         }
 
         /* Footer */
@@ -380,22 +240,6 @@
 
         /* ===== TABLET (>= 600px) ===== */
         @media (min-width: 600px) {
-            .bg-gradient::before {
-                width: 500px;
-                height: 500px;
-            }
-
-            .bg-gradient::after {
-                width: 600px;
-                height: 600px;
-            }
-
-            @keyframes float {
-                0%, 100% { transform: translate(0, 0); }
-                33% { transform: translate(30px, -40px); }
-                66% { transform: translate(-20px, 30px); }
-            }
-
             .container {
                 padding: 2rem 1.5rem;
                 gap: 3rem;
@@ -429,38 +273,16 @@
                 font-size: 0.95rem;
             }
 
-            /* Las columnas se cuentan solas y la rejilla se centra: con una sola tarjeta
-               queda en medio, y al añadir la segunda se reparten sin tocar nada. */
+            /* El boton deja de ocupar todo el ancho: a partir de tablet una linea de
+               texto estirada a 800px se lee peor que una centrada. */
             .cards {
-                grid-template-columns: repeat(auto-fit, minmax(0, 22rem));
-                justify-content: center;
-                gap: 1.25rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
             }
 
             .card {
-                border-radius: 16px;
-                padding: 2rem 1.5rem;
-                gap: 0.75rem;
-            }
-
-            .card::before {
-                border-radius: 16px 16px 0 0;
-            }
-
-            .card-icon {
-                font-size: 2.2rem;
-            }
-
-            .card-domain {
-                font-size: 0.8rem;
-            }
-
-            .card h3 {
-                font-size: 1.1rem;
-            }
-
-            .card p {
-                font-size: 0.88rem;
+                padding: 1.15rem 2.5rem;
             }
 
             footer {
@@ -506,8 +328,6 @@
     </script>
 </head>
 <body>
-    <div class="bg-gradient" aria-hidden="true"></div>
-
     <main class="container">
         <header>
             <h1 class="logo-text">CartasMagic<span class="logo-tld">.es</span></h1>
@@ -533,21 +353,15 @@
         </section>
 
         <nav class="cards" aria-label="Nuestros servicios">
-            <a href="https://vendercartasmagic.es/valoracion-cartas-magic" class="card card-sell" rel="noopener">
-                <i class="ms ms-loyalty-up card-icon" aria-hidden="true"></i>
-                <span class="card-domain">vendercartasmagic.es</span>
-                <h3>Vende tu colección de cartas Magic</h3>
-                <p>
-                    Envío pagado, valoración en un día laborable y pago por
-                    transferencia. Vendedor en Cardmarket desde 2011 con más de
-                    3.200 valoraciones positivas.
-                </p>
-                <span class="card-arrow" aria-hidden="true">Saber cuánto vale mi colección &rarr;</span>
+            <a href="https://vendercartasmagic.es/valoracion-cartas-magic" class="card" rel="noopener">
+                Saber cuánto vale mi colección
                 <span class="card-nota">Tarda un minuto y es gratis</span>
             </a>
             <p class="cards-nota">
-                O primero mira <a href="https://vendercartasmagic.es" rel="noopener">cómo funciona vender
-                una colección de cartas Magic</a>: el proceso, los plazos y qué compramos.
+                Vendedor en Cardmarket desde 2011 con más de 3.200 valoraciones
+                positivas. O primero mira <a href="https://vendercartasmagic.es" rel="noopener">cómo
+                funciona vender una colección de cartas Magic</a>: el proceso, los plazos
+                y qué compramos.
             </p>
         </nav>
 
