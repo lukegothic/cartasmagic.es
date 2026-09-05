@@ -145,3 +145,31 @@ test('descarta las entradas con el frontmatter roto sin arrastrar a las demas', 
 test('formatea la fecha en castellano', () => {
   assert.equal(formatearFecha('2026-09-05'), '5 de septiembre de 2026');
 });
+
+// Los enlaces a vender que se escriben dentro del markdown tienen que salir medidos
+// igual que los de las plantillas, o el articulo que los lleve no se puede atribuir.
+test('anade los parametros de medicion a los enlaces hacia vender', () => {
+  const dir = conDirectorio({
+    'valor.md':
+      '---\ntitulo: T\ndescripcion: d\nfecha: 2026-09-05\n---\n\n' +
+      'Mira [la valoracion](https://vendercartasmagic.es/valoracion-cartas-magic).\n'
+  });
+
+  const [entrada] = leerEntradas(dir);
+
+  assert.match(entrada.html, /utm_source=cartasmagic/);
+  assert.match(entrada.html, /utm_campaign=articulo-valor/);
+});
+
+test('no toca los enlaces internos del propio hub', () => {
+  const dir = conDirectorio({
+    'a.md':
+      '---\ntitulo: T\ndescripcion: d\nfecha: 2026-09-05\n---\n\n' +
+      'Ver [la otra guia](/blog/otra-guia).\n'
+  });
+
+  const [entrada] = leerEntradas(dir);
+
+  assert.match(entrada.html, /href="\/blog\/otra-guia"/);
+  assert.ok(!entrada.html.includes('utm_'));
+});

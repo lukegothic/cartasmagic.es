@@ -1,5 +1,6 @@
 const path = require('node:path');
 const { leerEntradas } = require('../lib/contenido');
+const { enlaceVender, VENDER, VALORACION } = require('../lib/enlaces');
 
 // El contenido solo cambia al desplegar, asi que se lee al arrancar y no en cada
 // peticion.
@@ -64,7 +65,9 @@ module.exports = (app) => {
         'Qué determina el precio de una carta Magic, qué colecciones valen dinero y cómo vender la tuya sin listarla.',
       conNav: false,
       ld_json: grafo(),
-      entradas: ENTRADAS
+      entradas: ENTRADAS,
+      cta: enlaceVender(VALORACION, 'home-cta'),
+      comoFunciona: enlaceVender(VENDER, 'home-proceso')
     });
   });
 
@@ -85,7 +88,9 @@ module.exports = (app) => {
         url: `${PORTADA}/blog`,
         isPartOf: { '@id': 'https://cartasmagic.es/#web' }
       }),
-      entradas: ENTRADAS
+      entradas: ENTRADAS,
+      cta: enlaceVender(VALORACION, 'blog-indice'),
+      comoFunciona: enlaceVender(VENDER, 'blog-indice-proceso')
     });
   });
 
@@ -114,7 +119,8 @@ module.exports = (app) => {
         author: { '@id': 'https://cartasmagic.es/#organizacion' },
         publisher: { '@id': 'https://cartasmagic.es/#organizacion' }
       }),
-      entrada
+      entrada,
+      cta: enlaceVender(VALORACION, `articulo-${entrada.slug}`)
     });
   });
 
@@ -165,7 +171,8 @@ module.exports = (app) => {
       og_description: 'La página que buscas no existe.',
       conNav: true,
       noindex: true,
-      ld_json: grafo()
+      ld_json: grafo(),
+      cta: enlaceVender(VALORACION, '404')
     });
   });
 };

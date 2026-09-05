@@ -2,11 +2,31 @@ const fs = require('node:fs');
 const path = require('node:path');
 const matter = require('gray-matter');
 const MarkdownIt = require('markdown-it');
+const { enlaceVender } = require('./enlaces');
 
 // html: false escapa cualquier etiqueta que venga en el markdown. Las entradas las
 // genera un proceso automatizado, asi que el cuerpo se trata como texto, no como HTML
 // de confianza.
 const md = new MarkdownIt({ html: false, linkify: true, typographer: false });
+
+// Los enlaces a vender escritos dentro del markdown salen medidos con la campana del
+// articulo, para no depender de que quien escribe se acuerde de ponerlos.
+const VENDER = 'https://vendercartasmagic.es';
+
+const enlaceMedido = (md_, campana) => {
+  const original =
+    md_.renderer.rules.link_open ||
+    ((tokens, i, opciones, env, self) => self.renderToken(tokens, i, opciones));
+
+  return (tokens, i, opciones, env, self) => {
+    const href = tokens[i].attrGet('href');
+    if (href && href.startsWith(VENDER)) {
+      tokens[i].attrSet('href', enlaceVender(href.slice(VENDER.length) || '/', campana));
+      tokens[i].attrSet('rel', 'noopener');
+    }
+    return original(tokens, i, opciones, env, self);
+  };
+};
 
 // El slug sale del nombre del fichero y acaba tal cual en la URL y en el canonical.
 const SLUG_VALIDO = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -57,8 +77,17 @@ const leerEntrada = (directorio, fichero) => {
     fecha,
     fechaLegible: formatearFecha(fecha),
     keywords: keywords || '',
-    html: md.render(content)
+    html: renderizar(content, `articulo-${slug}`)
   };
+};
+
+// El renderizador se configura por articulo porque la campana cambia con el slug.
+const renderizar = (texto, campana) => {
+  const anterior = md.renderer.rules.link_open;
+  md.renderer.rules.link_open = enlaceMedido(md, campana);
+  const html = md.render(texto);
+  md.renderer.rules.link_open = anterior;
+  return html;
 };
 
 const leerEntradas = (directorio) => {

@@ -55,7 +55,41 @@ próximos seis meses. Si no convierte, el esfuerzo de captación se va a conteni
 Hasta tener esa respuesta, el plan de contenido se mantiene en el tamaño mínimo que
 cubre la capacidad real de compra, entre cuatro y doce colecciones al mes.
 
+## Enlaces entre los dos dominios
+
+Los dos sitios se enlazan mutuamente y todos los enlaces llevan parametros de medicion,
+para saber que pieza de contenido trae cada lead.
+
+### Del hub hacia vender
+
+Los construye `apps/hub/lib/enlaces.js`. Ninguna plantilla escribe la URL a mano: si un
+enlace no pasa por ahi, no se mide, y el modulo obliga a declarar la campaña.
+
+Los enlaces escritos dentro del markdown de un articulo tambien se reescriben al
+renderizar, asi que una guia nueva no puede olvidarse de medir.
+
+| Origen | utm_campaign |
+|---|---|
+| Portada, boton principal | `home-cta` |
+| Portada, enlace al proceso | `home-proceso` |
+| Indice del blog | `blog-indice` |
+| Cada articulo | `articulo-<slug>` |
+| Pagina 404 | `404` |
+
+Todos comparten `utm_source=cartasmagic` y `utm_medium=hub`.
+
+### De vender hacia el hub
+
+Un enlace en el pie hacia las guias, con `utm_source=vendercartasmagic`,
+`utm_medium=footer` y `utm_campaign=guias`. Sin el, el enlazado solo iba en una
+direccion y el blog no recibia nada del trafico que vender ya tiene.
+
+### Que se responde con esto
+
+En GA4, filtrando por `session_campaign`, se puede saber que articulo trae visitas que
+acaban rellenando el formulario. Es lo que decide si merece la pena seguir escribiendo, y
+sobre que temas.
+
 ## Pendiente
 
-- Regenerar el QR de la tarjeta con la URL de arriba y reimprimir
 - Revisar los datos a las ocho semanas desde la primera tarjeta con el QR nuevo
