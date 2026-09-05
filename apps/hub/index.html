@@ -12,7 +12,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CartasMagic.es | Compramos tu colección de cartas Magic en España</title>
-    <meta name="description" content="Compramos colecciones de cartas Magic: The Gathering en toda España. Envío pagado, valoración en 24 horas y pago por transferencia. Sin listados ni negociación.">
+    <meta name="description" content="Compramos tu colección de cartas Magic: The Gathering en toda España. Pides la etiqueta en un minuto, el envío lo pagamos nosotros y cobras por transferencia. Sin listados ni negociación.">
     <meta name="keywords" content="cartas magic, vender cartas magic, vender coleccion cartas magic, magic the gathering españa, cartas magic españa">
     <meta name="author" content="CartasMagic.es">
     <meta name="robots" content="index, follow">
@@ -199,21 +199,20 @@
             animation: mana-pulse 4s ease-in-out infinite;
         }
 
-        /* Medio segundo entre simbolos: la onda cruza la fila en dos segundos y los dos
-           restantes el grupo descansa. Repartir los cinco por el ciclo entero deja
-           siempre alguno encendido y el conjunto se lee como agitado. */
+        /* Cuatro decimas entre simbolos: la onda recorre la fila mientras el primero
+           sigue subiendo, asi el grupo se lee como un solo movimiento y no como cinco
+           parpadeos sueltos. */
         .mana-symbols .ms:nth-child(1) { animation-delay: 0s; }
-        .mana-symbols .ms:nth-child(2) { animation-delay: 0.5s; }
-        .mana-symbols .ms:nth-child(3) { animation-delay: 1s; }
-        .mana-symbols .ms:nth-child(4) { animation-delay: 1.5s; }
-        .mana-symbols .ms:nth-child(5) { animation-delay: 2s; }
+        .mana-symbols .ms:nth-child(2) { animation-delay: 0.4s; }
+        .mana-symbols .ms:nth-child(3) { animation-delay: 0.8s; }
+        .mana-symbols .ms:nth-child(4) { animation-delay: 1.2s; }
+        .mana-symbols .ms:nth-child(5) { animation-delay: 1.6s; }
 
-        /* Sube y baja en el primer 40% y descansa el resto: el reposo largo es lo que
-           hace que respire en vez de parpadear. */
+        /* Sube durante media vuelta y baja durante la otra media: el ciclo simetrico
+           con ease-in-out es lo que hace que respire en vez de parpadear. */
         @keyframes mana-pulse {
-            0%, 100% { opacity: 0.2; transform: scale(1); }
-            20% { opacity: 0.9; transform: scale(1.15); }
-            40% { opacity: 0.2; transform: scale(1); }
+            0%, 100% { opacity: 0.2; transform: scale(0.9); }
+            50% { opacity: 1; transform: scale(1.25); }
         }
 
         /* Enlace por defecto: sin esto el navegador pinta el azul y el morado de visitado,
@@ -334,6 +333,12 @@
 
         .card-sell .card-arrow { color: var(--accent-sell); }
         .card-buy .card-arrow { color: var(--accent-buy); }
+
+        .card-nota {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            opacity: 0.8;
+        }
 
         /* Coming soon state */
         .card-coming-soon {
@@ -498,7 +503,7 @@
     <main class="container">
         <header>
             <h1 class="logo-text">CartasMagic<span class="logo-tld">.es</span></h1>
-            <p class="tagline">Compramos colecciones de cartas Magic en toda España</p>
+            <p class="tagline">Compramos tu colección de cartas Magic en toda España</p>
             <div class="mana-symbols" aria-label="Los cinco colores de maná de Magic">
                 <i class="ms ms-cost ms-w" title="Maná blanco"></i>
                 <i class="ms ms-cost ms-u" title="Maná azul"></i>
@@ -511,23 +516,26 @@
         <section class="section-intro">
             <h2>¿Tienes una colección de Magic parada en un armario?</h2>
             <p>
-                Te la compramos entera. Mandas los mazos y los álbumes con una
-                etiqueta de envío que pagamos nosotros, en 24 horas tienes un precio
-                cerrado y cobras por transferencia. Sin tener que listar las cartas, fotografiarlas ni negociar.
+                Te la compramos entera. Pides la etiqueta de envío en un minuto, metes
+                los mazos y los álbumes en una caja y la dejas en Correos: el envío lo
+                pagamos nosotros. Un día laborable después de que llegue tienes un precio
+                cerrado, y si lo aceptas cobras por transferencia en 24 horas.
+                Sin listar las cartas, sin fotografiarlas y sin negociar.
             </p>
         </section>
 
         <nav class="cards" aria-label="Nuestros servicios">
-            <a href="https://vendercartasmagic.es" class="card card-sell" rel="noopener">
+            <a href="https://vendercartasmagic.es/valoracion-cartas-magic" class="card card-sell" rel="noopener">
                 <i class="ms ms-loyalty-up card-icon" aria-hidden="true"></i>
                 <span class="card-domain">vendercartasmagic.es</span>
                 <h3>Vende tu colección de cartas Magic</h3>
                 <p>
-                    Envío pagado, valoración en un día laborable y pago
-                    por transferencia. Vendedor en Cardmarket desde 2011 con más de
+                    Envío pagado, valoración en un día laborable y pago por
+                    transferencia. Vendedor en Cardmarket desde 2011 con más de
                     3.200 valoraciones positivas.
                 </p>
-                <span class="card-arrow" aria-hidden="true">Quiero vender mi colección &rarr;</span>
+                <span class="card-arrow" aria-hidden="true">Pedir la etiqueta de envío &rarr;</span>
+                <span class="card-nota">Tarda un minuto y no te obliga a vender</span>
             </a>
         </nav>
 
