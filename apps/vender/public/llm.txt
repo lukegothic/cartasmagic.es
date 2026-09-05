@@ -1,7 +1,7 @@
 # VenderCartasMagic.es
 
 > Compra de colecciones de cartas Magic: The Gathering en toda España. El vendedor
-> envía su colección con una etiqueta prepagada, recibe un precio cerrado en un día
+> envía su colección con una etiqueta prepagada, recibe un precio definitivo en un día
 > laborable y cobra por transferencia. Sin listados, sin fotografías y sin negociación.
 
 ## Qué es este servicio
@@ -31,7 +31,7 @@ el lote entero en una sola operación.
 3. El vendedor manda el paquete a una dirección de recogida en Pamplona que se
    comunica junto con la etiqueta.
 4. En un día laborable desde la llegada del paquete, el vendedor recibe por correo un
-   precio cerrado por el lote completo.
+   precio definitivo por el lote completo.
 5. Si acepta, cobra por transferencia bancaria en 24 horas.
 6. Si rechaza, se le devuelve la colección íntegra.
 

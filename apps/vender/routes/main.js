@@ -16,7 +16,7 @@ const PROCESO_FAQ = [
   },
   {
     q: '¿Cuánto tardáis en valorar la colección?',
-    a: 'Un día laborable desde que el paquete llega. Recibes un precio cerrado por correo, sin condiciones ni letra pequeña.'
+    a: 'Un día laborable desde que el paquete llega. Recibes un precio definitivo por correo, sin condiciones ni letra pequeña.'
   },
   {
     q: '¿Quién paga el envío?',
@@ -118,7 +118,7 @@ module.exports = (app) => {
               { '@type': 'HowToStep', position: 1, name: 'Cuenta qué tienes', text: 'Rellenas el formulario: nombre, correo y cuántas cartas son. Si dejas también la dirección, la etiqueta llega en el primer correo.' },
               { '@type': 'HowToStep', position: 2, name: 'Recibe la etiqueta', text: 'Te mandamos una etiqueta de Correos prepagada. El envío lo pagamos nosotros.' },
               { '@type': 'HowToStep', position: 3, name: 'Envía la caja', text: 'Metes las cartas en una caja, pegas la etiqueta y la dejas en una oficina de Correos.' },
-              { '@type': 'HowToStep', position: 4, name: 'Recibe el precio', text: 'En un día laborable desde que llega el paquete recibes un precio cerrado por correo.' },
+              { '@type': 'HowToStep', position: 4, name: 'Recibe el precio', text: 'En un día laborable desde que llega el paquete recibes un precio definitivo por correo.' },
               { '@type': 'HowToStep', position: 5, name: 'Cobra', text: 'Si aceptas, cobras por transferencia en 24 horas.' }
             ]
           }
@@ -130,7 +130,7 @@ module.exports = (app) => {
   const vistaValoracion = (res, extra = {}) =>
     res.render('valoracion-cartas-magic', conMensaje({
       title: 'Cuánto vale mi colección de cartas Magic | Valoración en 24 horas',
-      description: 'Te decimos cuánto vale tu colección de cartas Magic un día laborable después de que llegue. Envío pagado, precio cerrado y pago por transferencia.',
+      description: 'Te decimos cuánto vale tu colección de cartas Magic un día laborable después de que llegue. Envío pagado, precio definitivo y pago por transferencia.',
       keywords: 'cuanto valen mis cartas magic, valorar coleccion cartas magic, valoracion cartas magic, tasacion cartas magic',
       canonical: 'https://vendercartasmagic.es/valoracion-cartas-magic',
       og_title: 'Cuánto vale mi colección de cartas Magic',

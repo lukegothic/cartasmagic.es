@@ -22,7 +22,7 @@ const cuerpoHtml = ({ lead, mazo, presupuesto }) => [
   lista([
     'Etiqueta de Correos prepagada: el envío lo pagamos nosotros',
     'Pago por transferencia dentro de las 24 horas siguientes a que aceptes',
-    'Precio cerrado por el lote entero, sin negociación'
+    'Precio definitivo por el lote entero, sin negociación'
   ]),
   parrafo('El precio sale de la lista que nos has enviado y se confirma al recibir las cartas y comprobar su estado. Si el estado no se corresponde con la lista, te lo diríamos antes de pagar nada.'),
   lead.direccion ? bloqueEtiqueta() : pedirDireccion(),
@@ -40,7 +40,7 @@ const cuerpoTexto = ({ lead, mazo, presupuesto }) => [
   'Qué incluye:',
   '  - Etiqueta de Correos prepagada: el envío lo pagamos nosotros',
   '  - Pago por transferencia dentro de las 24 horas siguientes a que aceptes',
-  '  - Precio cerrado por el lote entero, sin negociación',
+  '  - Precio definitivo por el lote entero, sin negociación',
   '',
   'El precio sale de la lista que nos has enviado y se confirma al recibir las cartas y comprobar su estado.',
   '',
