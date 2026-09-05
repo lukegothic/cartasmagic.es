@@ -19,20 +19,18 @@ casos concretos.
 
 ## Prioridad 1: los que faltan y traen ventas
 
-### 1. Dónde vender cartas Magic en España: todas las opciones
+### 1. Descartado: dónde vender cartas Magic en España
 
-La búsqueda más transaccional que existe en este mercado y ahora mismo no se responde en
-ninguna parte del ecosistema. Comparar con honestidad las cinco vías reales: Cardmarket,
-Wallapop, tiendas físicas, buylists tipo Itaca y vender la colección entera.
+Estaba propuesto como la pieza más importante y los datos de Search Console lo
+desaconsejan. "donde vender cartas magic" ya rankea en vendercartasmagic.es en la
+posición 6 y "como vender cartas magic" en la 9, con la página `como-vender-cartas-magic`
+ya publicada.
 
-Tiene que reconocer abiertamente cuándo conviene otra opción, porque quien tiene diez
-cartas caras y tiempo gana más en Cardmarket. Esa honestidad es lo que hace que el
-artículo se cite y que quien sí encaje confíe.
+Escribirlo en el hub sería competir contra la propia casa por posiciones que ya se
+tienen. Lo que conviene en su lugar es mejorar esa página de vender, que acumula 203
+impresiones en la posición 32.
 
-Hay que coordinarlo con `como-vender-cartas-magic` de vendercartasmagic.es, que ya trata
-las cuatro opciones: el del hub debe ser el comparativo amplio y el de vender el que
-cierra la venta. Conviene revisar los dos juntos para que no compitan por la misma
-búsqueda.
+Ver `reparto-keywords.md` para la frontera entre los dos dominios.
 
 ### 2. Cuánto tarda y cómo se cobra al vender una colección
 

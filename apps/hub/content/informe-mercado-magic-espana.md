@@ -2,7 +2,7 @@
 titulo: Qué compramos y a cuánto
 descripcion: Datos reales de las colecciones de Magic que hemos comprado en España, con los importes que hemos pagado
 fecha: 2026-09-05
-keywords: precio compra colecciones magic, cuanto pagan por cartas magic, vender coleccion magic españa
+keywords: precio compra colecciones magic, cuanto pagan por cartas magic, valor coleccion cartas magic
 ---
 
 Casi nadie publica lo que paga de verdad por una colección de Magic. Se habla de

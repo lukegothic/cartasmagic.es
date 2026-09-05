@@ -54,13 +54,13 @@ const grafo = (...nodos) =>
 module.exports = (app) => {
   app.get('/', (req, res) => {
     res.render('index', {
-      title: 'CartasMagic.es | Cuánto valen tus cartas Magic y cómo venderlas',
+      title: 'CartasMagic.es | Cuánto valen tus cartas Magic',
       description:
         'Guías sobre el valor de las cartas Magic: The Gathering en España. Qué determina el precio de una carta, qué colecciones valen dinero y cómo vender la tuya sin listarla.',
       keywords:
-        'cartas magic, cuanto valen mis cartas magic, valor cartas magic, vender cartas magic, vender coleccion cartas magic, magic the gathering españa',
+        'valor cartas magic, cuanto vale una carta magic, valorar cartas magic, tasar cartas magic, precio cartas magic antiguas',
       canonical: `${PORTADA}/`,
-      og_title: 'CartasMagic.es | Cuánto valen tus cartas Magic y cómo venderlas',
+      og_title: 'CartasMagic.es | Cuánto valen tus cartas Magic',
       og_description:
         'Qué determina el precio de una carta Magic, qué colecciones valen dinero y cómo vender la tuya sin listarla.',
       conNav: false,
@@ -77,7 +77,7 @@ module.exports = (app) => {
       description:
         'Cómo se calcula el precio de una carta Magic: edición, estado, idioma y demanda. Guías escritas por quien compra colecciones a diario.',
       keywords:
-        'valor cartas magic, cuanto valen mis cartas magic, precio cartas magic, guia cartas magic',
+        'valor cartas magic, precio cartas magic, guia cartas magic, tasar cartas magic',
       canonical: `${PORTADA}/blog`,
       og_title: 'Guías sobre el valor de las cartas Magic',
       og_description: 'Cómo se calcula el precio de una carta Magic, explicado sin tecnicismos.',
