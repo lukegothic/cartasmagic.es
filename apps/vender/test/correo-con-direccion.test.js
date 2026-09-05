@@ -2,6 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { componerCorreo } = require('../lib/lead');
 const { componerCorreoMazo } = require('../lib/correo-manabox');
+const { leerDireccion } = require('../lib/direccion');
 
 const postal = (extra = {}) => componerCorreo({
   nombre: 'Jordi', email: 'jordi@correo.com', provincia: 'Valencia',
@@ -9,7 +10,8 @@ const postal = (extra = {}) => componerCorreo({
   ...extra
 });
 
-const direccion = { texto: 'Calle Baron de Santa Barbara 17, 46110 Godella (Valencia)', pareceIncompleta: false };
+// Se construye con la funcion de verdad: a mano se quedaba sin localidad y el asunto no lo notaba.
+const direccion = leerDireccion({ direccion: 'Calle Baron de Santa Barbara 17, 46110 Godella (Valencia)' });
 
 test('sin direccion el correo la pide, como hasta ahora', () => {
   const { html } = postal();
@@ -65,4 +67,15 @@ test('con direccion no se pide la direccion por ningun lado, en ninguna de las d
     assert.doesNotMatch(html, /necesito una direcci[oó]n de remitente/i);
     assert.doesNotMatch(text, /necesito una direcci[oó]n de remitente/i);
   });
+});
+
+// El asunto de ManaBox ya lleva la oferta, que es lo que decide; la localidad ahorra abrir
+// el correo para saber si la etiqueta se puede generar ya.
+test('el asunto de ManaBox lleva la localidad cuando hay direccion', () => {
+  const lead = { nombre: 'Ana', email: 'a@x.es', url: 'https://manabox.app/decks/A', idMazo: 'A', mensaje: '', direccion };
+  const { subject } = componerCorreoMazo({
+    lead, mazo: { nombre: 'M', formato: 'C' },
+    cartas: [{ nombre: 'x', cantidad: 1, esFoil: false, set: 's', rareza: 'r', precio: 100 }]
+  });
+  assert.match(subject, /Godella/);
 });

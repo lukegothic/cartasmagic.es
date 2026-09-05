@@ -16,15 +16,15 @@
             <label for="email">Correo electrónico</label>
             <input type="email" id="email" name="email" required autocomplete="email" placeholder="ej. nombre@correo.com">
 
-            <label for="mensaje">Cuéntanos algo más (opcional)</label>
-            <textarea id="mensaje" name="mensaje" rows="4" placeholder="ej. tengo también dos mazos de Commander en Manabox, y algunas cartas están usadas"></textarea>
-
             <%- include('partials/atajo-envio') %>
-            </div>
 
-            <%- include('partials/form-legal') %>
+            <label for="mensaje">¿Algo más que debamos saber? (opcional)</label>
+            <textarea id="mensaje" name="mensaje" rows="3" placeholder="ej. tengo también dos mazos de Commander en Manabox, y algunas cartas están usadas"></textarea>
 
             <button type="submit" class="btn-mythic">Pedir presupuesto</button>
+            <p class="form-nota-envio">Sin compromiso: pedir el presupuesto no te obliga a vender</p>
+
+            <%- include('partials/form-legal') %>
         </form>
 
         <p class="center-text text-muted">¿No usas ManaBox?

@@ -66,7 +66,7 @@ const componerCorreoMazo = ({ lead, mazo, cartas, entorno = process.env }) => {
   const partes = { lead, mazo, presupuesto };
 
   return {
-    subject: `Presupuesto para ${lead.nombre}: ${euros(presupuesto.oferta)} EUR${presupuesto.bajoMinimo ? ' (bajo mínimo)' : ''}${lead.direccion ? ' - con dirección' : ''}`,
+    subject: `Presupuesto para ${lead.nombre}${lead.direccion?.localidad ? ` (${lead.direccion.localidad})` : ''}: ${euros(presupuesto.oferta)} EUR${presupuesto.bajoMinimo ? ' (bajo mínimo)' : ''}${lead.direccion ? ' - con dirección' : ''}`,
     replyTo: lead.email,
     text: cuerpoTexto(partes),
     html: envolver({ cuerpo: cuerpoHtml(partes), notas: notasHtml(partes) }),
