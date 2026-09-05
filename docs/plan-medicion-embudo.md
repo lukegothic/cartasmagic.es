@@ -27,9 +27,9 @@ no medir.
 
 Por eso el plan mide de una vez y espera, en lugar de revisar cada semana y reaccionar.
 
-## Fase 1: instrumentar el embudo
+## Fase 1: instrumentar el embudo (hecho el 5 de septiembre de 2026)
 
-Cuatro eventos, del más general al más concreto. Solo el último existe hoy.
+Cinco eventos, del más general al más concreto. Antes solo existía `generate_lead`.
 
 | Evento | Cuándo se dispara | Qué revela |
 |---|---|---|
@@ -37,21 +37,26 @@ Cuatro eventos, del más general al más concreto. Solo el último existe hoy.
 | `empezar_formulario` | Primer campo que se rellena | Cuántos se sientan a escribir |
 | `intento_envio` | Se pulsa el botón de enviar | Cuántos terminan |
 | `generate_lead` | El envío se completa | Cuántos lo consiguen |
+| `envio_rechazado` | El backend rechaza el envío | Qué validación lo frena |
 
 La distancia entre `intento_envio` y `generate_lead` es la más reveladora: si hay hueco,
 alguien está intentando enviar y fallando, y eso es un error corregible, no una decisión
-del visitante.
+del visitante. `envio_rechazado` lleva el `errorCode` del backend, así que dice qué
+validación concreta lo frena.
 
-Conviene registrar también los `errorCode` que ya devuelve el backend, para saber qué
-validación concreta rechaza los envíos.
+Viven en `views/partials/medicion-embudo.ejs`, incluido en los dos formularios. El evento
+de empezar salta con el primer campo que se toca, por delegación, así que sigue valiendo
+si mañana se añade otro campo.
 
-## Fase 2: la caída anterior al formulario
+## Fase 2: la caída anterior al formulario (hecho el 5 de septiembre de 2026)
 
 El embudo no empieza en el formulario sino en la portada, que es la página que recibe
 casi todo el tráfico: 144 de los 149 clics del trimestre.
 
-Basta un evento al pulsar cualquiera de los CTA que llevan a la valoración, con la
-posición del botón como parámetro, porque la portada tiene tres.
+El evento `clic_cta` salta al pulsar cualquiera de los botones que llevan a la valoración
+o al presupuesto, con la posición del botón y la página de origen. La portada tiene tres
+botones al mismo destino y así se sabe cuál funciona. Está en el layout, así que cubre
+todas las páginas.
 
 Eso responde a la pregunta que hoy no se puede responder: de cada cien que entran por la
 portada, cuántos llegan siquiera a ver el formulario.

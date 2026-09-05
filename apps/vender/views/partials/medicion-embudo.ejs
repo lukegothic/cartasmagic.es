@@ -1,0 +1,33 @@
+<script>
+// Mide los tres pasos anteriores al lead, que hasta ahora no se registraban: quien ve el
+// formulario, quien empieza a rellenarlo y quien intenta enviarlo. El hueco entre el
+// intento de envio y el generate_lead del feedback delata un fallo tecnico, porque ahi
+// no interviene ninguna decision del visitante.
+(function () {
+    var form = document.querySelector('.lead-form');
+    if (!form || typeof gtag !== 'function') return;
+
+    var formulario = '<%= etiquetaConversion %>';
+    var empezado = false;
+
+    var evento = function (nombre, extra) {
+        gtag('event', nombre, Object.assign({ event_category: 'formulario', event_label: formulario }, extra || {}));
+    };
+
+    evento('ver_formulario');
+
+    // Delegado en el formulario: asi vale para cualquier campo sin enumerarlos, y sigue
+    // valiendo si manana se anade uno.
+    form.addEventListener('input', function (e) {
+        if (empezado || !e.target.name) return;
+        empezado = true;
+        evento('empezar_formulario', { primer_campo: e.target.name });
+    }, true);
+
+    form.addEventListener('submit', function () {
+        // El navegador bloquea el envio si hay campos obligatorios sin rellenar, asi que
+        // se distingue el intento valido del que ni siquiera sale del navegador.
+        evento('intento_envio', { valido: form.checkValidity() });
+    });
+})();
+</script>

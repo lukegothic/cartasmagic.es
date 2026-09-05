@@ -69,5 +69,24 @@
             </p>
         </div>
     </footer>
+    <script>
+    // Mide el paso anterior al formulario: de los que entran por la portada, cuantos
+    // llegan siquiera a verlo. La posicion distingue los tres botones que llevan al
+    // mismo sitio, para saber cual funciona.
+    (function () {
+        if (typeof gtag !== 'function') return;
+        var botones = document.querySelectorAll('a.btn-mythic[href^="/valoracion"], a.btn-mythic[href^="/presupuesto"]');
+        Array.prototype.forEach.call(botones, function (boton, i) {
+            boton.addEventListener('click', function () {
+                gtag('event', 'clic_cta', {
+                    event_category: 'navegacion',
+                    event_label: boton.getAttribute('href'),
+                    posicion: i + 1,
+                    pagina: window.location.pathname
+                });
+            });
+        });
+    })();
+    </script>
 </body>
 </html>

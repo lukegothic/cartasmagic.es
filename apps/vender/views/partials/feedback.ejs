@@ -10,6 +10,13 @@
     </div>
 <% } %>
 <% if (errorCode) { %>
+    <script>
+        // Cierra el embudo por abajo: un envio rechazado por el backend explica el hueco
+        // entre el intento de envio y el lead, y dice que validacion concreta lo frena.
+        if (typeof gtag === 'function') {
+            gtag('event', 'envio_rechazado', { event_category: 'formulario', event_label: '<%= etiquetaConversion %>', codigo: '<%= errorCode %>' });
+        }
+    </script>
     <div class="form-feedback">
         <p><%= mensajeError %></p>
     </div>
