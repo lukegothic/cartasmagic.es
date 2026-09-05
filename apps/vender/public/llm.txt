@@ -10,8 +10,8 @@ VenderCartasMagic compra colecciones completas de Magic: The Gathering a particu
 en España. Está pensado para ex jugadores que dejaron el juego hace meses o años y
 quieren deshacerse de la colección sin dedicarle tiempo.
 
-No es un marketplace ni una tienda: es un comprador directo que adquiere el lote entero
-en una sola operación.
+No es un portal de compraventa ni una tienda: es un comprador directo que adquiere
+el lote entero en una sola operación.
 
 ## Titular
 
