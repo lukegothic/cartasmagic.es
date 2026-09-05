@@ -4,8 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "npm run lint:textos && node --test \"test/*.test.js\"",
-    "lint:textos": "lint-castellano --config ../../.lint-castellano.json views routes lib public/llm.txt",
+    "test": "node --test \"test/*.test.js\"",
+    "lint:textos": "node ../../../lint-castellano/bin/lint-castellano.js --config ../../.lint-castellano.json views routes lib public/llm.txt",
     "start": "node server.js"
   },
   "keywords": [],
@@ -17,8 +17,5 @@
     "express": "^5.2.1",
     "express-ejs-layouts": "^2.5.1",
     "nodemailer": "^10.0.0"
-  },
-  "devDependencies": {
-    "lint-castellano": "file:../../../lint-castellano"
   }
 }
