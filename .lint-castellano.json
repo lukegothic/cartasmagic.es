@@ -1,0 +1,30 @@
+{
+  "dominio": [
+    "bulk",
+    "foil",
+    "foils",
+    "set",
+    "sets",
+    "Magic",
+    "Cardmarket",
+    "ManaBox",
+    "Moxfield",
+    "commander",
+    "mazo",
+    "mazos",
+    "lote",
+    "sobre",
+    "sobres",
+    "tracker"
+  ],
+  "excluir": [
+    "node_modules",
+    "package-lock\\.json",
+    "/docs/341\\.html$",
+    "/docs/calculator_explicit\\.html$",
+    "/public/calculator\\.html$",
+    "/public/efecto_foil\\.html$",
+    "/\\.claude/",
+    "/\\.fallow/"
+  ]
+}

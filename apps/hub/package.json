@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "node --test \"test/*.test.js\"",
+    "lint:textos": "node ../../../lint-castellano/bin/lint-castellano.js --config ../../.lint-castellano.json content views routes lib public/llm.txt",
     "start": "node server.js"
   },
   "author": "",

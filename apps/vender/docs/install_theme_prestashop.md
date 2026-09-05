@@ -656,6 +656,6 @@ Si encuentras algún problema durante la instalación, compártelo aquí y te ay
 1. **Tamaño del archivo ZIP muy grande:** Aumenta más los límites de PHP
 2. **Módulos que no se instalan:** Revisar logs y permisos
 3. **Theme no se muestra:** Limpiar caché y regenerar assets
-4. **Elementor no carga:** Verificar extensiones PHP requeridas
+4. **Elementor no carga:** Verificar extensiones PHP necesarias
 
 ¡Avísame si necesitas ayuda con algún paso específico!
