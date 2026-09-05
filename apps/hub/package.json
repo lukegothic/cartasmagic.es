@@ -4,8 +4,8 @@
   "description": "Portada y blog de cartasmagic.es",
   "main": "server.js",
   "scripts": {
-    "test": "node --test \"test/*.test.js\"",
-    "lint:textos": "node ../../../lint-castellano/bin/lint-castellano.js --config ../../.lint-castellano.json content views routes lib public/llm.txt",
+    "test": "npm run lint:textos && node --test \"test/*.test.js\"",
+    "lint:textos": "lint-castellano --config ../../.lint-castellano.json content views routes lib public/llm.txt",
     "start": "node server.js"
   },
   "author": "",
@@ -17,5 +17,8 @@
     "express-ejs-layouts": "^2.5.1",
     "gray-matter": "^4.0.3",
     "markdown-it": "^15.0.1"
+  },
+  "devDependencies": {
+    "lint-castellano": "file:../../../lint-castellano"
   }
 }
