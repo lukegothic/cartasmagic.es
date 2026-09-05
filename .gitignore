@@ -9,3 +9,9 @@ Thumbs.db
 
 # Datos personales de trabajo, no forman parte del producto
 DATOS-LEGALES.md
+
+# Historico de compras: lleva nombres de vendedores y notas privadas sobre ellos.
+# Del CSV solo se publican agregados, nunca las filas.
+colecciones*.csv
+*compradas*.csv
+datos/
