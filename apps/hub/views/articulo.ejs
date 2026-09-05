@@ -1,0 +1,14 @@
+<article class="articulo">
+    <div class="articulo-cabecera">
+        <h1><%= entrada.titulo %></h1>
+        <time class="articulo-fecha" datetime="<%= entrada.fecha %>"><%= entrada.fechaLegible %></time>
+    </div>
+
+    <div class="articulo-cuerpo">
+        <%- entrada.html %>
+    </div>
+
+    <div class="articulo-cierre">
+        <%- include('partials/cierre') %>
+    </div>
+</article>

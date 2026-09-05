@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-F2JK45VQS3"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-F2JK45VQS3');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <meta name="description" content="<%= description %>">
+    <meta name="keywords" content="<%= keywords %>">
+    <meta name="author" content="CartasMagic.es">
+    <meta name="robots" content="<%= typeof noindex !== 'undefined' && noindex ? 'noindex, follow' : 'index, follow, max-snippet:-1, max-image-preview:large' %>">
+    <link rel="canonical" href="<%= canonical %>">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="<%= og_title %>">
+    <meta property="og:description" content="<%= og_description %>">
+    <meta property="og:url" content="<%= canonical %>">
+    <meta property="og:type" content="<%= typeof og_type !== 'undefined' ? og_type : 'website' %>">
+    <meta property="og:locale" content="es_ES">
+    <meta property="og:site_name" content="CartasMagic.es">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<%= og_title %>">
+    <meta name="twitter:description" content="<%= og_description %>">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    <%- ld_json %>
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Mana Font (MTG mana symbols) -->
+    <link href="https://cdn.jsdelivr.net/npm/mana-font@latest/css/mana.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <% if (typeof conNav !== 'undefined' && conNav) { %>
+    <nav class="site-nav" aria-label="Navegación principal">
+        <a href="/" class="marca">CartasMagic<span class="logo-tld">.es</span></a>
+        <div class="enlaces">
+            <a href="/blog">Guías</a>
+            <a href="https://vendercartasmagic.es/valoracion-cartas-magic" rel="noopener">Vender</a>
+        </div>
+    </nav>
+    <% } %>
+
+    <main class="container">
+        <%- body %>
+
+        <footer>
+            <p>&copy; 2026 CartasMagic.es &mdash; Iván Pérez, NIF 72808254Y, Pamplona
+                &middot; <a href="mailto:contacto@vendercartasmagic.es">contacto@vendercartasmagic.es</a></p>
+        </footer>
+    </main>
+</body>
+</html>

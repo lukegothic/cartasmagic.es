@@ -1,0 +1,500 @@
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-primary: #0a0a0f;
+    --bg-secondary: #12121a;
+    --bg-card: #1a1a2e;
+    --bg-card-hover: #222240;
+    --text-primary: #e8e8f0;
+    --text-secondary: #9393a8;
+    --accent-1: #7c5cbf;
+    --accent-2: #5b8fd9;
+    --accent-sell: #e8a838;
+    --accent-buy: #38c872;
+    --border: rgba(255, 255, 255, 0.06);
+    --glow: rgba(124, 92, 191, 0.15);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+/* ===== MOBILE-FIRST BASE (< 600px) ===== */
+
+/* Main layout — mobile base */
+.container {
+    width: 100%;
+    max-width: 800px;
+    padding: 2.5rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.5rem;
+}
+
+/* Header */
+header {
+    text-align: center;
+}
+
+.logo-text {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-1) 50%, var(--accent-2) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.3rem;
+}
+
+.logo-tld {
+    font-weight: 500;
+    -webkit-text-fill-color: var(--text-secondary);
+}
+
+.tagline {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+    margin-top: 0.5rem;
+}
+
+/* Los cinco colores, quietos: son un adorno de marca, no un indicador de que
+   algo esta cargando. .ms-cost pinta la ficha con el color real de cada mana;
+   sin ella el glifo hereda currentColor y los cinco salen del mismo tono. */
+.mana-symbols {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    margin-top: 1.25rem;
+}
+
+.mana-symbols .ms {
+    font-size: 1.4rem;
+    opacity: 0.75;
+}
+
+/* Enlace por defecto: sin esto el navegador pinta el azul y el morado de visitado,
+   que sobre el fondo oscuro no se leen. Las tarjetas llevan su propio color. */
+a:not(.card) {
+    color: var(--accent-2);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.2s ease;
+}
+
+a:not(.card):visited {
+    color: var(--accent-2);
+}
+
+a:not(.card):hover {
+    color: var(--accent-1);
+}
+
+a:focus-visible {
+    outline: 2px solid var(--accent-1);
+    outline-offset: 2px;
+}
+
+/* Section */
+.section-intro {
+    text-align: center;
+}
+
+.section-intro h2 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+}
+
+.section-intro p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+}
+
+.cards {
+    width: 100%;
+}
+
+/* El unico destino de la pagina: se pinta como boton, no como tarjeta, para que
+   en movil se lea como algo que se toca. */
+.card {
+    background: var(--accent-sell);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    text-decoration: none;
+    color: #1a1206;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+    text-align: center;
+    font-weight: 700;
+}
+
+.card-nota {
+    font-size: 0.78rem;
+    font-weight: 400;
+    opacity: 0.75;
+}
+
+.cards-nota {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: 1rem;
+}
+
+/* Guias: el contenido propio del hub. Se listan aunque todavia no existan todas
+   las paginas, asi que cada entrada enlaza solo cuando tiene destino real. */
+.guias {
+    width: 100%;
+}
+
+.guias h2 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+    text-align: center;
+}
+
+.guias-intro {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.guias-lista {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.guia {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.15rem;
+}
+
+.guia h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+}
+
+.guia p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* La credibilidad es el producto en un negocio donde el usuario manda cartas
+   por valor de miles de euros a un desconocido. */
+.prueba {
+    width: 100%;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-align: center;
+}
+
+.prueba h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.prueba p {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 1rem 0;
+    width: 100%;
+}
+
+footer p {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    opacity: 0.5;
+}
+
+/* ===== TABLET (>= 600px) ===== */
+@media (min-width: 600px) {
+    .container {
+        padding: 2rem 1.5rem;
+        gap: 3rem;
+    }
+
+    .logo-text {
+        font-size: clamp(2.2rem, 5vw, 3.2rem);
+    }
+
+    .tagline {
+        font-size: 1.15rem;
+    }
+
+    .mana-symbols {
+        gap: 1rem;
+    }
+
+    .mana-symbols .ms {
+        font-size: 1.6rem;
+    }
+
+    .section-intro {
+        max-width: 600px;
+    }
+
+    .section-intro h2 {
+        font-size: 1.15rem;
+    }
+
+    .section-intro p {
+        font-size: 0.95rem;
+    }
+
+    /* El boton deja de ocupar todo el ancho: a partir de tablet una linea de
+       texto estirada a 800px se lee peor que una centrada. */
+    .cards {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .card {
+        padding: 1.15rem 2.5rem;
+    }
+
+    footer {
+        padding: 1.5rem 0;
+    }
+
+    footer p {
+        font-size: 0.78rem;
+    }
+}
+
+/* Accessibility */
+.card:focus-visible {
+    outline: 2px solid var(--accent-1);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ===== NAVEGACION ===== */
+
+/* Con mas de una pagina hace falta una via de vuelta a la portada. */
+.site-nav {
+    width: 100%;
+    max-width: 800px;
+    padding: 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.site-nav .marca {
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    letter-spacing: -0.02em;
+}
+
+.site-nav a.marca:not(.card) {
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.site-nav .enlaces {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.9rem;
+}
+
+/* ===== INDICE DEL BLOG ===== */
+
+.entradas {
+    width: 100%;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.entrada {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.15rem;
+    transition: background 0.2s ease;
+}
+
+.entrada:hover {
+    background: var(--bg-card-hover);
+}
+
+.entrada h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+}
+
+.entrada h3 a:not(.card) {
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.entrada p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.entrada time {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    opacity: 0.7;
+    margin-top: 0.5rem;
+}
+
+/* ===== ARTICULO ===== */
+
+/* Ancho de lectura por debajo del contenedor: 800px de prosa corrida cansa. */
+.articulo {
+    width: 100%;
+    max-width: 680px;
+}
+
+.articulo-cabecera {
+    margin-bottom: 2rem;
+}
+
+.articulo h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    margin-bottom: 0.5rem;
+}
+
+.articulo-fecha {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+.articulo-cuerpo h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+}
+
+.articulo-cuerpo h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.articulo-cuerpo p {
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+    opacity: 0.9;
+}
+
+.articulo-cuerpo ul,
+.articulo-cuerpo ol {
+    margin: 0 0 1rem 1.25rem;
+    color: var(--text-primary);
+    opacity: 0.9;
+}
+
+.articulo-cuerpo li {
+    margin-bottom: 0.4rem;
+}
+
+.articulo-cuerpo table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+    font-size: 0.88rem;
+}
+
+.articulo-cuerpo th,
+.articulo-cuerpo td {
+    text-align: left;
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.articulo-cuerpo th {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.articulo-cuerpo td {
+    color: var(--text-secondary);
+}
+
+.articulo-cuerpo blockquote {
+    border-left: 2px solid var(--accent-1);
+    padding-left: 1rem;
+    margin: 0 0 1rem 0;
+    color: var(--text-secondary);
+}
+
+/* El cierre comercial de cada articulo: todo contenido termina llevando a vender. */
+.articulo-cierre {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+}
+
+@media (min-width: 600px) {
+    .articulo h1 {
+        font-size: 2rem;
+    }
+
+    .articulo-cuerpo h2 {
+        font-size: 1.35rem;
+    }
+}

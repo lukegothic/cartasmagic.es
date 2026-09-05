@@ -1,0 +1,24 @@
+<header>
+    <h1 class="logo-text">Guías</h1>
+    <p class="tagline">Cómo se calcula el valor de una carta Magic</p>
+</header>
+
+<% if (entradas.length) { %>
+<ul class="entradas">
+    <% entradas.forEach(({ slug, titulo, descripcion, fecha, fechaLegible }) => { %>
+    <li class="entrada">
+        <h3><a href="/blog/<%= slug %>"><%= titulo %></a></h3>
+        <p><%= descripcion %></p>
+        <time datetime="<%= fecha %>"><%= fechaLegible %></time>
+    </li>
+    <% }); %>
+</ul>
+<% } else { %>
+<section class="section-intro">
+    <p>Aún no hay guías publicadas. Mientras tanto, puedes ver
+    <a href="https://vendercartasmagic.es" rel="noopener">cómo funciona vender una
+    colección</a>.</p>
+</section>
+<% } %>
+
+<%- include('partials/cierre') %>

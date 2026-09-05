@@ -1,0 +1,59 @@
+<header>
+    <h1 class="logo-text">CartasMagic<span class="logo-tld">.es</span></h1>
+    <p class="tagline">Cuánto valen tus cartas Magic y cómo venderlas</p>
+    <div class="mana-symbols" aria-label="Los cinco colores de maná de Magic">
+        <i class="ms ms-cost ms-w" title="Maná blanco"></i>
+        <i class="ms ms-cost ms-u" title="Maná azul"></i>
+        <i class="ms ms-cost ms-b" title="Maná negro"></i>
+        <i class="ms ms-cost ms-r" title="Maná rojo"></i>
+        <i class="ms ms-cost ms-g" title="Maná verde"></i>
+    </div>
+</header>
+
+<section class="section-intro">
+    <h2>Cuánto valen tus cartas Magic</h2>
+    <p>
+        Casi nadie sabe qué tiene guardado en el armario. Una colección de los años
+        noventa puede valer cuatro mil euros o cuarenta, y la diferencia casi nunca está
+        donde la gente cree: no la marcan las cartas más vistosas sino la edición, el
+        estado y si se juegan hoy. Aquí explicamos cómo se calcula ese precio, con las
+        mismas referencias que usamos cuando compramos una colección.
+    </p>
+</section>
+
+<% if (entradas.length) { %>
+<section class="guias">
+    <h2>Guías sobre el valor de las cartas</h2>
+    <p class="guias-intro">Lo que determina el precio de una carta, explicado sin tecnicismos</p>
+    <ul class="entradas">
+        <% entradas.forEach(({ slug, titulo, descripcion }) => { %>
+        <li class="entrada">
+            <h3><a href="/blog/<%= slug %>"><%= titulo %></a></h3>
+            <p><%= descripcion %></p>
+        </li>
+        <% }); %>
+    </ul>
+</section>
+<% } %>
+
+<section class="prueba">
+    <h2>Quién está detrás</h2>
+    <p>
+        Iván Pérez, vendedor en Cardmarket desde 2011 con más de 3.200 valoraciones
+        positivas y certificado como Professional Seller. Compramos colecciones de Magic
+        en toda España desde Pamplona.
+    </p>
+</section>
+
+<nav class="cards" aria-label="Vender una colección">
+    <a href="https://vendercartasmagic.es/valoracion-cartas-magic" class="card" rel="noopener">
+        Saber cuánto vale mi colección
+        <span class="card-nota">Tarda un minuto y es gratis</span>
+    </a>
+    <p class="cards-nota">
+        Compramos la colección entera: pides la etiqueta, la mandas con el envío pagado y
+        cobras por transferencia. O mira antes
+        <a href="https://vendercartasmagic.es" rel="noopener">cómo funciona vender una
+        colección de cartas Magic</a>: el proceso, los plazos y qué compramos.
+    </p>
+</nav>

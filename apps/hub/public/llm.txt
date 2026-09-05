@@ -1,8 +1,8 @@
 # CartasMagic.es
 
-> Portada del ecosistema CartasMagic. La actividad activa es la compra de colecciones
-> de cartas Magic: The Gathering a particulares en toda España, que se gestiona en
-> vendercartasmagic.es.
+> Portada y sede editorial del ecosistema CartasMagic: guías sobre el valor de las
+> cartas Magic: The Gathering en España. La actividad comercial es la compra de
+> colecciones a particulares, que se gestiona en vendercartasmagic.es.
 
 ## Qué hacemos
 
@@ -15,6 +15,13 @@ que pagamos nosotros, envía el paquete, y en un día laborable desde la llegada
 un precio cerrado por el lote completo. Si lo acepta, cobra por transferencia en 24
 horas. Si lo rechaza, la devolución cuesta 11,90 euros a su cargo.
 
+## Cómo valoramos una colección
+
+El precio de una carta no lo marca la rareza por sí sola. Los factores que pesan son
+la edición, la versión exacta, el idioma, el estado de conservación, si es foil, la
+demanda actual y la liquidez. Valoramos con los precios de Cardmarket del día en que
+llega el paquete.
+
 ## Titular
 
 - Nombre: Iván Pérez
@@ -22,16 +29,15 @@ horas. Si lo rechaza, la devolución cuesta 11,90 euros a su cargo.
 - Domicilio: Calle Manuel Iribarren 10, 31008 Pamplona (Navarra), España
 - Correo: contacto@vendercartasmagic.es
 - Vendedor en Cardmarket desde 2011 con más de 3.200 valoraciones positivas
+- Certificado como Professional Seller de Cardmarket
+- Perfil: https://www.cardmarket.com/es/Magic/Users/ivan-the-seller
 
 ## Dominios
 
-- https://cartasmagic.es - portada de marca
+- https://cartasmagic.es - portada de marca y guías sobre el valor de las cartas
 - https://vendercartasmagic.es - servicio de compra de colecciones, con el proceso,
   las condiciones completas y el formulario de contacto
-- comprarcartasmagic.es - venta de cartas sueltas sin gastos de envío, en preparación,
-  todavía no operativo
 
-## Qué no hacemos todavía
+## Qué no hacemos
 
-No vendemos cartas sueltas. La tienda de compra está en preparación y no tiene fecha
-de apertura anunciada.
+No vendemos cartas sueltas ni tenemos tienda. Solo compramos colecciones completas.
