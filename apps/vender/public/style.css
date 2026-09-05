@@ -68,20 +68,27 @@ h1, h2, h3 {
 }
 
 /* Enlace por defecto: sin esto el navegador pinta el azul y el morado de visitado,
-   que sobre el fondo oscuro no se leen. */
-a {
+   que sobre el fondo oscuro no se leen. Los botones quedan fuera: tienen su propio
+   color de texto sobre fondo naranja, y heredar el naranja del enlace los dejaba con
+   el texto del mismo color que el fondo. */
+a:not(.btn-mythic) {
     color: var(--mtg-primary);
     text-decoration: underline;
     text-underline-offset: 2px;
     transition: var(--transition);
 }
 
-a:visited {
+a:not(.btn-mythic):visited {
     color: var(--mtg-primary);
 }
 
-a:hover {
+a:not(.btn-mythic):hover {
     color: #ffaa45;
+}
+
+a.btn-mythic,
+a.btn-mythic:visited {
+    color: #000;
 }
 
 a:focus-visible {
@@ -660,6 +667,15 @@ ol.plain-list li::before {
     border: 1px solid var(--mtg-primary);
     background: rgba(245, 144, 30, 0.08);
     margin-bottom: 1.5rem;
+}
+
+/* El enlace de vuelta al hub: sin el, el enlazado entre los dos dominios solo va en
+   una direccion y el blog no recibe nada del trafico que ya tiene vender. */
+.footer-guias {
+    font-size: 0.88rem;
+    color: var(--mtg-text-muted);
+    line-height: 1.7;
+    margin-top: 1.5rem;
 }
 
 .footer-legal {
