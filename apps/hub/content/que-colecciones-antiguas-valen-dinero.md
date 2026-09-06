@@ -2,7 +2,7 @@
 titulo: Qué colecciones antiguas de Magic valen dinero
 descripcion: Qué ediciones antiguas se pagan hoy y cuáles se imprimieron tanto que no valen nada, y cómo distinguirlas sin saber de Magic
 fecha: 2026-09-05
-keywords: cartas magic antiguas valor, coleccion magic años 90, ediciones magic caras, revised magic valor
+keywords: cartas magic antiguas, cartas magic antiguas valor, coleccion magic años 90, ediciones magic caras, revised magic valor
 ---
 
 Que una carta sea vieja no la hace valiosa. Lo que la hace valiosa es que se imprimieran

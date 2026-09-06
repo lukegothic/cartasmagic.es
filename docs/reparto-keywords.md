@@ -72,3 +72,42 @@ contra la propia casa por una posición que ya se tiene.
 
 Lo que sí conviene es mejorar la página de vender, que está en la posición 32 pese a
 tener 203 impresiones.
+
+## Demanda de compra, que hoy no se atiende
+
+En el trimestre hasta septiembre de 2026 aparecen consultas de gente que quiere
+**comprar**, no vender:
+
+| Consulta | Impresiones | Posición |
+|---|---|---|
+| compra venta cartas magic | 19 | 6,0 |
+| compra cartas magic | 11 | 15,5 |
+| compro cartas magic | 7 | 8,9 |
+| comprar cartas de magic | 2 | 26,0 |
+| comprar cartas magic online | 2 | 18,0 |
+| comprar cartas magic sueltas | 2 | 19,0 |
+
+Suman unas 43 impresiones, y en el hub salen otras seis consultas del mismo tipo
+("cartas magic comprar", "comprar magic the gathering") que aterrizan en una portada que
+no vende nada. Son visitas que llegan, no encuentran lo que buscan y se van.
+
+El volumen todavía es pequeño, pero la intención es inequívoca y ninguna página la
+atiende. La idea a medio plazo es `comprarcartasmagic.es`, una tienda pequeña, que
+cerraría el círculo: se compran colecciones enteras por un lado y se venden las cartas
+sueltas por otro.
+
+Mientras no exista, esas keywords **no se reparten**: no se le dan ni al hub ni a vender,
+porque ninguno de los dos puede responder a lo que se busca. Rankear para "comprar cartas
+magic" y llevar a quien busca a un formulario de venta es una visita perdida y una señal
+mala para Google.
+
+Cuando la tienda exista, el reparto pasa a tres:
+
+- **cartasmagic.es**, informacional. Qué vale y por qué.
+- **vendercartasmagic.es**, transaccional de venta. Quien tiene cartas y quiere dinero.
+- **comprarcartasmagic.es**, transaccional de compra. Quien quiere cartas y tiene dinero.
+
+Conviene revisar la cifra cada par de meses en el informe diario: la sección de huecos de
+contenido ya agrupa estas consultas bajo el tema "compra". Si pasan de unas 150
+impresiones al trimestre, la tienda deja de ser una idea y pasa a ser una decisión con
+datos detrás.
