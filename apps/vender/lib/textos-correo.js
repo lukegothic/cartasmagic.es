@@ -12,6 +12,23 @@ const FIRMA = {
   url: 'https://vendercartasmagic.es'
 };
 
+// Los pasos van dentro del adjunto y no en el correo porque el adjunto es lo unico que se
+// borra siempre antes de reenviar: si se cuelan, se cuelan con el fichero entero.
+const PASOS_REENVIO = {
+  titulo: 'Antes de reenviar',
+  // Gmail no deja tocar el asunto al responder, y ademas cita el cuerpo. Con reenviar no
+  // pasa ninguna de las dos cosas.
+  pasos: [
+    'Pulsa Reenviar, no Responder',
+    'Cambia el asunto: el de este correo es para tu bandeja, no para el cliente',
+    'Pon la dirección del cliente en Para, la tienes más abajo'
+  ],
+  quitarNotas: (fichero) => `Quita este fichero (${fichero}) de los adjuntos: lleva lo que pagas`,
+  quitarCsv: (fichero) => `Decide si el desglose (${fichero}) va al cliente`,
+  adjuntarEtiqueta: 'Adjunta la etiqueta de Correos, que este cliente ya ha dejado dirección',
+  separador: '---'
+};
+
 const NOTAS_INTERNAS = {
   titulo: 'Datos del formulario',
   nombre: 'Nombre:',
@@ -36,7 +53,7 @@ const ETIQUETA = {
   ],
   seguimiento: 'Tiene número de seguimiento, así que puedes seguir el paquete. En un día laborable desde que llegue te mando la valoración a este mismo correo.',
   limite: (peso, medidas) =>
-    `Ten en cuenta que el paquete no puede pasar de ${peso} ni de ${medidas}. Si se te queda corto, avísame y te preparo otra etiqueta.`,
+    `Ten en cuenta que el paquete no puede pasar de ${peso} ni de ${medidas}.`,
   limiteTexto: (peso, medidas) =>
     `Ten en cuenta que el paquete no puede pasar de ${peso} ni de ${medidas}.`
 };
@@ -89,4 +106,4 @@ const MANABOX = {
   }
 };
 
-module.exports = { FIRMA, NOTAS_INTERNAS, LIMITES_PAQUETE, ETIQUETA, PEDIR_DIRECCION, POSTAL, MANABOX };
+module.exports = { FIRMA, PASOS_REENVIO, NOTAS_INTERNAS, LIMITES_PAQUETE, ETIQUETA, PEDIR_DIRECCION, POSTAL, MANABOX };

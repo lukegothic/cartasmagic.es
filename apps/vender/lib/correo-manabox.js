@@ -42,11 +42,12 @@ const cuerpoTexto = ({ lead, mazo, presupuesto }) => [
   ...firmaTexto()
 ].join('\n');
 
-const notas = ({ lead, mazo, presupuesto }) =>
+const notas = ({ lead, mazo, presupuesto, csv }) =>
   componerNotas({
     nombre: lead.nombre,
     direccion: lead.direccion,
     mensaje: lead.mensaje,
+    csv,
     lineas: [
       `${NOTAS_INTERNAS.correo} ${lead.email}`,
       `${MANABOX.notas.enlace} ${lead.url}`,
@@ -60,6 +61,7 @@ const notas = ({ lead, mazo, presupuesto }) =>
 
 const componerCorreoMazo = ({ lead, mazo, cartas, entorno = process.env }) => {
   const presupuesto = calcularPresupuesto(cartas, entorno);
+  const csv = `desglose-${nombreDeFichero(lead.nombre, 'presupuesto')}.csv`;
   const partes = { lead, mazo, presupuesto };
 
   return {
@@ -74,9 +76,9 @@ const componerCorreoMazo = ({ lead, mazo, cartas, entorno = process.env }) => {
     text: cuerpoTexto(partes),
     html: envolver(cuerpoHtml(partes)),
     attachments: [
-      notas(partes),
+      notas({ ...partes, csv }),
       {
-        filename: `desglose-${nombreDeFichero(lead.nombre, 'presupuesto')}.csv`,
+        filename: csv,
         content: componerDesgloseCsv(cartas, entorno),
         contentType: 'text/csv; charset=utf-8'
       }

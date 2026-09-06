@@ -23,6 +23,31 @@ const mazo = (extra = {}) => componerCorreoMazo({
 
 const notasDe = ({ attachments }) => attachments.find(({ filename }) => filename.startsWith('notas-'));
 
+test('las notas abren con los pasos del reenvio, antes de los datos', () => {
+  const { content } = notasDe(postal());
+  assert.match(content, /Reenviar/, 'el boton correcto es Reenviar, no Responder');
+  assert.ok(content.indexOf('Reenviar') < content.indexOf('Jordi'), 'los pasos van antes que los datos');
+});
+
+test('los pasos avisan de quitar este mismo fichero antes de reenviar', () => {
+  const { content, filename } = notasDe(postal());
+  assert.match(content, new RegExp(filename.replace('.', '\\.')), 'el aviso nombra el fichero que hay que quitar');
+});
+
+test('los pasos recuerdan cambiar el asunto, que Gmail no deja tocar al responder', () => {
+  assert.match(notasDe(postal()).content, /asunto/i);
+});
+
+test('solo se recuerda adjuntar la etiqueta cuando hay direccion para generarla', () => {
+  assert.match(notasDe(postal({ direccion })).content, /etiqueta/i);
+  assert.doesNotMatch(notasDe(postal()).content, /adjuntar la etiqueta/i);
+});
+
+test('solo en ManaBox se avisa del csv, que es el unico correo que lo lleva', () => {
+  assert.match(notasDe(mazo()).content, /desglose-Pepe\.csv/);
+  assert.doesNotMatch(notasDe(postal()).content, /\.csv/);
+});
+
 test('las notas viajan como adjunto de texto, no dentro del cuerpo', () => {
   [postal(), mazo()].forEach((correo) => {
     const notas = notasDe(correo);
@@ -30,6 +55,11 @@ test('las notas viajan como adjunto de texto, no dentro del cuerpo', () => {
     assert.match(notas.filename, /\.txt$/);
     assert.match(notas.contentType, /text\/plain/);
   });
+});
+
+// Un nombre con tilde salia partido: la NFD separa la tilde y luego se colaba de guion.
+test('las tildes del nombre no parten el nombre del fichero', () => {
+  assert.match(notasDe(postal({ nombre: 'Daniel Rodríguez' })).filename, /^notas-Daniel-Rodriguez\.txt$/);
 });
 
 test('el nombre del adjunto identifica al cliente, para no confundirlo entre varios', () => {
