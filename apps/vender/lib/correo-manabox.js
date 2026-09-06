@@ -1,8 +1,9 @@
 const {
   envolver, escaparHtml, euros, parrafo, lista, destacado, firmaTexto,
-  bloqueEtiqueta, bloqueEtiquetaTexto, pedirDireccion, pedirDireccionTexto
+  bloqueEtiqueta, bloqueEtiquetaTexto, aprovecharCaja, aprovecharCajaTexto,
+  pedirDireccion, pedirDireccionTexto
 } = require('./correo-plantilla');
-const { NOTAS_INTERNAS, LIMITES_PAQUETE, MANABOX } = require('./textos-correo');
+const { NOTAS_INTERNAS, LIMITES_PAQUETE, APROVECHAR_CAJA, MANABOX } = require('./textos-correo');
 const { calcularPresupuesto } = require('./presupuesto');
 const { componerDesgloseCsv } = require('./desglose');
 const { componerNotas, nombreDeFichero } = require('./notas');
@@ -21,7 +22,8 @@ const cuerpoHtml = ({ lead, mazo, presupuesto }) => [
   lista(MANABOX.queIncluye),
   parrafo(MANABOX.confirmacion),
   lead.direccion ? bloqueEtiqueta() : pedirDireccion(),
-  lead.direccion ? '' : parrafo(MANABOX.limite(LIMITES_PAQUETE.peso, LIMITES_PAQUETE.medidas))
+  lead.direccion ? '' : parrafo(MANABOX.limite(LIMITES_PAQUETE.peso, LIMITES_PAQUETE.medidas)),
+  aprovecharCaja(APROVECHAR_CAJA.extras)
 ].filter(Boolean).join('\n\n');
 
 const cuerpoTexto = ({ lead, mazo, presupuesto }) => [
@@ -38,6 +40,11 @@ const cuerpoTexto = ({ lead, mazo, presupuesto }) => [
   MANABOX.confirmacionTexto,
   '',
   lead.direccion ? bloqueEtiquetaTexto() : pedirDireccionTexto(),
+  '',
+  // Sin direccion el texto plano se quedaba sin los limites, que en html si van: el parrafo
+  // siguiente habla del tamaño de la caja y necesita que este dicho antes.
+  ...(lead.direccion ? [] : [MANABOX.limite(LIMITES_PAQUETE.peso, LIMITES_PAQUETE.medidas), '']),
+  aprovecharCajaTexto(APROVECHAR_CAJA.extras),
   '',
   ...firmaTexto()
 ].join('\n');

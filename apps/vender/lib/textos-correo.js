@@ -44,6 +44,18 @@ const NOTAS_INTERNAS = {
 
 const LIMITES_PAQUETE = { peso: '2 kg', medidas: '30 x 20 x 20 cm' };
 
+// El envio lo pagamos nosotros y la caja viaja igual llena que medio vacia, asi que interesa
+// que venga llena: lo que se quede en casa del cliente ya no vuelve, porque una segunda tanda
+// cuesta otro envio. El parrafo se lo dice mirandolo desde su lado, que es cobrar mas.
+const APROVECHAR_CAJA = {
+  // Las 1.000 cartas no son un limite como el peso o las medidas, que los mide Correos: son
+  // una estimacion y solo sirven para persuadir, por eso no salen de LIMITES_PAQUETE.
+  intro: 'En una caja de ese tamaño caben unas 1.000 cartas, y sale mejor mandarla llena: cuantas más cartas valoremos de una vez, más alta es la oferta. Merece la pena revisar cajas y carpetas antes de cerrarla, sobre todo si aparecen cartas raras, foils o cartas de ediciones antiguas, que son las que más levantan la valoración.',
+  // El precio de ManaBox sale de una lista cerrada, asi que hay que decir de antemano que lo
+  // que llegue de mas no va de regalo.
+  extras: 'Si metes cartas que no estaban en la lista, las valoramos aparte y te sumamos lo que salga a la oferta.'
+};
+
 // Cuando el cliente ya ha dejado su direccion, el correo no se la vuelve a pedir: habla de
 // la etiqueta como si viniese adjunta.
 const ETIQUETA = {
@@ -114,4 +126,4 @@ const MANABOX = {
   }
 };
 
-module.exports = { FIRMA, PASOS_REENVIO, NOTAS_INTERNAS, LIMITES_PAQUETE, ETIQUETA, PEDIR_DIRECCION, POSTAL, MANABOX };
+module.exports = { FIRMA, PASOS_REENVIO, NOTAS_INTERNAS, LIMITES_PAQUETE, APROVECHAR_CAJA, ETIQUETA, PEDIR_DIRECCION, POSTAL, MANABOX };
