@@ -48,6 +48,7 @@ const notas = ({ lead, mazo, presupuesto, csv }) =>
     direccion: lead.direccion,
     mensaje: lead.mensaje,
     csv,
+    asuntoCliente: MANABOX.asuntoCliente,
     lineas: [
       `${NOTAS_INTERNAS.correo} ${lead.email}`,
       `${MANABOX.notas.enlace} ${lead.url}`,

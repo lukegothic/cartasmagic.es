@@ -20,12 +20,14 @@ const PASOS_REENVIO = {
   // pasa ninguna de las dos cosas.
   pasos: [
     'Pulsa Reenviar, no Responder',
-    'Cambia el asunto: el de este correo es para tu bandeja, no para el cliente',
+    'Copia el asunto de aquí abajo: el de este correo es para tu bandeja, no para el cliente',
     'Pon la dirección del cliente en Para, la tienes más abajo'
   ],
   quitarNotas: (fichero) => `Quita este fichero (${fichero}) de los adjuntos: lleva lo que pagas`,
   quitarCsv: (fichero) => `Decide si el desglose (${fichero}) va al cliente`,
   adjuntarEtiqueta: 'Adjunta la etiqueta de Correos, que este cliente ya ha dejado dirección',
+  // El asunto va en una linea suelta, sin nada delante, para copiarlo de un tiron.
+  asunto: 'Asunto para el cliente:',
   separador: '---'
 };
 
@@ -73,7 +75,10 @@ const POSTAL = {
   // El asunto es lo unico que se lee antes de decidir si la etiqueta sale ya, asi que lleva
   // el volumen, que marca el tamaño de la etiqueta, y la localidad cuando se puede generar.
   asunto: ({ nombre, volumen, donde, conDireccion }) =>
-    `Nueva colección: ${nombre} (${volumen}${donde})${conDireccion ? ' - con dirección' : ''}`
+    `Nueva colección: ${nombre} (${volumen}${donde})${conDireccion ? ' - con dirección' : ''}`,
+  // El que se copia al reenviar. Sin datos de triaje: el cliente no tiene por que leer el
+  // volumen que dijo ni si nos consta su direccion.
+  asuntoCliente: 'Tu valoración - vendercartasmagic.es'
 };
 
 // Correo de quien manda una lista de ManaBox y recibe ya una cifra.
@@ -95,6 +100,9 @@ const MANABOX = {
     `Ten en cuenta que el paquete no puede pasar de ${peso} ni de ${medidas}. Si se te queda corto, avísame y te preparo una etiqueta para más peso.`,
   asunto: ({ nombre, donde, oferta, bajoMinimo, conDireccion }) =>
     `Presupuesto para ${nombre}${donde}: ${oferta} EUR${bajoMinimo ? ' (bajo mínimo)' : ''}${conDireccion ? ' - con dirección' : ''}`,
+  // El que se copia al reenviar. La cifra no va aqui: el cliente la lee en el cuerpo, y en el
+  // asunto delataria la oferta antes de abrir el correo.
+  asuntoCliente: 'Tu presupuesto - vendercartasmagic.es',
   notas: {
     enlace: 'Enlace:',
     mazo: 'Mazo:',

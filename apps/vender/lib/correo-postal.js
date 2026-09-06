@@ -30,6 +30,7 @@ const notas = ({ nombre, email, volumen, mensaje, direccion }) =>
     nombre,
     direccion,
     mensaje,
+    asuntoCliente: POSTAL.asuntoCliente,
     lineas: [
       `${NOTAS_INTERNAS.correo} ${email}`,
       `${NOTAS_INTERNAS.volumen} ${volumen.largo}`

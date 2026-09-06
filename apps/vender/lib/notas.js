@@ -18,7 +18,7 @@ const bloqueDireccion = (direccion) => [
 
 // El orden es el del reenvio: lo que se puede olvidar del todo va antes que lo que se ve al
 // escribir. Solo se listan los pasos que aplican, para que ninguno se lea en balde.
-const bloquePasos = ({ fichero, csv, direccion }) => [
+const bloquePasos = ({ fichero, csv, direccion, asuntoCliente }) => [
   PASOS_REENVIO.titulo,
   ...[
     ...PASOS_REENVIO.pasos,
@@ -27,17 +27,20 @@ const bloquePasos = ({ fichero, csv, direccion }) => [
     ...(direccion ? [PASOS_REENVIO.adjuntarEtiqueta] : [])
   ].map((paso, i) => `  ${i + 1}. ${paso}`),
   '',
+  PASOS_REENVIO.asunto,
+  asuntoCliente,
+  '',
   PASOS_REENVIO.separador,
   ''
 ];
 
-const componerNotas = ({ nombre, lineas, direccion, mensaje, csv }) => {
+const componerNotas = ({ nombre, lineas, direccion, mensaje, csv, asuntoCliente }) => {
   const filename = `notas-${nombreDeFichero(nombre, 'cliente')}.txt`;
 
   return {
     filename,
     content: [
-      ...bloquePasos({ fichero: filename, csv, direccion }),
+      ...bloquePasos({ fichero: filename, csv, direccion, asuntoCliente }),
       NOTAS_INTERNAS.titulo,
       '',
       `${NOTAS_INTERNAS.nombre} ${nombre}`,

@@ -38,6 +38,24 @@ test('los pasos recuerdan cambiar el asunto, que Gmail no deja tocar al responde
   assert.match(notasDe(postal()).content, /asunto/i);
 });
 
+// El asunto se pone a mano en cada reenvio, asi que va escrito y en su propia linea: hay que
+// poder copiarlo de un tiron, sin arrastrar la etiqueta que lo introduce.
+test('las notas traen el asunto ya escrito, en una linea suelta', () => {
+  const lineas = notasDe(postal()).content.split('\n');
+  assert.ok(lineas.includes('Tu valoración - vendercartasmagic.es'), 'el asunto va solo en su linea');
+});
+
+test('cada via trae el asunto que le toca', () => {
+  assert.match(notasDe(postal()).content, /Tu valoración - vendercartasmagic\.es/);
+  assert.match(notasDe(mazo()).content, /Tu presupuesto - vendercartasmagic\.es/);
+});
+
+test('el asunto de cara al cliente no lleva los datos de triaje del asunto interno', () => {
+  const { content } = notasDe(mazo({ direccion }));
+  const asunto = content.split('\n').find((l) => l.includes('vendercartasmagic.es'));
+  assert.doesNotMatch(asunto, /EUR|Godella|con direcci[oó]n/, 'eso es para tu bandeja, no para el cliente');
+});
+
 test('solo se recuerda adjuntar la etiqueta cuando hay direccion para generarla', () => {
   assert.match(notasDe(postal({ direccion })).content, /etiqueta/i);
   assert.doesNotMatch(notasDe(postal()).content, /adjuntar la etiqueta/i);
