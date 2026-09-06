@@ -6,6 +6,7 @@
 
     <div class="mtg-card mtg-card-margin">
         <%- include('partials/feedback') %>
+        <%- include('partials/atajo-manabox') %>
         <form class="lead-form" method="post" action="/valoracion-cartas-magic">
             <label for="nombre">Nombre</label>
             <input type="text" id="nombre" name="nombre" required autocomplete="name" placeholder="ej. Juan García" value="<%= valores.nombre || '' %>">
@@ -33,10 +34,6 @@
             <%- include('partials/form-legal') %>
         </form>
         <%- include('partials/medicion-embudo') %>
-
-        <p class="center-text text-muted">¿Tienes la colección en ManaBox?
-            <a href="/presupuesto-manabox" class="link-mythic">Pega el enlace y te presupuestamos en minutos</a>
-        </p>
     </div>
 
     <div class="mtg-card mtg-card-margin">

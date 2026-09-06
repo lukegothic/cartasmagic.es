@@ -728,3 +728,64 @@ ol.plain-list li::before {
 .main-container-narrow {
     max-width: 40rem;
 }
+
+/* Desvio a ManaBox. Se pone antes del formulario porque quien tiene la lista hecha no
+   deberia rellenar nada: el enlace en texto que habia debajo no lo veia casi nadie. */
+.atajo-manabox {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background-color: var(--mtg-bg-dark);
+    border: 1px solid var(--mtg-border);
+    border-left: 4px solid var(--mtg-primary);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    margin: 0 0 24px;
+}
+
+.atajo-manabox-logo {
+    width: 48px;
+    height: auto;
+    flex-shrink: 0;
+}
+
+/* El mismo logo en la cabecera de la pagina de destino, para confirmar la marca.
+   Lo centra el text-align del contenedor, que la imagen es inline. */
+.cabecera-manabox-logo {
+    width: 64px;
+    height: auto;
+    margin-bottom: 8px;
+}
+
+.atajo-manabox-texto {
+    flex: 1;
+    min-width: 0;
+}
+
+.atajo-manabox-titulo {
+    font-weight: 600;
+    margin: 0;
+}
+
+.atajo-manabox-nota {
+    font-size: 0.82rem;
+    color: var(--mtg-text-muted);
+    line-height: 1.5;
+    margin: 0.2rem 0 0;
+}
+
+.atajo-manabox .btn-mythic {
+    flex-shrink: 0;
+}
+
+/* Por debajo de 480px las tres columnas dejan al boton sin ancho para su texto. */
+@media (max-width: 479px) {
+    .atajo-manabox {
+        flex-wrap: wrap;
+    }
+
+    .atajo-manabox .btn-mythic {
+        width: 100%;
+        text-align: center;
+    }
+}
