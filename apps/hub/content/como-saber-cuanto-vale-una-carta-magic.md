@@ -2,7 +2,7 @@
 titulo: Cómo saber cuánto vale una carta Magic
 descripcion: "Los siete factores que fijan el precio: edición, versión, idioma, estado, foil, demanda y liquidez"
 fecha: 2026-09-05
-keywords: cuanto vale una carta magic, valor cartas magic, precio cartas magic
+keywords: cuanto vale una carta magic, precio cartas magic, saber el precio de una carta magic
 ---
 
 La pregunta llega casi siempre con la misma forma: alguien abre una caja que llevaba

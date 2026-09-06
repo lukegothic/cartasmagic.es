@@ -72,7 +72,7 @@ module.exports = (app) => {
     res.render('index', {
       title: 'Vender cartas Magic: mándalas y cobra sin listar nada | VenderCartasMagic.es',
       description: 'Compramos tu colección de cartas Magic. Pides la etiqueta en un minuto, la mandas gratis y cobras por transferencia. Sin listados, sin fotos y sin negociación.',
-      keywords: 'vender cartas magic, vender coleccion cartas magic, donde vender cartas magic, vender cartas magic españa, comprar colecciones magic',
+      keywords: 'vender cartas magic, vender cartas, venta cartas magic, vendo cartas magic, compra venta cartas magic, vender coleccion cartas magic, vender cartas magic españa, comprar colecciones magic',
       canonical: 'https://vendercartasmagic.es',
       og_title: 'Vender cartas Magic: mándalas y cobra sin listar nada',
       og_description: 'Compramos tu colección de cartas Magic. Envío pagado, valoración en 24 horas y pago por transferencia.',

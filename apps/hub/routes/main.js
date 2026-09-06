@@ -58,7 +58,7 @@ module.exports = (app) => {
       description:
         'Guías sobre el valor de las cartas Magic: The Gathering en España. Qué determina el precio de una carta, qué colecciones valen dinero y cómo vender la tuya sin listarla.',
       keywords:
-        'valor cartas magic, cuanto vale una carta magic, valorar cartas magic, tasar cartas magic, precio cartas magic antiguas',
+        'valor cartas magic, valorar cartas magic, tasar cartas magic, cartas magic antiguas, precio cartas magic antiguas',
       canonical: `${PORTADA}/`,
       og_title: 'CartasMagic.es | Cuánto valen tus cartas Magic',
       og_description:
@@ -77,7 +77,7 @@ module.exports = (app) => {
       description:
         'Cómo se calcula el precio de una carta Magic: edición, estado, idioma y demanda. Guías escritas por quien compra colecciones a diario.',
       keywords:
-        'valor cartas magic, precio cartas magic, guia cartas magic, tasar cartas magic',
+        'guia cartas magic, guias valor cartas magic, aprender a valorar cartas magic',
       canonical: `${PORTADA}/blog`,
       og_title: 'Guías sobre el valor de las cartas Magic',
       og_description: 'Cómo se calcula el precio de una carta Magic, explicado sin tecnicismos.',
