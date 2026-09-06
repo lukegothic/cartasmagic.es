@@ -79,6 +79,11 @@ el lote entero en una sola operación.
   15 días.
 - Peso máximo por paquete: 2 kg y 30x20x20 cm (unas 1.000 cartas). Para más volumen
   hay que avisar antes.
+- La etiqueta de envío caduca a los 5 días naturales desde que se manda, y con ella el
+  presupuesto previo calculado sobre una lista de cartas. Pasado ese plazo se cancela el
+  envío y hay que pedir una etiqueta nueva. No confundir con el plazo para responder a la
+  oferta, que son 15 días y corre desde que se comunica el precio de unas cartas ya
+  recibidas.
 
 ## Qué se compra
 

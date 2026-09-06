@@ -1,6 +1,7 @@
 const {
   envolver, escaparHtml, euros, parrafo, lista, destacado, firmaTexto,
-  bloqueEtiqueta, bloqueEtiquetaTexto, aprovecharCaja, aprovecharCajaTexto,
+  bloqueEtiqueta, bloqueEtiquetaTexto, plazoEtiqueta, plazoEtiquetaTexto,
+  aprovecharCaja, aprovecharCajaTexto,
   pedirDireccion, pedirDireccionTexto
 } = require('./correo-plantilla');
 const { NOTAS_INTERNAS, LIMITES_PAQUETE, APROVECHAR_CAJA, MANABOX } = require('./textos-correo');
@@ -23,6 +24,7 @@ const cuerpoHtml = ({ lead, mazo, presupuesto }) => [
   parrafo(MANABOX.confirmacion),
   lead.direccion ? bloqueEtiqueta() : pedirDireccion(),
   lead.direccion ? '' : parrafo(MANABOX.limite(LIMITES_PAQUETE.peso, LIMITES_PAQUETE.medidas)),
+  plazoEtiqueta(true),
   aprovecharCaja(APROVECHAR_CAJA.extras)
 ].filter(Boolean).join('\n\n');
 
@@ -44,6 +46,8 @@ const cuerpoTexto = ({ lead, mazo, presupuesto }) => [
   // Sin direccion el texto plano se quedaba sin los limites, que en html si van: el parrafo
   // siguiente habla del tamaño de la caja y necesita que este dicho antes.
   ...(lead.direccion ? [] : [MANABOX.limite(LIMITES_PAQUETE.peso, LIMITES_PAQUETE.medidas), '']),
+  plazoEtiquetaTexto(true),
+  '',
   aprovecharCajaTexto(APROVECHAR_CAJA.extras),
   '',
   ...firmaTexto()

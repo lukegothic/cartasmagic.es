@@ -1,6 +1,7 @@
 const {
   envolver, escaparHtml, parrafo, firmaTexto,
-  bloqueEtiqueta, bloqueEtiquetaTexto, aprovecharCaja, aprovecharCajaTexto,
+  bloqueEtiqueta, bloqueEtiquetaTexto, plazoEtiqueta, plazoEtiquetaTexto,
+  aprovecharCaja, aprovecharCajaTexto,
   pedirDireccion, pedirDireccionTexto
 } = require('./correo-plantilla');
 const { NOTAS_INTERNAS, LIMITES_PAQUETE, PEDIR_DIRECCION, POSTAL } = require('./textos-correo');
@@ -12,6 +13,7 @@ const cuerpoHtml = ({ nombre, direccion }) => [
   parrafo(POSTAL.proceso),
   direccion ? bloqueEtiqueta() : pedirDireccion(),
   direccion ? '' : parrafo(PEDIR_DIRECCION.limite(LIMITES_PAQUETE.peso, LIMITES_PAQUETE.medidas)),
+  plazoEtiqueta(),
   aprovecharCaja()
 ].filter(Boolean).join('\n\n');
 
@@ -27,6 +29,8 @@ const cuerpoTexto = ({ nombre, direccion }) => [
   // Sin direccion el texto plano se quedaba sin los limites, que en html si van: el parrafo
   // siguiente habla del tamaño de la caja y necesita que este dicho antes.
   ...(direccion ? [] : [PEDIR_DIRECCION.limite(LIMITES_PAQUETE.peso, LIMITES_PAQUETE.medidas), '']),
+  plazoEtiquetaTexto(),
+  '',
   aprovecharCajaTexto(),
   '',
   ...firmaTexto()

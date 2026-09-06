@@ -44,6 +44,19 @@ const NOTAS_INTERNAS = {
 
 const LIMITES_PAQUETE = { peso: '2 kg', medidas: '30 x 20 x 20 cm' };
 
+// Packlink solo deja cancelar un envio dentro de los 15 dias siguientes a contratarlo. Los 5
+// que se anuncian son un margen nuestro dentro de esa ventana: dejan diez dias para tramitar
+// la cancelacion sin apurar el plazo del transportista.
+//
+// No confundir con los 15 dias naturales del aviso legal, que son otra cosa y corren desde
+// que se manda el precio de unas cartas ya recibidas. Aqui todavia no ha salido el paquete.
+const PLAZO_ETIQUETA = {
+  // En la via postal no hay cifra todavia: caduca solo el envio.
+  etiqueta: 'La etiqueta caduca a los 5 días. Pasado ese plazo se cancela el envío.',
+  // La cifra sale de precios de Cardmarket, que se mueven, asi que caduca con la etiqueta.
+  conOferta: 'La oferta y la etiqueta caducan a los 5 días. Pasado ese plazo se cancela el envío y habría que valorar las cartas otra vez.'
+};
+
 // El envio lo pagamos nosotros y la caja viaja igual llena que medio vacia, asi que interesa
 // que venga llena: lo que se quede en casa del cliente ya no vuelve, porque una segunda tanda
 // cuesta otro envio. El parrafo se lo dice mirandolo desde su lado, que es cobrar mas.
@@ -126,4 +139,4 @@ const MANABOX = {
   }
 };
 
-module.exports = { FIRMA, PASOS_REENVIO, NOTAS_INTERNAS, LIMITES_PAQUETE, APROVECHAR_CAJA, ETIQUETA, PEDIR_DIRECCION, POSTAL, MANABOX };
+module.exports = { FIRMA, PASOS_REENVIO, NOTAS_INTERNAS, LIMITES_PAQUETE, PLAZO_ETIQUETA, APROVECHAR_CAJA, ETIQUETA, PEDIR_DIRECCION, POSTAL, MANABOX };

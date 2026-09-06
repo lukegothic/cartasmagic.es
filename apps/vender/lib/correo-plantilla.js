@@ -2,7 +2,7 @@
 // cliente debe leer: los datos del formulario viajan aparte, como adjunto (ver notas.js).
 //
 // Aqui vive la maquetacion, no la prosa: el texto de los correos esta en textos-correo.js.
-const { FIRMA, LIMITES_PAQUETE, APROVECHAR_CAJA, ETIQUETA, PEDIR_DIRECCION } = require('./textos-correo');
+const { FIRMA, LIMITES_PAQUETE, PLAZO_ETIQUETA, APROVECHAR_CAJA, ETIQUETA, PEDIR_DIRECCION } = require('./textos-correo');
 
 const escaparHtml = (texto) =>
   String(texto).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -54,6 +54,14 @@ const bloqueEtiquetaTexto = () => [
 // Va detras de los pasos del envio en las dos vias y tanto si la etiqueta viaja adjunta como
 // si todavia se esta pidiendo la direccion: el cliente decide que mete en la caja en los cuatro
 // casos. `extras` solo lo pasa ManaBox, donde el precio sale de una lista cerrada.
+// Cierra el bloque logistico: detras del peso y las medidas, delante de la invitacion a
+// llenar la caja. `conOferta` lo pasa ManaBox, donde ademas de la etiqueta caduca la cifra.
+const plazoEtiqueta = (conOferta = false) =>
+  parrafo(conOferta ? PLAZO_ETIQUETA.conOferta : PLAZO_ETIQUETA.etiqueta);
+
+const plazoEtiquetaTexto = (conOferta = false) =>
+  conOferta ? PLAZO_ETIQUETA.conOferta : PLAZO_ETIQUETA.etiqueta;
+
 const aprovecharCaja = (extras = '') =>
   [APROVECHAR_CAJA.intro, extras].filter(Boolean).map(parrafo).join('\n\n');
 
@@ -66,6 +74,7 @@ const pedirDireccionTexto = () => PEDIR_DIRECCION.texto;
 
 module.exports = {
   envolver, escaparHtml, euros, parrafo, lista, destacado, firmaTexto,
-  bloqueEtiqueta, bloqueEtiquetaTexto, aprovecharCaja, aprovecharCajaTexto,
+  bloqueEtiqueta, bloqueEtiquetaTexto, plazoEtiqueta, plazoEtiquetaTexto,
+  aprovecharCaja, aprovecharCajaTexto,
   pedirDireccion, pedirDireccionTexto
 };
