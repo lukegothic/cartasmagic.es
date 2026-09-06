@@ -134,3 +134,65 @@ test('recorta las listas largas', () => {
 
   assert.equal(acciones.length, 10);
 });
+
+// El adjunto llega cada dia con las mismas acciones hasta que se aplican. Sin marcar
+// cuales son nuevas, no hay forma de distinguir lo que ya se hizo de lo que falta.
+test('marca como nueva la accion que ayer no estaba', () => {
+  const hallazgos = {
+    ...vacio,
+    sinDuenno: [
+      {
+        consulta: 'vender cartas',
+        impresiones: 97,
+        clics: 0,
+        mejor: { dominio: VENDER, posicion: 16.1 },
+        deberia: VENDER
+      },
+      {
+        consulta: 'venta cartas magic',
+        impresiones: 44,
+        clics: 1,
+        mejor: { dominio: VENDER, posicion: 8.6 },
+        deberia: VENDER
+      }
+    ]
+  };
+  // Ayer solo estaba "vender cartas", asi que la otra es la nueva.
+  const acciones = derivarAcciones(hallazgos, indice, ['huerfana:vender cartas']);
+  const porFirma = new Map(acciones.map((a) => [a.firma, a]));
+
+  assert.equal(porFirma.get('huerfana:vender cartas').esNueva, false);
+  assert.equal(porFirma.get('huerfana:venta cartas magic').esNueva, true);
+});
+
+// Con 48 visitas al mes una consulta de 10 impresiones no distingue una senal de una
+// casualidad. La accion tiene que decirlo, no presentarse como una orden.
+test('avisa cuando la accion se apoya en pocas impresiones', () => {
+  const flojo = {
+    ...vacio,
+    sinDuenno: [
+      {
+        consulta: 'tasar cartas magic',
+        impresiones: 10,
+        clics: 0,
+        mejor: { dominio: VENDER, posicion: 15 },
+        deberia: HUB
+      }
+    ]
+  };
+  const solido = {
+    ...vacio,
+    sinDuenno: [
+      {
+        consulta: 'vender cartas',
+        impresiones: 97,
+        clics: 0,
+        mejor: { dominio: VENDER, posicion: 16.1 },
+        deberia: VENDER
+      }
+    ]
+  };
+
+  assert.equal(derivarAcciones(flojo, indice)[0].esRuido, true);
+  assert.equal(derivarAcciones(solido, indice)[0].esRuido, false);
+});

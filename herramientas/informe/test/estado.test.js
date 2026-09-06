@@ -66,3 +66,12 @@ test('el embudo sale los lunes y ningun otro dia', () => {
     assert.equal(esDiaDeEmbudo(new Date(2026, 8, dia)), false, `dia ${dia}`);
   }
 });
+
+// El adjunto se regeneraba entero cada dia, asi que una accion ya aplicada era
+// indistinguible de una nueva. Marcar cuales son nuevas es lo que hace que el fichero
+// sirva de lista de trabajo y no de inventario repetido.
+test('marca que firmas son nuevas respecto a ayer', () => {
+  const hoy = ['huerfana:vender cartas', 'huerfana:venta cartas magic'];
+  const { nuevas } = comparar(hoy, ['huerfana:vender cartas']);
+  assert.deepEqual(nuevas, ['huerfana:venta cartas magic']);
+});

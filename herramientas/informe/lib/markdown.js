@@ -18,16 +18,33 @@ const seccionAcciones = (acciones) => {
   if (!acciones.length) return '## Acciones\n\n_Sin acciones pendientes._';
 
   const cuerpo = acciones
-    .map(
-      ({ titulo, porque, donde, hacer }, i) =>
-        `### ${i + 1}. ${titulo}\n\n` +
+    .map(({ titulo, porque, donde, hacer, esNueva, esRuido }, i) => {
+      const marcas = [esNueva ? 'NUEVA' : null, esRuido ? 'POCO VOLUMEN' : null].filter(Boolean);
+      return (
+        `### ${i + 1}. ${titulo}${marcas.length ? ` _(${marcas.join(', ')})_` : ''}\n\n` +
         `- **Por que:** ${porque}\n` +
         `- **Donde:** ${donde.length ? donde.map(enlace).join(', ') : 'sin pagina asignada'}\n` +
         `- **Hacer:** ${hacer}`
-    )
+      );
+    })
     .join('\n\n');
 
-  return `## Acciones\n\nOrdenadas por impresiones perdidas.\n\n${cuerpo}`;
+  const nuevas = acciones.filter(({ esNueva }) => esNueva).length;
+  const ruido = acciones.filter(({ esRuido }) => esRuido).length;
+
+  // El adjunto repite las acciones hasta que se aplican, asi que sin decir cuantas son
+  // nuevas se lee como un inventario y no como una lista de trabajo.
+  const aviso = ruido
+    ? `\n\n${ruido} de estas acciones se apoyan en menos de 40 impresiones y van marcadas ` +
+      'como POCO VOLUMEN. A ese nivel la diferencia entre acertar y no cabe dentro del ruido, ' +
+      'asi que conviene aplicarlas solo si el cambio no cuesta nada y no tocan nada que ya ' +
+      'funcione.'
+    : '';
+
+  return (
+    `## Acciones\n\n${acciones.length} en total, ${nuevas} sin ver ayer. ` +
+    `Ordenadas por impresiones perdidas.${aviso}\n\n${cuerpo}`
+  );
 };
 
 const seccionGeo = (consultas) => {
@@ -159,8 +176,8 @@ const seccionDatos = (porDominio) => {
   return `## Datos en bruto\n\n${bloques.join('\n\n')}`;
 };
 
-const componerMarkdown = ({ ventana, indice, hallazgos, consultas, porDominio, llms, embudo }) => {
-  const acciones = derivarAcciones(hallazgos, indice);
+const componerMarkdown = ({ ventana, indice, hallazgos, consultas, porDominio, llms, embudo, previas }) => {
+  const acciones = derivarAcciones(hallazgos, indice, previas);
 
   const partes = [
     `# Informe cartasmagic ${ventana.hasta}`,
