@@ -66,12 +66,11 @@ aunque en la interfaz se vean los datos igual.
 
 ### 5. Dar acceso en GA4
 
-En https://analytics.google.com, por cada una de las dos propiedades:
-**Administrar > Gestión del acceso a la propiedad > +**, pegar el mismo correo y darle
-el rol de **lector**.
+Los dos dominios comparten una sola propiedad, la `552777806`, cada uno con su flujo de
+datos. En el informe se separan filtrando por `hostName`, no por propiedad.
 
-De paso, apuntar el identificador numérico de cada propiedad, que sale en
-**Administrar > Detalles de la propiedad**. Son los dos números que hacen falta abajo.
+En https://analytics.google.com: **Administrar > Gestión del acceso a la propiedad > +**,
+pegar el mismo correo y darle el rol de **lector**. Una vez, no dos.
 
 ## Cómo se ejecuta
 
@@ -80,13 +79,12 @@ cd herramientas/informe
 npm install
 
 export GOOGLE_APPLICATION_CREDENTIALS="W:/APPS_MTG/credenciales/cartasmagic-informe.json"
-export GA4_HUB=000000000
-export GA4_VENDER=000000000
+export GA4_PROPIEDAD=552777806
 
 npm run informe
 ```
 
-En PowerShell las variables se asignan con `$env:GA4_HUB = '000000000'`.
+En PowerShell las variables se asignan con `$env:GA4_PROPIEDAD = '552777806'`.
 
 Por defecto mira los últimos 90 días. Con `--dias` se cambia la ventana:
 
@@ -94,8 +92,10 @@ Por defecto mira los últimos 90 días. Con `--dias` se cambia la ventana:
 node informe.js --dias 28
 ```
 
-La ventana termina tres días antes de hoy porque Search Console no tiene consolidados
-los últimos días y contarlos hunde las medias sin motivo.
+La ventana de Search Console termina tres días antes de hoy porque no tiene
+consolidados los últimos días y contarlos hunde las medias sin motivo. La de GA4 llega
+hasta hoy: ahí no hay ese retraso, y de momento casi todo lo que ha recogido está en los
+últimos días.
 
 ## El aviso diario en Dokploy
 
@@ -117,47 +117,58 @@ contenedor de Dokploy, que es el unico sitio del servidor con node y git: el hos
 tiene node instalado, y la imagen de vender solo lleva `apps/vender`, asi que ni un
 Server Job ni un Application Job pueden ejecutar esto.
 
+Los campos que pide son solo estos, no hay ninguno para variables de entorno:
+
 | Campo | Valor |
 |---|---|
-| Cron | `30 7 * * *` |
-| Comando | el de abajo |
+| Name | `informe-cartasmagic` |
+| Cron Expression | `30 7 * * *` |
+| Shell Type | `bash` |
+| Script | el de abajo |
+
+Como no hay campo de variables, van en un fichero aparte que el script carga. Asi
+tampoco quedan las credenciales guardadas en la base de datos de Dokploy.
 
 ```sh
-cd /etc/dokploy/informe/repo && git pull -q && cd herramientas/informe && npm ci --omit=dev --silent && node diario.js
+set -a
+. /etc/dokploy/informe/entorno
+set +a
+
+cd /etc/dokploy/informe/repo && git pull -q
+cd herramientas/informe && npm ci --omit=dev --silent
+node diario.js
 ```
 
-`/etc/dokploy` esta montado desde el host, asi que lo que se deje ahi sobrevive a que
-el contenedor de Dokploy se recree.
+`set -a` hace que todo lo que se lea del fichero se exporte al proceso de node. Sin eso
+las variables se quedan en el shell y node no las ve.
+
+`/etc/dokploy` esta montado desde el host, asi que lo que se deje ahi sobrevive a que el
+contenedor de Dokploy se recree.
 
 ### La primera vez
 
-El repositorio ya esta clonado en `/etc/dokploy/informe/repo`. Falta dejar la
-credencial, y eso pide entrar por SSH una vez:
+El repositorio ya esta clonado en `/etc/dokploy/informe/repo` y la credencial ya esta
+puesta en `/etc/dokploy/informe/google.json`. Falta el fichero de variables:
 
 ```sh
 ssh vps
 D=$(docker ps --filter name=dokploy --format "{{.Names}}" | grep -vE "postgres|redis" | head -1)
-docker exec -i $D sh -c 'mkdir -p /etc/dokploy/informe/estado && cat > /etc/dokploy/informe/google.json && chmod 600 /etc/dokploy/informe/google.json' < ruta/al/json/de/la/cuenta.json
-```
-
-El JSON se pasa por la entrada estandar a proposito: por la linea de comandos quedaria
-en el historial del shell, y como variable de entorno de Dokploy habria que meterlo en
-base64 porque es multilinea. Por stdin no pasa ninguna de las dos cosas.
-
-### Variables de entorno del job
-
-```
+docker exec -i $D sh -c 'cat > /etc/dokploy/informe/entorno && chmod 600 /etc/dokploy/informe/entorno' <<'FIN'
 GOOGLE_APPLICATION_CREDENTIALS=/etc/dokploy/informe/google.json
 INFORME_ESTADO_DIR=/etc/dokploy/informe/estado
-GA4_HUB=000000000
-GA4_VENDER=000000000
-SMTP_HOST=...
+GA4_PROPIEDAD=552777806
+SMTP_HOST=
 SMTP_PORT=587
-SMTP_USER=...
-SMTP_PASS=...
-EMAIL_FROM=...
-INFORME_EMAIL_TO=...
+SMTP_SECURE=false
+SMTP_USER=
+SMTP_PASS=
+EMAIL_FROM=
+INFORME_EMAIL_TO=
+FIN
 ```
+
+Los valores de SMTP son los mismos que ya usa vender: se copian de su panel de
+variables en Dokploy.
 
 `INFORME_ESTADO_DIR` es lo que hace que el aviso no se repita: ahí se guarda qué se
 mandó ayer. Si apunta a un sitio que se borra, cada ejecución vuelve a mandar todos los

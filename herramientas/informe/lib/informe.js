@@ -3,9 +3,11 @@ const { construirIndice } = require('./keywords');
 const { agrupar, avisos, keywordsMuertas } = require('./analisis');
 const { numero, decimal, porcentaje, titulo, seccion, tabla } = require('./formato');
 
+// Una sola propiedad de GA4 para los dos dominios, cada uno con su flujo de datos. Se
+// separan por hostName al consultar, no por propiedad.
 const SITIOS = [
-  { dominio: 'cartasmagic.es', ga4: process.env.GA4_HUB },
-  { dominio: 'vendercartasmagic.es', ga4: process.env.GA4_VENDER }
+  { dominio: 'cartasmagic.es', ga4: process.env.GA4_PROPIEDAD },
+  { dominio: 'vendercartasmagic.es', ga4: process.env.GA4_PROPIEDAD }
 ];
 
 // Los cinco del embudo de docs/plan-medicion-embudo.md, en orden. Los umbrales son los
@@ -18,12 +20,19 @@ const EMBUDO = [
   { evento: 'envio_rechazado', etiqueta: 'Envio rechazado', suelto: true }
 ];
 
+const iso = (d) => d.toISOString().slice(0, 10);
+
+// GSC no tiene consolidados los ultimos tres dias y contarlos hunde las medias. GA4 si
+// los tiene, y ademas es donde esta casi todo lo que ha recogido hasta ahora, asi que
+// cada uno lleva su propia ventana.
 const fechas = (dias) => {
-  // GSC no tiene los ultimos tres dias consolidados, asi que la ventana acaba antes.
-  const hasta = new Date(Date.now() - 3 * 86400000);
-  const desde = new Date(hasta.getTime() - dias * 86400000);
-  const iso = (d) => d.toISOString().slice(0, 10);
-  return { desde: iso(desde), hasta: iso(hasta) };
+  const hoy = new Date();
+  const hastaGSC = new Date(hoy.getTime() - 3 * 86400000);
+  return {
+    desde: iso(new Date(hastaGSC.getTime() - dias * 86400000)),
+    hasta: iso(hastaGSC),
+    ga4: { desde: iso(new Date(hoy.getTime() - dias * 86400000)), hasta: iso(hoy) }
+  };
 };
 
 const bloqueGSC = async (auth, dominio, ventana) => {
@@ -83,19 +92,21 @@ const bloqueGSC = async (auth, dominio, ventana) => {
 
 const bloqueGA4 = async (auth, { dominio, ga4 }, ventana) => {
   if (!ga4) {
-    const variable = dominio.startsWith('vender') ? 'GA4_VENDER' : 'GA4_HUB';
     return (
       `${seccion(`GA4 ${dominio}`)}\n` +
-      `  Falta ${variable}. El identificador numerico esta en GA4, en\n` +
+      '  Falta GA4_PROPIEDAD. El identificador numerico esta en GA4, en\n' +
       '  Administrar > Detalles de la propiedad. Sin el no se lee el embudo.'
     );
   }
 
+  const rango = ventana.ga4 || ventana;
+
   const [resumen, eventos, campanas] = await Promise.all([
-    consultaGA4(auth, ga4, { ...ventana, metricas: ['sessions', 'activeUsers'] }),
-    consultaGA4(auth, ga4, { ...ventana, dimensiones: ['eventName'], metricas: ['eventCount'] }),
+    consultaGA4(auth, ga4, { ...rango, dominio, metricas: ['sessions', 'activeUsers'] }),
+    consultaGA4(auth, ga4, { ...rango, dominio, dimensiones: ['eventName'], metricas: ['eventCount'] }),
     consultaGA4(auth, ga4, {
-      ...ventana,
+      ...rango,
+      dominio,
       dimensiones: ['sessionCampaignName'],
       metricas: ['sessions', 'keyEvents']
     })

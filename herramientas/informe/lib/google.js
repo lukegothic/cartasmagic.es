@@ -42,7 +42,17 @@ const consultaGSC = async (auth, dominio, { desde, hasta, dimensiones, limite = 
   }));
 };
 
-const consultaGA4 = async (auth, propiedad, { desde, hasta, dimensiones = [], metricas, limite = 200 }) => {
+// Los dos dominios mandan a la misma propiedad, asi que sin filtro por hostName cada
+// uno saldria con las cifras de los dos sumadas.
+const filtroDominio = (dominio) => ({
+  filter: { fieldName: 'hostName', stringFilter: { matchType: 'EXACT', value: dominio } }
+});
+
+const consultaGA4 = async (
+  auth,
+  propiedad,
+  { desde, hasta, dimensiones = [], metricas, limite = 200, dominio }
+) => {
   const datos = await pedir(
     auth,
     `https://analyticsdata.googleapis.com/v1beta/properties/${propiedad}:runReport`,
@@ -50,6 +60,7 @@ const consultaGA4 = async (auth, propiedad, { desde, hasta, dimensiones = [], me
       dateRanges: [{ startDate: desde, endDate: hasta }],
       dimensions: dimensiones.map((name) => ({ name })),
       metrics: metricas.map((name) => ({ name })),
+      ...(dominio ? { dimensionFilter: filtroDominio(dominio) } : {}),
       limit: limite
     }
   );
