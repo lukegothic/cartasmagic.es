@@ -36,11 +36,11 @@ const grafo = (...nodos) =>
 
 const INDEX = {
   title: 'Vender cartas Magic: mándalas y cobra sin listar nada | VenderCartasMagic.es',
-  description: 'Compramos tu colección de cartas Magic. Pides la etiqueta en un minuto, la mandas gratis y cobras por transferencia. Sin listados, sin fotos y sin negociación.',
+  description: 'Compramos tu colección de cartas Magic en cualquier idioma y estado. Pides la etiqueta en un minuto, la mandas gratis y cobras por transferencia. Sin listados ni negociación.',
   keywords: 'vender cartas magic, vender cartas, venta cartas magic, vendo cartas magic, compra venta cartas magic, vender coleccion cartas magic, vender cartas magic españa, comprar colecciones magic',
   canonical: DOMINIO,
   og_title: 'Vender cartas Magic: mándalas y cobra sin listar nada',
-  og_description: 'Compramos tu colección de cartas Magic. Envío pagado, valoración en 24 horas y pago por transferencia.',
+  og_description: 'Compramos tu colección de cartas Magic en cualquier idioma y estado. Envío pagado, valoración en 24 horas y pago por transferencia.',
   og_url: DOMINIO
 };
 

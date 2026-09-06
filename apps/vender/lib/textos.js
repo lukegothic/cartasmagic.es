@@ -50,7 +50,7 @@ const PROCESO_FAQ = [
   },
   {
     q: '¿Qué colecciones compráis?',
-    a: 'Mazos montados, álbumes y colecciones completas de Magic: The Gathering. No compramos cajas de bulk sin clasificar, cartas de otros juegos ni falsificaciones.'
+    a: 'Mazos montados, álbumes y colecciones completas de Magic: The Gathering, en cualquier idioma y en cualquier estado. El bulk que venga dentro de una colección se paga como parte del lote. Lo que no compramos es una caja que sea solo comunes sin nada más, ni cartas de otros juegos ni falsificaciones.'
   },
   {
     q: '¿Cuánto valen mis cartas Magic?',
@@ -64,7 +64,7 @@ const PROCESO_FAQ = [
 
 const PORTADA = {
   h1: 'Vende tus cartas Magic sin listar, fotografiar ni negociar',
-  reclamo: 'Metes los mazos y los álbumes en una caja, la mandas con la etiqueta que pagamos nosotros y un día laborable después tienes un precio definitivo. Aceptas y cobras por transferencia.',
+  reclamo: 'Compramos en cualquier idioma y en cualquier estado. Metes los mazos y los álbumes en una caja, la mandas con la etiqueta que pagamos nosotros y un día laborable después tienes un precio definitivo. Aceptas y cobras por transferencia.',
   llamadaPrincipal: 'Saber cuánto vale mi colección',
   notaMinuto: 'Se tarda un minuto &middot; sin compromiso &middot; el envío lo pagamos nosotros',
   notaCardmarket: 'Vendedor en Cardmarket desde 2011 &middot; más de 3.200 valoraciones positivas',
@@ -89,8 +89,8 @@ const PORTADA = {
     etiquetaSi: 'Sí:',
     etiquetaNo: 'No:',
     etiquetaSube: 'Sube el precio',
-    si: 'mazos montados, álbumes, carpetas de clasificadores y colecciones completas de Magic: The Gathering, de cualquier época.',
-    no: 'cajas de bulk sin clasificar, cartas de otros juegos (Pokémon, Yu-Gi-Oh y demás) y falsificaciones.',
+    si: 'mazos montados, álbumes, carpetas de clasificadores y colecciones completas de Magic: The Gathering, de cualquier época, en cualquier idioma y en cualquier estado. No hace falta ordenar nada.',
+    no: 'cajas que sean solo comunes y nada más, cartas de otros juegos (Pokémon, Yu-Gi-Oh y demás) y falsificaciones.',
     sube: 'el buen estado, los sets antiguos y las cartas de formatos que se juegan hoy. Lo baja el desgaste, las cartas dobladas y el volumen de comunes modernas.',
     nota: 'La etiqueta cubre hasta 2 kg y 30x20x20 cm, que son unas 1.000 cartas. Si tienes más, dilo en el formulario y te preparamos otra: no mandes un paquete más grande sin avisar, porque se queda a medias en Correos.'
   },
@@ -164,7 +164,7 @@ const VALORACION = {
       'El precio es una cifra definitiva por el lote entero. No hay negociación ni contraoferta.',
       'Si rechazas el precio, la devolución cuesta 11,90 € y la paga quien rechaza, por transferencia, antes de devolver el paquete.',
       'Si decidimos no valorar tu colección, la devolución la pagamos nosotros.',
-      'Compramos mazos, álbumes y colecciones. No compramos bulk sin clasificar, otros juegos ni falsificaciones.',
+      'Compramos mazos, álbumes y colecciones en cualquier idioma y estado. No compramos cajas que sean solo comunes, otros juegos ni falsificaciones.',
       'Hasta 2 kg por paquete. Si tienes más, avísanos antes de enviar.'
     ],
     enlace: 'Leer las condiciones completas'
