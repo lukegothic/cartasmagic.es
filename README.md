@@ -7,7 +7,7 @@ Dokploy apuntando a este mismo repositorio con un build path diferente.
 
 ```
 apps/
-├── hub/      cartasmagic.es        portada estática, sin build
+├── hub/      cartasmagic.es        Express 5 + EJS, portada y blog
 └── vender/   vendercartasmagic.es  Express 5 + EJS
 
 herramientas/
@@ -18,8 +18,15 @@ herramientas/
 
 ### hub
 
-Una sola página estática (`index.html`). No tiene dependencias ni paso de build:
-se sirve tal cual.
+Aplicación Express con vistas EJS: portada, índice del blog y una página por artículo.
+Los artículos son los ficheros markdown de `content/`, que se leen al arrancar. Para
+levantarla:
+
+```bash
+cd apps/hub
+npm install
+npm start
+```
 
 ### vender
 
@@ -65,6 +72,7 @@ Lo que hay en `docs/` y conviene leer antes de tocar keywords o dominios:
 | [corte-julio-2026.md](docs/corte-julio-2026.md) | El hueco de datos del 20 de julio al 2 de septiembre de 2026 |
 | [plan-medicion-embudo.md](docs/plan-medicion-embudo.md) | Qué se mide del embudo y por qué no se lee antes de ocho semanas |
 | [medicion-canales.md](docs/medicion-canales.md) | Cómo se atribuye cada colección al canal que la trajo |
+| [donde-se-cambian-los-textos.md](docs/donde-se-cambian-los-textos.md) | En qué fichero vive cada texto de las aplicaciones y cómo añadir, cambiar o quitar uno |
 
 ## Despliegue
 

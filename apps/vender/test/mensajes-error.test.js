@@ -2,10 +2,11 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const { mensajeDeError, MENSAJES } = require('../lib/mensajes-error');
+const { mensajeDeError } = require('../lib/mensajes-error');
+const { ERRORES } = require('../lib/textos');
 
 test('cada codigo conocido tiene su mensaje', () => {
-  assert.equal(mensajeDeError('EMAIL_NO_VALIDO'), MENSAJES.EMAIL_NO_VALIDO);
+  assert.equal(mensajeDeError('EMAIL_NO_VALIDO'), ERRORES.EMAIL_NO_VALIDO);
   assert.ok(mensajeDeError('MAZO_VACIO').length > 0);
 });
 
@@ -33,6 +34,6 @@ test('todos los codigos que devuelven las librerias estan mapeados', () => {
 
   assert.ok(codigos.size > 0, 'no se ha encontrado ningun codigo en las fuentes');
   codigos.forEach((codigo) => {
-    assert.ok(MENSAJES[codigo], `el codigo ${codigo} no tiene mensaje`);
+    assert.ok(ERRORES[codigo], `el codigo ${codigo} no tiene mensaje`);
   });
 });

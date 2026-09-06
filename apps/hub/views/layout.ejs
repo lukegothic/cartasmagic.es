@@ -48,11 +48,11 @@
 </head>
 <body>
     <% if (typeof conNav !== 'undefined' && conNav) { %>
-    <nav class="site-nav" aria-label="Navegación principal">
-        <a href="/" class="marca">CartasMagic<span class="logo-tld">.es</span></a>
+    <nav class="site-nav" aria-label="<%= textos.NAV.etiqueta %>">
+        <a href="/" class="marca"><%= textos.MARCA.nombre %><span class="logo-tld"><%= textos.MARCA.tld %></span></a>
         <div class="enlaces">
-            <a href="/blog">Guías</a>
-            <a href="<%= cta %>" rel="noopener">Vender</a>
+            <a href="/blog"><%= textos.NAV.guias %></a>
+            <a href="<%= cta %>" rel="noopener"><%= textos.NAV.vender %></a>
         </div>
     </nav>
     <% } %>
@@ -61,8 +61,8 @@
         <%- body %>
 
         <footer>
-            <p>&copy; 2026 CartasMagic.es &mdash; Iván Pérez, NIF 72808254Y, Pamplona
-                &middot; <a href="mailto:contacto@vendercartasmagic.es">contacto@vendercartasmagic.es</a></p>
+            <p>&copy; <%= textos.PIE.copyright %> &mdash; <%= textos.PIE.titular %>
+                &middot; <a href="mailto:<%= textos.PIE.correo %>"><%= textos.PIE.correo %></a></p>
         </footer>
     </main>
 </body>

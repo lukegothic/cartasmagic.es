@@ -1,39 +1,27 @@
 <div class="main-container">
-    <h1>Cómo vender cartas Magic en España</h1>
-    <p>Hay cuatro formas razonables de vender una colección de Magic en España. Ninguna es la mejor para todo el mundo: depende de cuánto tiempo estés dispuesto a meterle y de cuánto valga lo que tienes. Debajo están las cuatro con sus números reales, y la nuestra es solo una de ellas.</p>
+    <h1><%= textos.COMPARATIVA.h1 %></h1>
+    <p><%= textos.COMPARATIVA.intro %></p>
 
-    <h2>1. Cardmarket, carta por carta</h2>
-    <p>Es donde más dinero se saca, sin discusión. También es donde más trabajo hay. Tienes que abrir cuenta, identificar cada carta con su set y su idioma, evaluar el estado de cada una, listarlas, y luego ir enviando pedidos a medida que se venden.</p>
-    <p>La parte que casi nadie calcula: en una colección normal, la mayor parte del volumen son comunes y no comunes que no se venden nunca, o se venden a céntimos. Las veinte o treinta cartas que valen de verdad se venden pronto; el resto se queda listado durante años. Y cada pedido de dos euros implica sobre, sello y viaje a Correos.</p>
-    <p><strong>Te conviene si:</strong> tienes tiempo, la colección es grande y valiosa, y no te importa que esto dure meses.</p>
+    <% textos.COMPARATIVA.opciones.forEach(({ titulo, parrafos, conviene }) => { %>
+    <h2><%= titulo %></h2>
+    <% parrafos.forEach((parrafo) => { %>
+    <p><%= parrafo %></p>
+    <% }) %>
+    <p><strong><%= textos.COMPARATIVA.convieneEtiqueta %></strong> <%= conviene %></p>
+    <% }) %>
 
-    <h2>2. Tu tienda de siempre</h2>
-    <p>Muchas tiendas de juegos compran colecciones. Es rápido y es en persona, que a mucha gente le da tranquilidad. A cambio, la tienda tiene que revender con margen y en su zona, así que la oferta suele ser conservadora, sobre todo con el volumen que no tiene salida en su vitrina.</p>
-    <p><strong>Te conviene si:</strong> tienes una tienda de confianza cerca y prefieres cerrar el asunto cara a cara.</p>
-
-    <h2>3. Wallapop, eBay o grupos de compraventa</h2>
-    <p>Vender el lote entero de golpe a un particular. Se puede sacar un precio decente si aciertas con el comprador, pero hay que aguantar el proceso: fotos, mensajes, gente que pregunta y desaparece, ofertas de la mitad, y quedar con desconocidos o arriesgarse con el envío.</p>
-    <p><strong>Te conviene si:</strong> no tienes prisa y no te importa gestionar conversaciones.</p>
-
-    <h2>4. Vender la colección entera a un comprador especializado</h2>
-    <p>Es lo que hacemos nosotros. Mandas la colección, se valora y recibes un precio definitivo por el lote entero. Cobras en días, no en meses, y no tocas una sola carta más allá de meterlas en una caja.</p>
-    <p>La contrapartida es honesta: por el lote entero se paga menos que vendiendo carta por carta durante un año. Lo que compras es no tener que hacerlo.</p>
-    <p><strong>Te conviene si:</strong> quieres que la caja deje de estar en el armario, cobrar de una vez, y el trabajo de las otras tres opciones te da pereza solo de leerlo.</p>
-
-    <h2>Cómo funciona con nosotros, paso a paso</h2>
+    <h2><%= textos.COMPARATIVA.proceso.titulo %></h2>
     <ol class="plain-list">
-        <li><strong>Rellenas el formulario contando qué tienes.</strong> Nombre, correo y cuántas cartas son, más o menos. Si dejas también la dirección, la etiqueta te llega en el primer correo.</li>
-        <li><strong>Te mandamos una etiqueta de Correos, ya pagada.</strong> El envío de ida lo pagamos nosotros. No adelantas dinero.</li>
-        <li><strong>Envías la caja.</strong> Hasta 2 kg y 30x20x20 cm, que son unas 1.000 cartas. Si tienes más, avisa antes y lo organizamos.</li>
-        <li><strong>Un día laborable después de que llegue, recibes el precio.</strong> Una cifra definitiva por el lote, por correo, sin condiciones añadidas.</li>
-        <li><strong>Aceptas y cobras por transferencia en 24 horas.</strong> O rechazas y se te devuelve todo: la devolución cuesta 11,90 €, el envío de ida más el de vuelta, y la paga quien rechaza.</li>
+        <% textos.COMPARATIVA.proceso.pasos.forEach(({ destacado, resto }) => { %>
+        <li><strong><%= destacado %></strong> <%= resto %></li>
+        <% }) %>
     </ol>
 
-    <h2>Antes de vender, tres cosas que conviene saber</h2>
-    <p><strong>No hace falta que ordenes nada.</strong> Si vendes a un comprador especializado, clasificar las cartas antes no sube el precio: es trabajo que se iba a hacer igual. Guarda ese tiempo.</p>
-    <p><strong>El estado importa más de lo que parece.</strong> Una carta antigua muy jugada puede valer una fracción de la misma carta bien conservada. Por eso nadie serio da un precio por fotos.</p>
-    <p><strong>Las cartas antiguas no valen por antiguas.</strong> Valen por ser jugables hoy o por ser escasas. Hay cartas de 1995 que valen céntimos y cartas de hace tres años que valen cien euros.</p>
+    <h2><%= textos.COMPARATIVA.antesDeVender.titulo %></h2>
+    <% textos.COMPARATIVA.antesDeVender.puntos.forEach(({ destacado, resto }) => { %>
+    <p><strong><%= destacado %></strong> <%= resto %></p>
+    <% }) %>
 
-    <p class="center-text"><a href="/valoracion-cartas-magic" class="btn-mythic">Pedir la etiqueta de envío</a></p>
-    <p class="center-text text-muted">Se tarda un minuto y no te obliga a vender</p>
+    <p class="center-text"><a href="/valoracion-cartas-magic" class="btn-mythic"><%= textos.COMPARATIVA.llamada %></a></p>
+    <p class="center-text text-muted"><%= textos.COMPARATIVA.notaLlamada %></p>
 </div>

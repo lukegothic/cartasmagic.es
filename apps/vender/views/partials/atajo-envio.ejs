@@ -1,5 +1,5 @@
 <div class="atajo-envio">
-    <label for="direccion">Dirección para mandarte la etiqueta</label>
-    <textarea id="direccion" name="direccion" rows="3" autocomplete="street-address" placeholder="ej. Calle Mayor 1, 3º B&#10;28001 Madrid (Madrid)"><%= valores.direccion || '' %></textarea>
-    <p class="atajo-nota">Si la dejas, te mando la etiqueta ya en el primer correo. Si prefieres no darla todavía, déjala en blanco y te contesto igual</p>
+    <label for="direccion"><%= textos.FORMULARIO.direccion.label %></label>
+    <textarea id="direccion" name="direccion" rows="3" autocomplete="street-address" placeholder="<%- textos.FORMULARIO.direccion.placeholder %>"><%= valores.direccion || '' %></textarea>
+    <p class="atajo-nota"><%= textos.FORMULARIO.direccion.nota %></p>
 </div>

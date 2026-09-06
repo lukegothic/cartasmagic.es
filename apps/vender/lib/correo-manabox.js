@@ -1,8 +1,9 @@
 const {
-  envolver, escaparHtml, euros, parrafo, lista, destacado, notaHtml,
-  LIMITES_PAQUETE, bloqueEtiqueta, bloqueEtiquetaTexto, pedirDireccion, pedirDireccionTexto,
+  envolver, escaparHtml, euros, parrafo, lista, destacado, notaHtml, firmaTexto,
+  bloqueEtiqueta, bloqueEtiquetaTexto, pedirDireccion, pedirDireccionTexto,
   avisoAdjuntar, notaDireccion
 } = require('./correo-plantilla');
+const { NOTAS_INTERNAS, LIMITES_PAQUETE, MANABOX } = require('./textos-correo');
 const { calcularPresupuesto } = require('./presupuesto');
 const { componerDesgloseCsv } = require('./desglose');
 
@@ -11,54 +12,46 @@ const nombreDeFichero = (texto) => texto.normalize('NFD').replace(/[^\w]+/g, '-'
 
 const cuerpoHtml = ({ lead, mazo, presupuesto }) => [
   lead.direccion ? avisoAdjuntar() : '',
-  parrafo(`Hola ${escaparHtml(lead.nombre)},`),
-  parrafo('Hemos valorado la lista que nos mandaste. Esta es nuestra oferta por el lote completo:'),
+  parrafo(MANABOX.saludo(escaparHtml(lead.nombre))),
+  parrafo(MANABOX.intro),
   destacado([
-    `    <div style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#666;">Oferta por tu colección</div>`,
+    `    <div style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#666;">${MANABOX.ofertaEtiqueta}</div>`,
     `    <div style="font-size:40px;font-weight:bold;color:#333;padding:8px 0;">${euros(presupuesto.oferta)} €</div>`,
-    `    <div style="font-size:14px;color:#666;">${presupuesto.totalCartas} cartas${mazo.nombre ? ` &middot; ${escaparHtml(mazo.nombre)}` : ''}</div>`
+    `    <div style="font-size:14px;color:#666;">${MANABOX.cartas(presupuesto.totalCartas)}${mazo.nombre ? ` &middot; ${escaparHtml(mazo.nombre)}` : ''}</div>`
   ].join('\n')),
-  parrafo('<strong>Qué incluye</strong>'),
-  lista([
-    'Etiqueta de Correos prepagada: el envío lo pagamos nosotros',
-    'Pago por transferencia dentro de las 24 horas siguientes a que aceptes',
-    'Precio definitivo por el lote entero, sin negociación'
-  ]),
-  parrafo('El precio sale de la lista que nos has enviado y se confirma al recibir las cartas y comprobar su estado. Si el estado no se corresponde con la lista, te lo diríamos antes de pagar nada.'),
+  parrafo(`<strong>${MANABOX.queIncluyeTitulo}</strong>`),
+  lista(MANABOX.queIncluye),
+  parrafo(MANABOX.confirmacion),
   lead.direccion ? bloqueEtiqueta() : pedirDireccion(),
-  lead.direccion ? '' : parrafo(`Ten en cuenta que el paquete no puede pasar de ${LIMITES_PAQUETE.peso} ni de ${LIMITES_PAQUETE.medidas}. Si se te queda corto, avísame y te preparo una etiqueta para más peso.`)
+  lead.direccion ? '' : parrafo(MANABOX.limite(LIMITES_PAQUETE.peso, LIMITES_PAQUETE.medidas))
 ].filter(Boolean).join('\n\n');
 
 const cuerpoTexto = ({ lead, mazo, presupuesto }) => [
-  `Hola ${lead.nombre},`,
+  MANABOX.saludo(lead.nombre),
   '',
-  'Hemos valorado la lista que nos mandaste. Esta es nuestra oferta por el lote completo:',
+  MANABOX.intro,
   '',
   `    ${euros(presupuesto.oferta)} EUR`,
-  `    ${presupuesto.totalCartas} cartas${mazo.nombre ? ` - ${mazo.nombre}` : ''}`,
+  `    ${MANABOX.cartas(presupuesto.totalCartas)}${mazo.nombre ? ` - ${mazo.nombre}` : ''}`,
   '',
-  'Qué incluye:',
-  '  - Etiqueta de Correos prepagada: el envío lo pagamos nosotros',
-  '  - Pago por transferencia dentro de las 24 horas siguientes a que aceptes',
-  '  - Precio definitivo por el lote entero, sin negociación',
+  `${MANABOX.queIncluyeTitulo}:`,
+  ...MANABOX.queIncluye.map((p) => `  - ${p}`),
   '',
-  'El precio sale de la lista que nos has enviado y se confirma al recibir las cartas y comprobar su estado.',
+  MANABOX.confirmacionTexto,
   '',
   lead.direccion ? bloqueEtiquetaTexto() : pedirDireccionTexto(),
   '',
-  'Un saludo,',
-  'Iván',
-  'vendercartasmagic.es'
+  ...firmaTexto()
 ].join('\n');
 
 const notasHtml = ({ lead, presupuesto }) => [
   lead.direccion ? notaDireccion(lead.direccion) : '',
-  notaHtml(`Correo: ${escaparHtml(lead.email)}<br>
-  Enlace: <a href="${escaparHtml(lead.url)}">${escaparHtml(lead.url)}</a><br>
-  Mercado: ${euros(presupuesto.valorMercado)} € &middot; se paga el ${Math.round((presupuesto.oferta / presupuesto.valorMercado) * 100)} %<br>
-  Foils: ${presupuesto.totalFoils}${presupuesto.bajoMinimo ? '<br><strong>Por debajo del mínimo configurado</strong>' : ''}`),
-  notaHtml(`Dice el cliente: ${escaparHtml(lead.mensaje || '(nada)')}`),
-  notaHtml(`Desglose por tramo: ${presupuesto.tramos.filter(({ cartas }) => cartas > 0).map(({ etiqueta, cartas, oferta }) => `${escaparHtml(etiqueta)}: ${cartas} a ${euros(oferta)} €`).join(' &middot; ')}`)
+  notaHtml(`${NOTAS_INTERNAS.correo} ${escaparHtml(lead.email)}<br>
+  ${MANABOX.notas.enlace} <a href="${escaparHtml(lead.url)}">${escaparHtml(lead.url)}</a><br>
+  ${MANABOX.notas.mercado} ${euros(presupuesto.valorMercado)} € &middot; ${MANABOX.notas.sePaga(Math.round((presupuesto.oferta / presupuesto.valorMercado) * 100))}<br>
+  ${MANABOX.notas.foils} ${presupuesto.totalFoils}${presupuesto.bajoMinimo ? `<br><strong>${MANABOX.notas.bajoMinimo}</strong>` : ''}`),
+  notaHtml(`${NOTAS_INTERNAS.diceCliente} ${escaparHtml(lead.mensaje || NOTAS_INTERNAS.sinMensaje)}`),
+  notaHtml(`${MANABOX.notas.desglose} ${presupuesto.tramos.filter(({ cartas }) => cartas > 0).map(({ etiqueta, cartas, oferta }) => `${escaparHtml(etiqueta)}: ${cartas} a ${euros(oferta)} €`).join(' &middot; ')}`)
 ].join('\n');
 
 const componerCorreoMazo = ({ lead, mazo, cartas, entorno = process.env }) => {
@@ -66,7 +59,13 @@ const componerCorreoMazo = ({ lead, mazo, cartas, entorno = process.env }) => {
   const partes = { lead, mazo, presupuesto };
 
   return {
-    subject: `Presupuesto para ${lead.nombre}${lead.direccion?.localidad ? ` (${lead.direccion.localidad})` : ''}: ${euros(presupuesto.oferta)} EUR${presupuesto.bajoMinimo ? ' (bajo mínimo)' : ''}${lead.direccion ? ' - con dirección' : ''}`,
+    subject: MANABOX.asunto({
+      nombre: lead.nombre,
+      donde: lead.direccion?.localidad ? ` (${lead.direccion.localidad})` : '',
+      oferta: euros(presupuesto.oferta),
+      bajoMinimo: presupuesto.bajoMinimo,
+      conDireccion: Boolean(lead.direccion)
+    }),
     replyTo: lead.email,
     text: cuerpoTexto(partes),
     html: envolver({ cuerpo: cuerpoHtml(partes), notas: notasHtml(partes) }),

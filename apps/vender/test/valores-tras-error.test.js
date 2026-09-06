@@ -3,11 +3,14 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const ejs = require('ejs');
+const textos = require('../lib/textos');
 
 const VISTAS = path.join(__dirname, '..', 'views');
 
+// Las vistas sacan su copy de lib/textos.js, asi que renderizarlas a mano obliga a pasarlo
+// igual que hace la ruta.
 const render = (vista, datos) =>
-  ejs.render(fs.readFileSync(path.join(VISTAS, `${vista}.ejs`), 'utf8'), datos, {
+  ejs.render(fs.readFileSync(path.join(VISTAS, `${vista}.ejs`), 'utf8'), { textos, ...datos }, {
     filename: path.join(VISTAS, `${vista}.ejs`)
   });
 

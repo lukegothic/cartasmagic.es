@@ -1,70 +1,22 @@
 const path = require('node:path');
 const { leerEntradas } = require('../lib/contenido');
 const { enlaceVender, VENDER, VALORACION } = require('../lib/enlaces');
+const textos = require('../lib/textos');
+const {
+  PORTADA, grafo, urlArticulo, INDEX, BLOG, NO_ENCONTRADA, articulo, coleccionBlog, articuloSchema
+} = require('../lib/metadatos');
 
 // El contenido solo cambia al desplegar, asi que se lee al arrancar y no en cada
 // peticion.
 const ENTRADAS = leerEntradas(path.join(__dirname, '..', 'content'));
-const PORTADA = 'https://cartasmagic.es';
-
-const ORGANIZACION = {
-  '@type': 'Organization',
-  '@id': 'https://cartasmagic.es/#organizacion',
-  name: 'CartasMagic',
-  url: PORTADA,
-  email: 'contacto@vendercartasmagic.es',
-  telephone: '+34644154365',
-  founder: { '@type': 'Person', name: 'Iván Pérez' },
-  foundingDate: '2011',
-  areaServed: { '@type': 'Country', name: 'España' },
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: 'Calle Manuel Iribarren 10',
-    postalCode: '31008',
-    addressLocality: 'Pamplona',
-    addressRegion: 'Navarra',
-    addressCountry: 'ES'
-  },
-  description:
-    'Compramos colecciones de cartas Magic: The Gathering en toda España y publicamos guías sobre el valor de las cartas.',
-  knowsAbout: [
-    'Magic: The Gathering',
-    'Valoración de cartas coleccionables',
-    'Mercado de cartas Magic de segunda mano en España'
-  ],
-  subOrganization: { '@id': 'https://vendercartasmagic.es/#negocio' },
-  sameAs: [
-    'https://vendercartasmagic.es',
-    'https://www.cardmarket.com/es/Magic/Users/ivan-the-seller'
-  ]
-};
-
-const SITIO = {
-  '@type': 'WebSite',
-  '@id': 'https://cartasmagic.es/#web',
-  url: PORTADA,
-  name: 'CartasMagic.es',
-  inLanguage: 'es-ES',
-  publisher: { '@id': 'https://cartasmagic.es/#organizacion' }
-};
-
-const grafo = (...nodos) =>
-  JSON.stringify({ '@context': 'https://schema.org', '@graph': [ORGANIZACION, SITIO, ...nodos] });
 
 module.exports = (app) => {
   app.get('/', (req, res) => {
     res.render('index', {
-      title: 'CartasMagic.es | Cuánto valen tus cartas Magic',
-      description:
-        'Guías sobre el valor de las cartas Magic: The Gathering en España. Qué determina el precio de una carta, qué colecciones valen dinero y cómo vender la tuya sin listarla.',
-      keywords:
-        'valor cartas magic, valorar cartas magic, tasar cartas magic, precio cartas magic antiguas',
-      canonical: `${PORTADA}/`,
-      og_title: 'CartasMagic.es | Cuánto valen tus cartas Magic',
-      og_description:
-        'Qué determina el precio de una carta Magic, qué colecciones valen dinero y cómo vender la tuya sin listarla.',
+      ...INDEX,
       conNav: false,
       ld_json: grafo(),
+      textos,
       entradas: ENTRADAS,
       cta: enlaceVender(VALORACION, 'home-cta'),
       comoFunciona: enlaceVender(VENDER, 'home-proceso')
@@ -73,21 +25,10 @@ module.exports = (app) => {
 
   app.get('/blog', (req, res) => {
     res.render('blog', {
-      title: 'Guías sobre el valor de las cartas Magic | CartasMagic.es',
-      description:
-        'Cómo se calcula el precio de una carta Magic: edición, estado, idioma y demanda. Guías escritas por quien compra colecciones a diario.',
-      keywords:
-        'guia cartas magic, guias valor cartas magic, aprender a valorar cartas magic',
-      canonical: `${PORTADA}/blog`,
-      og_title: 'Guías sobre el valor de las cartas Magic',
-      og_description: 'Cómo se calcula el precio de una carta Magic, explicado sin tecnicismos.',
+      ...BLOG,
       conNav: true,
-      ld_json: grafo({
-        '@type': 'CollectionPage',
-        name: 'Guías sobre el valor de las cartas Magic',
-        url: `${PORTADA}/blog`,
-        isPartOf: { '@id': 'https://cartasmagic.es/#web' }
-      }),
+      ld_json: grafo(coleccionBlog()),
+      textos,
       entradas: ENTRADAS,
       cta: enlaceVender(VALORACION, 'blog-indice'),
       comoFunciona: enlaceVender(VENDER, 'blog-indice-proceso')
@@ -98,27 +39,11 @@ module.exports = (app) => {
     const entrada = ENTRADAS.find(({ slug }) => slug === req.params.slug);
     if (!entrada) return next();
 
-    const url = `${PORTADA}/blog/${entrada.slug}`;
-
     res.render('articulo', {
-      title: `${entrada.titulo} | CartasMagic.es`,
-      description: entrada.descripcion,
-      keywords: entrada.keywords || '',
-      canonical: url,
-      og_title: entrada.titulo,
-      og_description: entrada.descripcion,
-      og_type: 'article',
+      ...articulo(entrada),
       conNav: true,
-      ld_json: grafo({
-        '@type': 'Article',
-        headline: entrada.titulo,
-        description: entrada.descripcion,
-        datePublished: entrada.fecha,
-        inLanguage: 'es-ES',
-        mainEntityOfPage: { '@type': 'WebPage', '@id': url },
-        author: { '@id': 'https://cartasmagic.es/#organizacion' },
-        publisher: { '@id': 'https://cartasmagic.es/#organizacion' }
-      }),
+      ld_json: grafo(articuloSchema(entrada)),
+      textos,
       entrada,
       cta: enlaceVender(VALORACION, `articulo-${entrada.slug}`)
     });
@@ -135,10 +60,10 @@ module.exports = (app) => {
     const urls = [
       { loc: `${PORTADA}/`, priority: '1.0' },
       { loc: `${PORTADA}/blog`, priority: '0.8' },
-      ...ENTRADAS.map(({ slug, fecha }) => ({
-        loc: `${PORTADA}/blog/${slug}`,
+      ...ENTRADAS.map((entrada) => ({
+        loc: urlArticulo(entrada),
         priority: '0.7',
-        lastmod: fecha
+        lastmod: entrada.fecha
       }))
     ];
 
@@ -163,15 +88,11 @@ module.exports = (app) => {
 
   app.use((req, res) => {
     res.status(404).render('404', {
-      title: 'Página no encontrada | CartasMagic.es',
-      description: 'La página que buscas no existe.',
-      keywords: '',
-      canonical: `${PORTADA}/`,
-      og_title: 'Página no encontrada',
-      og_description: 'La página que buscas no existe.',
+      ...NO_ENCONTRADA,
       conNav: true,
       noindex: true,
       ld_json: grafo(),
+      textos,
       cta: enlaceVender(VALORACION, '404')
     });
   });

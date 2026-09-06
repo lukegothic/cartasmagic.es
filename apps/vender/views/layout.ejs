@@ -22,7 +22,7 @@
     <meta name="robots" content="<%= typeof noindex !== 'undefined' && noindex ? 'noindex, follow' : 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1' %>">
     <link rel="canonical" href="<%= canonical %>">
     <meta name="theme-color" content="#f5901e">
-    <meta name="author" content="contacto@vendercartasmagic.es">
+    <meta name="author" content="<%= textos.MARCA.correo %>">
     <meta property="og:title" content="<%= og_title %>">
     <meta property="og:description" content="<%= og_description %>">
     <meta property="og:image" content="/og-image.jpg">
@@ -44,7 +44,7 @@
     <header class="site-header">
         <div class="header-content">
             <div class="logo-container">
-                <img src="magic_logo_black-69593323a0ba9347e74d005ad167625e.png" alt="Magic: The Gathering Logo" class="magic-logo">
+                <img src="magic_logo_black-69593323a0ba9347e74d005ad167625e.png" alt="<%= textos.MARCA.logoAlt %>" class="magic-logo">
             </div>
         </div>
     </header>
@@ -52,20 +52,20 @@
     <footer class="site-footer">
         <div class="footer-content">
             <div class="certification-container">
-                <a href="Certified_ProfessionalSeller_ES.pdf" target="_blank" title="Certificado Professional Seller de Cardmarket">
-                    <img src="Certified_ProfessionalSeller_ES.jpg" alt="Certified Professional Seller" class="certification-badge">
+                <a href="Certified_ProfessionalSeller_ES.pdf" target="_blank" title="<%= textos.PIE.certificadoTitulo %>">
+                    <img src="Certified_ProfessionalSeller_ES.jpg" alt="<%= textos.PIE.certificadoAlt %>" class="certification-badge">
                 </a>
-                <p><a href="https://www.cardmarket.com/es/Magic/Users/ivan-the-seller" target="_blank" rel="noopener">Ver perfil en Cardmarket</a></p>
+                <p><a href="https://www.cardmarket.com/es/Magic/Users/ivan-the-seller" target="_blank" rel="noopener"><%= textos.PIE.perfil %></a></p>
             </div>
             <p class="footer-guias">
-                ¿Quieres saber cómo se calcula el precio de una carta? Lee las
-                <a href="https://cartasmagic.es/blog?utm_source=vendercartasmagic&utm_medium=footer&utm_campaign=guias" rel="noopener">guías sobre el valor de las cartas Magic</a>
-                en CartasMagic.es
+                <%= textos.PIE.guias.antes %>
+                <a href="https://cartasmagic.es/blog?utm_source=vendercartasmagic&utm_medium=footer&utm_campaign=guias" rel="noopener"><%= textos.PIE.guias.enlace %></a>
+                <%= textos.PIE.guias.despues %>
             </p>
             <p class="footer-legal">
-                Iván Pérez &middot; NIF 72808254Y &middot; Pamplona (Navarra)<br>
-                <a href="mailto:contacto@vendercartasmagic.es">contacto@vendercartasmagic.es</a> &middot;
-                <a href="/aviso-legal">Aviso legal y condiciones</a>
+                <%- textos.PIE.titular %><br>
+                <a href="mailto:<%= textos.MARCA.correo %>"><%= textos.MARCA.correo %></a> &middot;
+                <a href="/aviso-legal"><%= textos.PIE.avisoLegal %></a>
             </p>
         </div>
     </footer>

@@ -1,55 +1,49 @@
 <div class="main-container main-container-narrow">
     <div class="center-text">
-        <h1>Presupuesto al momento con tu lista de ManaBox</h1>
-        <p class="contact-intro">Si tienes la colección en ManaBox, pega el enlace del mazo y te mandamos un presupuesto por correo en unos minutos. Sin fotos, sin contar cartas y sin esperar a que llegue el paquete.</p>
+        <h1><%= textos.MANABOX.h1 %></h1>
+        <p class="contact-intro"><%= textos.MANABOX.intro %></p>
     </div>
 
     <div class="mtg-card mtg-card-margin">
         <%- include('partials/feedback') %>
         <form class="lead-form" method="post" action="/presupuesto-manabox">
-            <label for="url">Enlace del mazo en ManaBox</label>
-            <input type="url" id="url" name="url" required placeholder="ej. https://manabox.app/decks/AZ7lfIfhflqh2vgQaCEtkg" value="<%= valores.url || '' %>">
+            <label for="url"><%= textos.FORMULARIO.url.label %></label>
+            <input type="url" id="url" name="url" required placeholder="<%= textos.FORMULARIO.url.placeholder %>" value="<%= valores.url || '' %>">
 
-            <label for="nombre">Nombre</label>
-            <input type="text" id="nombre" name="nombre" required autocomplete="name" placeholder="ej. Juan García" value="<%= valores.nombre || '' %>">
+            <label for="nombre"><%= textos.FORMULARIO.nombre.label %></label>
+            <input type="text" id="nombre" name="nombre" required autocomplete="name" placeholder="<%= textos.FORMULARIO.nombre.placeholder %>" value="<%= valores.nombre || '' %>">
 
-            <label for="email">Correo electrónico</label>
-            <input type="email" id="email" name="email" required autocomplete="email" placeholder="ej. nombre@correo.com" value="<%= valores.email || '' %>">
+            <label for="email"><%= textos.FORMULARIO.email.label %></label>
+            <input type="email" id="email" name="email" required autocomplete="email" placeholder="<%= textos.FORMULARIO.email.placeholder %>" value="<%= valores.email || '' %>">
 
             <%- include('partials/atajo-envio') %>
 
-            <label for="mensaje">¿Algo más que debamos saber? (opcional)</label>
-            <textarea id="mensaje" name="mensaje" rows="3" placeholder="ej. tengo también dos mazos de Commander en Manabox, y algunas cartas están usadas"><%= valores.mensaje || '' %></textarea>
+            <label for="mensaje"><%= textos.FORMULARIO.mensaje.label %></label>
+            <textarea id="mensaje" name="mensaje" rows="3" placeholder="<%= textos.FORMULARIO.mensaje.placeholderManabox %>"><%= valores.mensaje || '' %></textarea>
 
-            <button type="submit" class="btn-mythic">Pedir presupuesto</button>
-            <p class="form-nota-envio">Sin compromiso: pedir el presupuesto no te obliga a vender</p>
+            <button type="submit" class="btn-mythic"><%= textos.MANABOX.boton %></button>
+            <p class="form-nota-envio"><%= textos.MANABOX.notaEnvio %></p>
 
             <%- include('partials/form-legal') %>
         </form>
         <%- include('partials/medicion-embudo') %>
 
-        <p class="center-text text-muted">¿No usas ManaBox?
-            <a href="/valoracion-cartas-magic" class="link-mythic">Mándanos la colección sin tener que listar nada</a>
+        <p class="center-text text-muted"><%= textos.MANABOX.sinManabox.antes %>
+            <a href="/valoracion-cartas-magic" class="link-mythic"><%= textos.MANABOX.sinManabox.enlace %></a>
         </p>
     </div>
 
     <div class="mtg-card mtg-card-margin">
-        <h2>Cómo sacar el enlace en ManaBox</h2>
+        <h2><%= textos.MANABOX.comoSacarEnlace.titulo %></h2>
         <div class="simple-steps">
+            <% textos.MANABOX.comoSacarEnlace.pasos.forEach((paso, i) => { %>
             <div class="step">
-                <div class="step-number">1</div>
-                <p>Abre el mazo o la colección que quieras vender en la app de ManaBox</p>
+                <div class="step-number"><%= i + 1 %></div>
+                <p><%= paso %></p>
             </div>
-            <div class="step">
-                <div class="step-number">2</div>
-                <p>Dale a compartir y copia el enlace que empieza por manabox.app/decks/</p>
-            </div>
-            <div class="step">
-                <div class="step-number">3</div>
-                <p>Pégalo aquí arriba con tu correo y recibes el presupuesto en unos minutos</p>
-            </div>
+            <% }) %>
         </div>
-        <p class="text-muted center-text">El enlace tiene que ser público. Si está en privado no podemos leer la lista.</p>
+        <p class="text-muted center-text"><%= textos.MANABOX.comoSacarEnlace.nota %></p>
     </div>
 
 </div>

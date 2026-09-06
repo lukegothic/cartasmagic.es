@@ -1,48 +1,45 @@
 const {
-  envolver, escaparHtml, parrafo, notaHtml,
-  LIMITES_PAQUETE, bloqueEtiqueta, bloqueEtiquetaTexto, pedirDireccion, pedirDireccionTexto,
+  envolver, escaparHtml, parrafo, notaHtml, firmaTexto,
+  bloqueEtiqueta, bloqueEtiquetaTexto, pedirDireccion, pedirDireccionTexto,
   avisoAdjuntar, notaDireccion
 } = require('./correo-plantilla');
-
-const INTRO = 'Gracias por escribirnos. Te cuento cómo funciona cuando hay que valorar una colección entera.';
-const PROCESO = 'Te generamos un código de envío a nuestra dirección, así que solo tienes que dejar el paquete en cualquier oficina de Correos. El envío lo pagamos nosotros. Cuando llega, lo revisamos y te escribimos con el presupuesto en un día laborable. Si te encaja, te hacemos la transferencia en 24 horas. Si no, te lo devolvemos, y en ese caso los costes de la devolución son a tu cargo (11,90 €, que es lo que suman el envío de ida y el de vuelta).';
+const { NOTAS_INTERNAS, LIMITES_PAQUETE, PEDIR_DIRECCION, POSTAL } = require('./textos-correo');
 
 const cuerpoHtml = ({ nombre, direccion }) => [
   direccion ? avisoAdjuntar() : '',
-  parrafo(`Hola ${escaparHtml(nombre)},`),
-  parrafo(INTRO),
-  parrafo(PROCESO),
+  parrafo(POSTAL.saludo(escaparHtml(nombre))),
+  parrafo(POSTAL.intro),
+  parrafo(POSTAL.proceso),
   direccion ? bloqueEtiqueta() : pedirDireccion(),
-  direccion ? '' : parrafo(`Mientras tanto, ten en cuenta que el paquete no puede pasar de ${LIMITES_PAQUETE.peso} ni de ${LIMITES_PAQUETE.medidas}.`)
+  direccion ? '' : parrafo(PEDIR_DIRECCION.limite(LIMITES_PAQUETE.peso, LIMITES_PAQUETE.medidas))
 ].filter(Boolean).join('\n\n');
 
 const cuerpoTexto = ({ nombre, direccion }) => [
-  `Hola ${nombre},`,
+  POSTAL.saludo(nombre),
   '',
-  INTRO,
+  POSTAL.intro,
   '',
-  PROCESO,
+  POSTAL.proceso,
   '',
   direccion ? bloqueEtiquetaTexto() : pedirDireccionTexto(),
   '',
-  'Un saludo,',
-  'Iván',
-  'vendercartasmagic.es'
+  ...firmaTexto()
 ].join('\n');
 
 const notasHtml = ({ email, volumen, mensaje, direccion }) => [
   direccion ? notaDireccion(direccion) : '',
-  notaHtml(`Correo: ${escaparHtml(email)}`),
-  notaHtml(`Volumen: ${escaparHtml(volumen.largo)}`),
-  notaHtml(`Dice el cliente: ${escaparHtml(mensaje || '(nada)')}`)
+  notaHtml(`${NOTAS_INTERNAS.correo} ${escaparHtml(email)}`),
+  notaHtml(`${NOTAS_INTERNAS.volumen} ${escaparHtml(volumen.largo)}`),
+  notaHtml(`${NOTAS_INTERNAS.diceCliente} ${escaparHtml(mensaje || NOTAS_INTERNAS.sinMensaje)}`)
 ].filter(Boolean).join('\n');
 
-// El asunto es lo unico que se lee antes de decidir si la etiqueta sale ya, asi que lleva
-// el volumen, que marca el tamaño de la etiqueta, y la localidad cuando se puede generar.
-const asunto = ({ nombre, volumen, direccion }) => {
-  const donde = direccion?.localidad ? `, ${direccion.localidad}` : '';
-  return `Nueva colección: ${nombre} (${volumen.corto}${donde})${direccion ? ' - con dirección' : ''}`;
-};
+const asunto = ({ nombre, volumen, direccion }) =>
+  POSTAL.asunto({
+    nombre,
+    volumen: volumen.corto,
+    donde: direccion?.localidad ? `, ${direccion.localidad}` : '',
+    conDireccion: Boolean(direccion)
+  });
 
 const componerCorreoPostal = (datos) => ({
   subject: asunto(datos),

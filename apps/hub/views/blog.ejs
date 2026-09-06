@@ -1,6 +1,6 @@
 <header>
-    <h1 class="logo-text">Guías</h1>
-    <p class="tagline">Cómo se calcula el valor de una carta Magic</p>
+    <h1 class="logo-text"><%= textos.BLOG.titulo %></h1>
+    <p class="tagline"><%= textos.BLOG.lema %></p>
 </header>
 
 <% if (entradas.length) { %>
@@ -15,9 +15,8 @@
 </ul>
 <% } else { %>
 <section class="section-intro">
-    <p>Aún no hay guías publicadas. Mientras tanto, puedes ver
-    <a href="<%= comoFunciona %>" rel="noopener">cómo funciona vender una
-    colección</a>.</p>
+    <p><%= textos.BLOG.vacio.antes %>
+    <a href="<%= comoFunciona %>" rel="noopener"><%= textos.BLOG.vacio.enlace %></a>.</p>
 </section>
 <% } %>
 

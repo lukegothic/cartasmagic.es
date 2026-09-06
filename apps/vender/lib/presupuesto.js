@@ -2,6 +2,10 @@
 // no su agresividad, y esa es la parte que casi nunca cambia.
 // Las cartas de bulk se pagan a tanto alzado por unidad y no por porcentaje, porque el
 // porcentaje sobre céntimos no compensa el trabajo de clasificarlas.
+//
+// La etiqueta llega al cliente, en el csv del presupuesto, pero no se lleva a
+// textos-correo.js: describe el corte de su propia fila y se lee al lado de el. Separarlas
+// deja cambiar un corte sin tocar su etiqueta, y el csv pasaria a mentir sin que falle nada.
 const TRAMOS = [
   { id: 'premium', desde: 20, variable: 'TRAMO_PREMIUM_PCT', porDefecto: 60, etiqueta: 'Cartas de 20 € o más' },
   { id: 'alta', desde: 5, variable: 'TRAMO_ALTA_PCT', porDefecto: 50, etiqueta: 'Cartas de 5 a 20 €' },

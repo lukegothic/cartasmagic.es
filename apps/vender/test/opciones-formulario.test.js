@@ -3,18 +3,15 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const { validarLead } = require('../lib/lead');
+const { FORMULARIO } = require('../lib/textos');
 
 const vista = fs.readFileSync(path.join(__dirname, '../views/valoracion-cartas-magic.ejs'), 'utf8');
 
-const valoresDe = (campo) => {
-  const bloque = vista.slice(vista.indexOf(`name="${campo}"`));
-  return [...bloque.slice(0, bloque.indexOf('</select>')).matchAll(/value="([^"]+)"/g)].map(([, v]) => v);
-};
-
 // Si el desplegable y el validador dejan de coincidir, el formulario rechaza envios buenos
-// sin que se note hasta que alguien se queja.
+// sin que se note hasta que alguien se queja. Las opciones se leen de textos.js, que es de
+// donde las saca la vista.
 test('todas las opciones del desplegable las acepta el validador', () => {
-  const volumenes = valoresDe('volumen');
+  const volumenes = FORMULARIO.volumen.opciones.map(({ valor }) => valor);
   assert.ok(volumenes.length >= 4);
 
   volumenes.forEach((volumen) => {

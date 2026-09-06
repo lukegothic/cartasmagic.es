@@ -1,30 +1,22 @@
 <header>
-    <h1 class="logo-text">CartasMagic<span class="logo-tld">.es</span></h1>
-    <p class="tagline">Cuánto valen tus cartas Magic</p>
-    <div class="mana-symbols" aria-label="Los cinco colores de maná de Magic">
-        <i class="ms ms-cost ms-w" title="Maná blanco"></i>
-        <i class="ms ms-cost ms-u" title="Maná azul"></i>
-        <i class="ms ms-cost ms-b" title="Maná negro"></i>
-        <i class="ms ms-cost ms-r" title="Maná rojo"></i>
-        <i class="ms ms-cost ms-g" title="Maná verde"></i>
+    <h1 class="logo-text"><%= textos.MARCA.nombre %><span class="logo-tld"><%= textos.MARCA.tld %></span></h1>
+    <p class="tagline"><%= textos.MARCA.lema %></p>
+    <div class="mana-symbols" aria-label="<%= textos.MANA.etiqueta %>">
+        <% textos.MANA.colores.forEach(({ clase, titulo }) => { %>
+        <i class="ms ms-cost <%= clase %>" title="<%= titulo %>"></i>
+        <% }); %>
     </div>
 </header>
 
 <section class="section-intro">
-    <h2>Cuánto valen tus cartas Magic</h2>
-    <p>
-        Casi nadie sabe qué tiene guardado en el armario. Una colección de los años
-        noventa puede valer cuatro mil euros o cuarenta, y la diferencia casi nunca está
-        donde la gente cree: no la marcan las cartas más vistosas sino la edición, el
-        estado y si se juegan hoy. Aquí explicamos cómo se calcula ese precio, con las
-        mismas referencias que usamos cuando compramos una colección.
-    </p>
+    <h2><%= textos.PORTADA.intro.titulo %></h2>
+    <p><%= textos.PORTADA.intro.cuerpo %></p>
 </section>
 
 <% if (entradas.length) { %>
 <section class="guias">
-    <h2>Guías sobre el valor de las cartas</h2>
-    <p class="guias-intro">Lo que determina el precio de una carta, explicado sin tecnicismos</p>
+    <h2><%= textos.PORTADA.guias.titulo %></h2>
+    <p class="guias-intro"><%= textos.PORTADA.guias.intro %></p>
     <ul class="entradas">
         <% entradas.forEach(({ slug, titulo, descripcion }) => { %>
         <li class="entrada">
@@ -37,22 +29,17 @@
 <% } %>
 
 <section class="prueba">
-    <h2>Quién está detrás de esto</h2>
-    <p>
-        Iván Pérez, vendedor en Cardmarket desde 2011 con más de 3.200 valoraciones
-        positivas y certificado como Professional Seller. Compramos colecciones de Magic
-        en toda España.
-    </p>
+    <h2><%= textos.PORTADA.prueba.titulo %></h2>
+    <p><%= textos.PORTADA.prueba.cuerpo %></p>
 </section>
 
-<nav class="cards" aria-label="Vender una colección">
+<nav class="cards" aria-label="<%= textos.CIERRE.etiqueta %>">
     <a href="<%= cta %>" class="card" rel="noopener">
-        Saber cuánto vale mi colección
-        <span class="card-nota">Se tarda un minuto y es gratis</span>
+        <%= textos.CIERRE.llamada %>
+        <span class="card-nota"><%= textos.CIERRE.nota %></span>
     </a>
     <p class="cards-nota">
-        Compramos la colección entera: te mandamos la etiqueta de envío prepagada y cobras por transferencia. O mira antes
-        <a href="<%= comoFunciona %>" rel="noopener">cómo funciona vender una
-        colección de cartas Magic</a>: el proceso, los plazos y qué compramos.
+        <%= textos.CIERRE.portada.antes %>
+        <a href="<%= comoFunciona %>" rel="noopener"><%= textos.CIERRE.portada.enlace %></a><%= textos.CIERRE.portada.despues %>
     </p>
 </nav>
