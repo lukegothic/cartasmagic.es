@@ -11,17 +11,16 @@ aparecen en ninguna parte. Estos son nuestros datos.
 
 ## El resumen
 
-Diez colecciones compradas y pagadas, entre enero y mayo de 2026:
+Diecinueve colecciones compradas y pagadas, entre enero y septiembre de 2026:
 
 | | |
 |---|---|
-| Colecciones compradas | 10 |
-| Cartas valoradas una a una | 4.227 |
-| Pagado en total | 8.907 euros |
+| Colecciones compradas | 19 |
+| Pagado en total | 9.298 euros |
 
 ## Qué proporción de una colección tiene valor
 
-De las 4.227 cartas que hemos valorado una a una:
+De las cartas que hemos valorado una a una:
 
 | | Proporción |
 |---|---|

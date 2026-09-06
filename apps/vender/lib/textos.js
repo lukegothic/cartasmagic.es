@@ -34,7 +34,7 @@ const PROCESO_FAQ = [
   },
   {
     q: '¿Tengo que hacer un listado de mis cartas?',
-    a: 'No. No hace falta ordenar, clasificar ni contar nada. Metes los mazos y los álbumes en una caja y los envías. De eso se trata: el trabajo lo hacemos nosotros.'
+    a: 'No. No hace falta ordenar, clasificar ni contar nada. Metes los mazos y los álbumes en una caja de magics y los envías. De eso se trata: el trabajo lo hacemos nosotros.'
   },
   {
     q: '¿Cuánto tardáis en valorar la colección?',
@@ -64,28 +64,28 @@ const PROCESO_FAQ = [
 
 const PORTADA = {
   h1: 'Vende tus cartas Magic sin listar, fotografiar ni negociar',
-  reclamo: 'Compramos en cualquier idioma y en cualquier estado. Metes los mazos y los álbumes en una caja, la mandas con la etiqueta que pagamos nosotros y un día laborable después tienes un precio definitivo. Aceptas y cobras por transferencia.',
+  reclamo: 'Compramos en cualquier idioma y en cualquier estado. Metes los mazos y los álbumes en una caja de magics, la mandas con la etiqueta que pagamos nosotros y un día laborable después tienes un precio definitivo. Aceptas y cobras por transferencia.',
   llamadaPrincipal: 'Saber cuánto vale mi colección',
-  notaMinuto: 'Se tarda un minuto &middot; sin compromiso &middot; el envío lo pagamos nosotros',
+  notaMinuto: 'Se tarda un minuto &middot; sin compromiso &middot; el envío es gratis, lo pagamos nosotros',
   notaCardmarket: 'Vendedor en Cardmarket desde 2011 &middot; más de 3.200 valoraciones positivas',
   comoFunciona: {
     titulo: 'Cómo funciona',
     pasos: [
-      { titulo: 'Cuentas qué tienes', cuerpo: 'Son cuatro palabras. Si nos mandas tu dirección, la etiqueta te llega en el primer correo.' },
-      { titulo: 'Envías la caja', cuerpo: 'Pegas la etiqueta y la dejas en cualquier oficina de Correos. No adelantas nada.' },
-      { titulo: 'Cobras', cuerpo: 'Un precio definitivo en un día laborable y la transferencia dentro de las 24 horas siguientes.' }
+      { titulo: 'Nos cuentas qué tienes', cuerpo: 'Son cuatro palabras y no te compromete a nada. Si nos mandas tu dirección, la etiqueta te llega en el primer correo.' },
+      { titulo: 'Envías el paquete', cuerpo: 'Pegas la etiqueta y la dejas en cualquier oficina de Correos. No adelantas nada.' },
+      { titulo: 'Cobras el dinero', cuerpo: 'Un precio definitivo en un día laborable y la transferencia dentro de las 24 horas siguientes.' }
     ]
   },
-  llamadaEtiqueta: 'Pedir la etiqueta de envío',
+  llamadaEtiqueta: 'Pedir mi etiqueta de envío',
   sinTienda: {
     titulo: 'Vender cartas Magic sin montar una tienda',
     parrafos: [
       'Lo dejaste hace unos meses o hace unos años. La colección sigue ahí, ocupando sitio, y cada vez que piensas en venderla te acuerdas de lo que costaría hacerlo bien: abrir cuenta en Cardmarket, fotografiar, mirar carta por carta de qué set es y en qué estado está, listarlas una a una, esperar meses a que se vendan las buenas mientras la mayoría no se vende nunca, y bajar a Correos cada vez que alguien te compra una carta de dos euros.',
-      'Eso son semanas de trabajo repartidas en meses. Si te apetece hacerlo, hazlo: sacarás más dinero y es la opción honesta para quien disfruta del proceso. Si lo que quieres es que la caja deje de estar ahí y cobrar por ella, nosotros somos esa opción.'
+      'Eso son semanas de trabajo repartidas en meses. Si te apetece hacerlo, hazlo: sacarás más dinero y es la opción honesta para quien disfruta del proceso. Si lo que quieres es que la caja de magics deje de estar ahí y cobrar por ella, nosotros somos esa opción.'
     ]
   },
   queCompramos: {
-    titulo: 'Qué compramos',
+    titulo: 'Qué compramos y qué no',
     etiquetaSi: 'Sí:',
     etiquetaNo: 'No:',
     etiquetaSube: 'Sube el precio',
@@ -152,7 +152,7 @@ const VALORACION = {
     titulo: 'Qué pasa después de darle a enviar',
     pasos: [
       'Te contestamos con la etiqueta de Correos, ya pagada',
-      'Dejas la caja en cualquier oficina y la valoramos en un día laborable desde que llega',
+      'Dejas el paquete en cualquier oficina y lo valoramos en un día laborable desde que llega',
       'Recibes un precio definitivo y, si lo aceptas, cobras por transferencia en 24 horas'
     ],
     nota: 'Todo por escrito y por correo, para que quede constancia de la oferta y de lo que enviaste.'
@@ -233,10 +233,10 @@ const COMPARATIVA = {
     {
       titulo: '4. Vender la colección entera a un comprador especializado',
       parrafos: [
-        'Es lo que hacemos nosotros. Mandas la colección, se valora y recibes un precio definitivo por el lote entero. Cobras en días, no en meses, y no tocas una sola carta más allá de meterlas en una caja.',
+        'Es lo que hacemos nosotros. Mandas la colección, se valora y recibes un precio definitivo por el lote entero. Cobras en días, no en meses, y no tocas una sola carta más allá de meterlas en una caja de magics.',
         'La contrapartida es honesta: por el lote entero se paga menos que vendiendo carta por carta durante un año. Lo que compras es no tener que hacerlo.'
       ],
-      conviene: 'quieres que la caja deje de estar en el armario, cobrar de una vez, y el trabajo de las otras tres opciones te da pereza solo de leerlo.'
+      conviene: 'quieres que la caja de magics deje de estar en el armario, cobrar de una vez, y el trabajo de las otras tres opciones te da pereza solo de leerlo.'
     }
   ],
   convieneEtiqueta: 'Te conviene si:',
@@ -245,7 +245,7 @@ const COMPARATIVA = {
     pasos: [
       { destacado: 'Rellenas el formulario contando qué tienes.', resto: 'Nombre, correo y cuántas cartas son, más o menos. Si dejas también la dirección, la etiqueta te llega en el primer correo.' },
       { destacado: 'Te mandamos una etiqueta de Correos, ya pagada.', resto: 'El envío de ida lo pagamos nosotros. No adelantas dinero.' },
-      { destacado: 'Envías la caja.', resto: 'Hasta 2 kg y 30x20x20 cm, que son unas 1.000 cartas. Si tienes más, avisa antes y lo organizamos.' },
+      { destacado: 'Envías el paquete.', resto: 'Hasta 2 kg y 30x20x20 cm, que son unas 1.000 cartas. Si tienes más, avisa antes y lo organizamos.' },
       { destacado: 'Un día laborable después de que llegue, recibes el precio.', resto: 'Una cifra definitiva por el lote, por correo, sin condiciones añadidas.' },
       { destacado: 'Aceptas y cobras por transferencia en 24 horas.', resto: 'O rechazas y se te devuelve todo: la devolución cuesta 11,90 €, el envío de ida más el de vuelta, y la paga quien rechaza.' }
     ]

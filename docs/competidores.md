@@ -44,7 +44,7 @@ stock inicial y las compras propias:
 
 | Mes | Colecciones |
 |---|---|
-| Enero | 5 |
+| Enero | 6 |
 | Febrero | 1 |
 | Marzo | 3 |
 | Abril | 3 |
@@ -55,12 +55,42 @@ Sobre ese recuento hay tres avisos:
 
 - **De junio a agosto no hay ni una fila.** No es que no entrara nada: hay colecciones sin
   documentar que faltan por añadir. El recuento real es más alto que 19.
-- **Dos filas tienen la fecha dudosa**, `2026-09-01` y `2026-12-01`. Con la segunda por
-  delante de hoy, o es un error de tecleo o lleva el día y el mes cambiados de sitio.
+- **Una fila tiene el día y el mes cambiados de sitio**: la que figura como `2026-12-01` es
+  del 12 de enero de 2026, así que enero fueron 6 colecciones y no 5. La de septiembre es
+  correcta.
 - **El jueves entran dos más**, que tampoco están todavía.
 
-La cifra de diez colecciones al mes que cita `plan-contenido.md` como capacidad está
-obsoleta y hay que corregirla ahí cuando se toque ese documento.
+### El artículo de datos, pendiente de cuadrar
+
+`informe-mercado-magic-espana.md` pasa a **19 colecciones y 9.298 euros, de enero a
+septiembre de 2026**, sacados de `rendimiento_colecciones.csv`. La fila de las 4.227
+cartas valoradas una a una sale del cuadro, porque ese recuento no está en este fichero.
+
+**Queda sin cuadrar, y hay que revisarlo con los datos delante.** Las 19 filas incluyen
+compras de una y de tres cartas, que no son colecciones en el sentido que le da el
+artículo. Contando solo las de 20 cartas o más salen 11 colecciones y 8.929 euros, muy
+cerca de las 10 y los 8.907 que había publicados, así que el artículo original venía de
+ese criterio. Con el recuento en 19 y los importes calculados sobre otro conjunto, las
+tres tablas que quedan más abajo no cuadran con la cabecera:
+
+| Dato publicado | Con las 19 filas |
+|---|---|
+| La colección más pequeña, 192 euros | 8,32 euros |
+| La mediana, 830 euros | 90,30 euros |
+| La más grande, 1.900 euros | 2.333,70 euros |
+| La colección con menos cartas, 26 | 1 |
+| La mediana, 428 cartas | 30 |
+| La colección con más cartas, 978 | 375 |
+
+La frase que más pesa de toda la página, "la mitad de las colecciones que compramos
+superan los 800 euros", es la que hay que comprobar primero: con las 19 filas la mediana
+sale de 90 euros y con el umbral de 20 cartas, de 532.
+
+Faltan además las colecciones de junio a agosto, que no están documentadas, así que el
+recuento definitivo será más alto que 19. Cuando aparezca el histórico completo se
+regenera todo con `scripts/agregados-compras.js`, que necesita las columnas `numero de
+cartas`, `tasado` y `total entregado`, y vive fuera del repositorio porque lleva nombres
+de vendedores.
 
 Aquí no se calculan medias de precio ni de margen a propósito: el fichero tiene meses sin
 documentar y cualquier media saldría falseada, igual que pasa con

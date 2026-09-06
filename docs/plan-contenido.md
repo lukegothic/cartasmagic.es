@@ -1,8 +1,13 @@
 # Plan de contenido del blog
 
 Qué falta por escribir en cartasmagic.es, por orden de prioridad. El criterio no es el
-volumen de búsquedas sino cuántas colecciones puede traer cada pieza, teniendo en cuenta
-que la capacidad real de compra está entre cuatro y doce colecciones al mes.
+volumen de búsquedas sino cuántas colecciones puede traer cada pieza.
+
+Hoy entran unas dos colecciones al mes y caben doce, así que el cuello de botella es la
+demanda y no la capacidad: cada pieza que traiga un vendedor más sirve para algo. Las doce
+son un objetivo de 2027, porque la búsqueda orgánica sola no multiplica por seis lo que
+entra. El razonamiento y el recuento por meses están en
+[competidores.md](competidores.md).
 
 ## Lo que ya está publicado
 
