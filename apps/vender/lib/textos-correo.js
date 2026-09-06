@@ -2,8 +2,8 @@
 // copy de interfaz sino comunicacion, se lee en otro contexto (la bandeja de entrada, sin
 // la pagina delante) y se edita por otros motivos.
 //
-// Aqui solo va el texto. El HTML que lo envuelve y las notas internas viven en
-// correo-plantilla.js, que es maquetacion y no prosa.
+// Aqui solo va el texto. El HTML que lo envuelve vive en correo-plantilla.js y las etiquetas
+// de los datos del formulario se montan en notas.js, que son maquetacion y no prosa.
 
 const FIRMA = {
   despedida: 'Un saludo,',
@@ -13,10 +13,8 @@ const FIRMA = {
 };
 
 const NOTAS_INTERNAS = {
-  titulo: 'Notas internas (borrar antes de reenviar)',
-  // La etiqueta se genera a mano, asi que el aviso va bien visible: sin el, el correo sale
-  // prometiendo un adjunto que no esta.
-  avisoAdjuntar: 'ADJUNTAR LA ETIQUETA ANTES DE ENVIAR',
+  titulo: 'Datos del formulario',
+  nombre: 'Nombre:',
   direccion: 'Dirección para la etiqueta:',
   direccionIncompleta: 'Parece incompleta: conviene revisar antes de generar la etiqueta',
   correo: 'Correo:',
@@ -34,7 +32,7 @@ const ETIQUETA = {
   pasos: [
     'Meter las cartas en una caja',
     'Enseñar la etiqueta en tu oficina de Correos, no hace falta imprimirla',
-    'Y listo: el envío lo pagamos nosotros'
+    'Y listo: el envío ya está pagado por nosotros'
   ],
   seguimiento: 'Tiene número de seguimiento, así que puedes seguir el paquete. En un día laborable desde que llegue te mando la valoración a este mismo correo.',
   limite: (peso, medidas) =>
@@ -82,6 +80,7 @@ const MANABOX = {
     `Presupuesto para ${nombre}${donde}: ${oferta} EUR${bajoMinimo ? ' (bajo mínimo)' : ''}${conDireccion ? ' - con dirección' : ''}`,
   notas: {
     enlace: 'Enlace:',
+    mazo: 'Mazo:',
     mercado: 'Mercado:',
     sePaga: (porcentaje) => `se paga el ${porcentaje} %`,
     foils: 'Foils:',

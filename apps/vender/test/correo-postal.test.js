@@ -45,12 +45,12 @@ test('deja claro que la devolucion la paga quien rechaza', () => {
   assert.match(html, /11,90|coste/i);
 });
 
-test('lo que dijo el cliente va en las notas internas, no en el cuerpo', () => {
-  const { html } = componerCorreo(base);
-  const marca = html.indexOf('id="notas-internas"');
-  assert.ok(marca > 0);
-  assert.ok(html.indexOf('varios mazos de Commander') > marca);
-  assert.ok(html.indexOf('Entre 500') > marca, 'el volumen es informacion para ti');
+test('lo que dijo el cliente va en las notas adjuntas, no en el cuerpo', () => {
+  const { html, attachments } = componerCorreo(base);
+  const [notas] = attachments;
+  assert.doesNotMatch(html, /varios mazos de Commander/);
+  assert.match(notas.content, /varios mazos de Commander/);
+  assert.match(notas.content, /Entre 500/, 'el volumen es informacion para ti');
 });
 
 test('sigue habiendo texto plano con lo esencial', () => {

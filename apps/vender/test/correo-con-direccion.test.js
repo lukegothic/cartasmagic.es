@@ -16,7 +16,6 @@ const direccion = leerDireccion({ direccion: 'Calle Baron de Santa Barbara 17, 4
 test('sin direccion el correo la pide, como hasta ahora', () => {
   const { html } = postal();
   assert.match(html, /direcci[oó]n de remitente/i);
-  assert.doesNotMatch(html, /ADJUNTAR LA ETIQUETA/);
 });
 
 test('con direccion el correo ya no la pide y habla de la etiqueta adjunta', () => {
@@ -26,15 +25,9 @@ test('con direccion el correo ya no la pide y habla de la etiqueta adjunta', () 
   assert.match(html, /Correos/);
 });
 
-test('con direccion el correo te recuerda adjuntar la etiqueta antes de reenviar', () => {
-  const { html } = postal({ direccion });
-  assert.match(html, /ADJUNTAR LA ETIQUETA/);
-});
-
-test('la direccion aparece en las notas internas, para copiarla a Correos', () => {
-  const { html } = postal({ direccion });
-  const marca = html.indexOf('id="notas-internas"');
-  assert.ok(html.indexOf('Godella') > marca, 'la direccion es informacion tuya, no del cuerpo');
+test('la direccion aparece en las notas adjuntas, para copiarla a Correos', () => {
+  const [notas] = postal({ direccion }).attachments;
+  assert.match(notas.content, /Godella/);
 });
 
 test('el asunto avisa de que hay direccion, para distinguirlo de un vistazo', () => {
@@ -43,8 +36,8 @@ test('el asunto avisa de que hay direccion, para distinguirlo de un vistazo', ()
 });
 
 test('una direccion dudosa se marca en las notas', () => {
-  const { html } = postal({ direccion: { texto: 'Madrid', pareceIncompleta: true } });
-  assert.match(html, /revisar|incompleta/i);
+  const [notas] = postal({ direccion: { texto: 'Madrid', pareceIncompleta: true } }).attachments;
+  assert.match(notas.content, /revisar|incompleta/i);
 });
 
 test('la via de ManaBox se comporta igual', () => {
@@ -54,9 +47,9 @@ test('la via de ManaBox se comporta igual', () => {
   const con = componerCorreoMazo({ lead: { ...lead, direccion }, mazo: { nombre: 'M', formato: 'Commander' }, cartas });
 
   assert.match(sin.html, /direcci[oó]n de remitente/i);
-  assert.match(con.html, /ADJUNTAR LA ETIQUETA/);
+  assert.match(con.html, /etiqueta/i);
   assert.match(con.subject, /con direcci[oó]n/i);
-  assert.equal(con.attachments.length, 1, 'el csv sigue viajando');
+  assert.ok(con.attachments.some(({ filename }) => filename.endsWith('.csv')), 'el csv sigue viajando');
 });
 
 test('con direccion no se pide la direccion por ningun lado, en ninguna de las dos vias', () => {

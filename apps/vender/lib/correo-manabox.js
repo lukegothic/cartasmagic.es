@@ -1,17 +1,15 @@
 const {
-  envolver, escaparHtml, euros, parrafo, lista, destacado, notaHtml, firmaTexto,
-  bloqueEtiqueta, bloqueEtiquetaTexto, pedirDireccion, pedirDireccionTexto,
-  avisoAdjuntar, notaDireccion
+  envolver, escaparHtml, euros, parrafo, lista, destacado, firmaTexto,
+  bloqueEtiqueta, bloqueEtiquetaTexto, pedirDireccion, pedirDireccionTexto
 } = require('./correo-plantilla');
 const { NOTAS_INTERNAS, LIMITES_PAQUETE, MANABOX } = require('./textos-correo');
 const { calcularPresupuesto } = require('./presupuesto');
 const { componerDesgloseCsv } = require('./desglose');
+const { componerNotas, nombreDeFichero } = require('./notas');
 
-// Solo se deja pasar lo que puede ir dentro de un nombre de fichero sin dar problemas.
-const nombreDeFichero = (texto) => texto.normalize('NFD').replace(/[^\w]+/g, '-').replace(/^-|-$/g, '') || 'presupuesto';
+const SEPARADOR = ' - ';
 
 const cuerpoHtml = ({ lead, mazo, presupuesto }) => [
-  lead.direccion ? avisoAdjuntar() : '',
   parrafo(MANABOX.saludo(escaparHtml(lead.nombre))),
   parrafo(MANABOX.intro),
   destacado([
@@ -44,15 +42,21 @@ const cuerpoTexto = ({ lead, mazo, presupuesto }) => [
   ...firmaTexto()
 ].join('\n');
 
-const notasHtml = ({ lead, presupuesto }) => [
-  lead.direccion ? notaDireccion(lead.direccion) : '',
-  notaHtml(`${NOTAS_INTERNAS.correo} ${escaparHtml(lead.email)}<br>
-  ${MANABOX.notas.enlace} <a href="${escaparHtml(lead.url)}">${escaparHtml(lead.url)}</a><br>
-  ${MANABOX.notas.mercado} ${euros(presupuesto.valorMercado)} € &middot; ${MANABOX.notas.sePaga(Math.round((presupuesto.oferta / presupuesto.valorMercado) * 100))}<br>
-  ${MANABOX.notas.foils} ${presupuesto.totalFoils}${presupuesto.bajoMinimo ? `<br><strong>${MANABOX.notas.bajoMinimo}</strong>` : ''}`),
-  notaHtml(`${NOTAS_INTERNAS.diceCliente} ${escaparHtml(lead.mensaje || NOTAS_INTERNAS.sinMensaje)}`),
-  notaHtml(`${MANABOX.notas.desglose} ${presupuesto.tramos.filter(({ cartas }) => cartas > 0).map(({ etiqueta, cartas, oferta }) => `${escaparHtml(etiqueta)}: ${cartas} a ${euros(oferta)} €`).join(' &middot; ')}`)
-].join('\n');
+const notas = ({ lead, mazo, presupuesto }) =>
+  componerNotas({
+    nombre: lead.nombre,
+    direccion: lead.direccion,
+    mensaje: lead.mensaje,
+    lineas: [
+      `${NOTAS_INTERNAS.correo} ${lead.email}`,
+      `${MANABOX.notas.enlace} ${lead.url}`,
+      `${MANABOX.notas.mazo} ${[mazo.nombre, mazo.formato].filter(Boolean).join(SEPARADOR)}`,
+      `${MANABOX.notas.mercado} ${euros(presupuesto.valorMercado)} EUR${SEPARADOR}${MANABOX.notas.sePaga(Math.round((presupuesto.oferta / presupuesto.valorMercado) * 100))}`,
+      `${MANABOX.notas.foils} ${presupuesto.totalFoils}`,
+      ...(presupuesto.bajoMinimo ? [MANABOX.notas.bajoMinimo] : []),
+      `${MANABOX.notas.desglose} ${presupuesto.tramos.filter(({ cartas }) => cartas > 0).map(({ etiqueta, cartas, oferta }) => `${etiqueta}: ${cartas} a ${euros(oferta)} EUR`).join(SEPARADOR)}`
+    ]
+  });
 
 const componerCorreoMazo = ({ lead, mazo, cartas, entorno = process.env }) => {
   const presupuesto = calcularPresupuesto(cartas, entorno);
@@ -68,12 +72,15 @@ const componerCorreoMazo = ({ lead, mazo, cartas, entorno = process.env }) => {
     }),
     replyTo: lead.email,
     text: cuerpoTexto(partes),
-    html: envolver({ cuerpo: cuerpoHtml(partes), notas: notasHtml(partes) }),
-    attachments: [{
-      filename: `desglose-${nombreDeFichero(lead.nombre)}.csv`,
-      content: componerDesgloseCsv(cartas, entorno),
-      contentType: 'text/csv; charset=utf-8'
-    }]
+    html: envolver(cuerpoHtml(partes)),
+    attachments: [
+      notas(partes),
+      {
+        filename: `desglose-${nombreDeFichero(lead.nombre, 'presupuesto')}.csv`,
+        content: componerDesgloseCsv(cartas, entorno),
+        contentType: 'text/csv; charset=utf-8'
+      }
+    ]
   };
 };
 

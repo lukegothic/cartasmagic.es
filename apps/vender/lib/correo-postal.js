@@ -1,12 +1,11 @@
 const {
-  envolver, escaparHtml, parrafo, notaHtml, firmaTexto,
-  bloqueEtiqueta, bloqueEtiquetaTexto, pedirDireccion, pedirDireccionTexto,
-  avisoAdjuntar, notaDireccion
+  envolver, escaparHtml, parrafo, firmaTexto,
+  bloqueEtiqueta, bloqueEtiquetaTexto, pedirDireccion, pedirDireccionTexto
 } = require('./correo-plantilla');
 const { NOTAS_INTERNAS, LIMITES_PAQUETE, PEDIR_DIRECCION, POSTAL } = require('./textos-correo');
+const { componerNotas } = require('./notas');
 
 const cuerpoHtml = ({ nombre, direccion }) => [
-  direccion ? avisoAdjuntar() : '',
   parrafo(POSTAL.saludo(escaparHtml(nombre))),
   parrafo(POSTAL.intro),
   parrafo(POSTAL.proceso),
@@ -26,12 +25,16 @@ const cuerpoTexto = ({ nombre, direccion }) => [
   ...firmaTexto()
 ].join('\n');
 
-const notasHtml = ({ email, volumen, mensaje, direccion }) => [
-  direccion ? notaDireccion(direccion) : '',
-  notaHtml(`${NOTAS_INTERNAS.correo} ${escaparHtml(email)}`),
-  notaHtml(`${NOTAS_INTERNAS.volumen} ${escaparHtml(volumen.largo)}`),
-  notaHtml(`${NOTAS_INTERNAS.diceCliente} ${escaparHtml(mensaje || NOTAS_INTERNAS.sinMensaje)}`)
-].filter(Boolean).join('\n');
+const notas = ({ nombre, email, volumen, mensaje, direccion }) =>
+  componerNotas({
+    nombre,
+    direccion,
+    mensaje,
+    lineas: [
+      `${NOTAS_INTERNAS.correo} ${email}`,
+      `${NOTAS_INTERNAS.volumen} ${volumen.largo}`
+    ]
+  });
 
 const asunto = ({ nombre, volumen, direccion }) =>
   POSTAL.asunto({
@@ -45,7 +48,8 @@ const componerCorreoPostal = (datos) => ({
   subject: asunto(datos),
   replyTo: datos.email,
   text: cuerpoTexto(datos),
-  html: envolver({ cuerpo: cuerpoHtml(datos), notas: notasHtml(datos) })
+  html: envolver(cuerpoHtml(datos)),
+  attachments: [notas(datos)]
 });
 
 module.exports = { componerCorreoPostal };

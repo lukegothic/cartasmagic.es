@@ -37,24 +37,25 @@ test('el cuerpo html NO lleva el desglose carta a carta, que va en el adjunto', 
   assert.doesNotMatch(html, /1\.502/);
 });
 
+const csvDe = ({ attachments }) => attachments.find(({ filename }) => filename.endsWith('.csv'));
+
 test('el desglose viaja como adjunto csv', () => {
-  const [adjunto] = componerCorreoMazo(base).attachments;
-  assert.match(adjunto.filename, /\.csv$/);
+  const adjunto = csvDe(componerCorreoMazo(base));
   assert.match(adjunto.content, /Ancient Tomb/);
   assert.match(adjunto.content, /TOTAL/);
 });
 
 test('el nombre del adjunto identifica el mazo, para no confundirlo entre varios', () => {
-  const [adjunto] = componerCorreoMazo(base).attachments;
-  assert.match(adjunto.filename, /Pepe/i);
+  assert.match(csvDe(componerCorreoMazo(base)).filename, /Pepe/i);
 });
 
-test('las notas para ti van al final y separadas, para borrarlas al reenviar', () => {
-  const { html } = componerCorreoMazo(base);
-  const marca = html.indexOf('id="notas-internas"');
-  assert.ok(marca > 0, 'debe existir un bloque de notas identificable');
-  assert.ok(html.indexOf('algunas jugadas') > marca, 'el mensaje del cliente es una nota interna');
-  assert.ok(html.indexOf('manabox.app') > marca, 'el enlace original tambien');
+test('las notas para ti van aparte, para que el cuerpo se reenvie tal cual', () => {
+  const { html, attachments } = componerCorreoMazo(base);
+  const notas = attachments.find(({ filename }) => filename.startsWith('notas-'));
+  assert.doesNotMatch(html, /algunas jugadas/, 'el mensaje del cliente no va en el cuerpo');
+  assert.doesNotMatch(html, /manabox\.app/, 'el enlace original tampoco');
+  assert.match(notas.content, /algunas jugadas/);
+  assert.match(notas.content, /manabox\.app/);
 });
 
 test('avisa en el asunto cuando la oferta baja del minimo', () => {
