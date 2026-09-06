@@ -8,18 +8,18 @@
         <%- include('partials/feedback') %>
         <form class="lead-form" method="post" action="/presupuesto-manabox">
             <label for="url">Enlace del mazo en ManaBox</label>
-            <input type="url" id="url" name="url" required placeholder="ej. https://manabox.app/decks/AZ7lfIfhflqh2vgQaCEtkg" value="<%= typeof url !== 'undefined' ? url : '' %>">
+            <input type="url" id="url" name="url" required placeholder="ej. https://manabox.app/decks/AZ7lfIfhflqh2vgQaCEtkg" value="<%= valores.url || '' %>">
 
             <label for="nombre">Nombre</label>
-            <input type="text" id="nombre" name="nombre" required autocomplete="name" placeholder="ej. Juan García">
+            <input type="text" id="nombre" name="nombre" required autocomplete="name" placeholder="ej. Juan García" value="<%= valores.nombre || '' %>">
 
             <label for="email">Correo electrónico</label>
-            <input type="email" id="email" name="email" required autocomplete="email" placeholder="ej. nombre@correo.com">
+            <input type="email" id="email" name="email" required autocomplete="email" placeholder="ej. nombre@correo.com" value="<%= valores.email || '' %>">
 
             <%- include('partials/atajo-envio') %>
 
             <label for="mensaje">¿Algo más que debamos saber? (opcional)</label>
-            <textarea id="mensaje" name="mensaje" rows="3" placeholder="ej. tengo también dos mazos de Commander en Manabox, y algunas cartas están usadas"></textarea>
+            <textarea id="mensaje" name="mensaje" rows="3" placeholder="ej. tengo también dos mazos de Commander en Manabox, y algunas cartas están usadas"><%= valores.mensaje || '' %></textarea>
 
             <button type="submit" class="btn-mythic">Pedir presupuesto</button>
             <p class="form-nota-envio">Sin compromiso: pedir el presupuesto no te obliga a vender</p>

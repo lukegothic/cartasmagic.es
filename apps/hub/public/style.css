@@ -359,6 +359,7 @@ footer p {
 }
 
 .entrada {
+    position: relative;
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 12px;
@@ -368,6 +369,29 @@ footer p {
 
 .entrada:hover {
     background: var(--bg-card-hover);
+}
+
+/* La tarjeta se aclara al pasar por encima, asi que tiene que llevar al articulo entera y
+   no solo por el titulo. La capa la estira el enlace del h3: asi el destino sigue siendo
+   uno solo y el lector de pantalla lee el titulo, no el resumen y la fecha detras. */
+.entrada h3 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+}
+
+/* El resumen y la fecha se quedan por encima de la capa para poder seleccionarlos: la capa
+   solo tiene que cubrir lo que no lleva texto. */
+.entrada p,
+.entrada time {
+    position: relative;
+}
+
+/* El pseudoelemento no recibe foco, asi que el recuadro se pinta sobre la tarjeta. */
+.entrada:has(h3 a:focus-visible) {
+    outline: 2px solid var(--accent-1);
+    outline-offset: 2px;
 }
 
 .entrada h3 {

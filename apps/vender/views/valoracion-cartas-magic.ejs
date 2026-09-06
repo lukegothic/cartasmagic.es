@@ -8,24 +8,24 @@
         <%- include('partials/feedback') %>
         <form class="lead-form" method="post" action="/valoracion-cartas-magic">
             <label for="nombre">Nombre</label>
-            <input type="text" id="nombre" name="nombre" required autocomplete="name" placeholder="ej. Juan García">
+            <input type="text" id="nombre" name="nombre" required autocomplete="name" placeholder="ej. Juan García" value="<%= valores.nombre || '' %>">
 
             <label for="email">Correo electrónico</label>
-            <input type="email" id="email" name="email" required autocomplete="email" placeholder="ej. nombre@correo.com">
+            <input type="email" id="email" name="email" required autocomplete="email" placeholder="ej. nombre@correo.com" value="<%= valores.email || '' %>">
 
             <label for="volumen">¿Cuántas cartas, más o menos?</label>
             <select id="volumen" name="volumen" required>
                 <option value="">Elige una opción</option>
-                <option value="menos-500">Menos de 500</option>
-                <option value="500-1000">Entre 500 y 1.000</option>
-                <option value="mas-1000">Más de 1.000</option>
-                <option value="ni-idea">Ni idea</option>
+                <option value="menos-500"<% if (valores.volumen === 'menos-500') { %> selected<% } %>>Menos de 500</option>
+                <option value="500-1000"<% if (valores.volumen === '500-1000') { %> selected<% } %>>Entre 500 y 1.000</option>
+                <option value="mas-1000"<% if (valores.volumen === 'mas-1000') { %> selected<% } %>>Más de 1.000</option>
+                <option value="ni-idea"<% if (valores.volumen === 'ni-idea') { %> selected<% } %>>Ni idea</option>
             </select>
 
             <%- include('partials/atajo-envio') %>
 
             <label for="mensaje">¿Algo más que debamos saber? (opcional)</label>
-            <textarea id="mensaje" name="mensaje" rows="3" placeholder="ej. lo dejé en 2018, tengo cuatro mazos de Commander y dos álbumes llenos"></textarea>
+            <textarea id="mensaje" name="mensaje" rows="3" placeholder="ej. lo dejé en 2018, tengo cuatro mazos de Commander y dos álbumes llenos"><%= valores.mensaje || '' %></textarea>
 
             <button type="submit" class="btn-mythic">Enviar y recibir la etiqueta</button>
             <p class="form-nota-envio">Sin compromiso: recibir la etiqueta no te obliga a vender</p>

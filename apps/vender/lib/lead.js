@@ -19,12 +19,17 @@ const validarLead = (body) => {
   const email = limpiar(body.email, 150);
   const mensaje = limpiar(body.mensaje, 2000);
   const { volumen } = body;
+  const direccion = leerDireccion(body);
 
-  if (!nombre) return { error: 'CAMPOS_OBLIGATORIOS' };
-  if (!EMAIL_VALIDO.test(email)) return { error: 'EMAIL_NO_VALIDO' };
-  if (!VOLUMENES[volumen]) return { error: 'OPCION_NO_VALIDA' };
+  // Lo ya recortado, para repintar el formulario cuando el envio se rechaza: devolver el
+  // cuerpo tal cual repondria un texto que despues se corta igualmente.
+  const valores = { nombre, email, mensaje, volumen, direccion: direccion?.texto ?? '' };
 
-  return { lead: { nombre, email, mensaje, volumen, direccion: leerDireccion(body) } };
+  if (!nombre) return { error: 'CAMPOS_OBLIGATORIOS', valores };
+  if (!EMAIL_VALIDO.test(email)) return { error: 'EMAIL_NO_VALIDO', valores };
+  if (!VOLUMENES[volumen]) return { error: 'OPCION_NO_VALIDA', valores };
+
+  return { lead: { nombre, email, mensaje, volumen, direccion }, valores };
 };
 
 const componerCorreo = ({ nombre, email, mensaje, volumen, direccion }) =>
@@ -35,14 +40,17 @@ const validarLeadMazo = (body) => {
   const email = limpiar(body.email, 150);
   const mensaje = limpiar(body.mensaje, 2000);
   const url = limpiar(body.url, 300);
+  const direccion = leerDireccion(body);
 
-  if (!nombre) return { error: 'CAMPOS_OBLIGATORIOS' };
-  if (!EMAIL_VALIDO.test(email)) return { error: 'EMAIL_NO_VALIDO' };
+  const valores = { nombre, email, mensaje, url, direccion: direccion?.texto ?? '' };
+
+  if (!nombre) return { error: 'CAMPOS_OBLIGATORIOS', valores };
+  if (!EMAIL_VALIDO.test(email)) return { error: 'EMAIL_NO_VALIDO', valores };
 
   const idMazo = extraerIdMazo(url);
-  if (!idMazo) return { error: 'ENLACE_NO_VALIDO' };
+  if (!idMazo) return { error: 'ENLACE_NO_VALIDO', valores };
 
-  return { lead: { nombre, email, mensaje, url, idMazo, direccion: leerDireccion(body) } };
+  return { lead: { nombre, email, mensaje, url, idMazo, direccion }, valores };
 };
 
 module.exports = { validarLead, componerCorreo, validarLeadMazo };

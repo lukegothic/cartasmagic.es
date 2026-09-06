@@ -4,7 +4,7 @@
             gtag('event', 'generate_lead', { event_category: 'formulario', event_label: '<%= etiquetaConversion %>' });
         }
     </script>
-    <div class="form-feedback">
+    <div class="form-feedback" role="status" tabindex="-1">
         <h2>Recibido</h2>
         <p><%= textoRecibido %></p>
     </div>
@@ -17,7 +17,14 @@
             gtag('event', 'envio_rechazado', { event_category: 'formulario', event_label: '<%= etiquetaConversion %>', codigo: '<%= errorCode %>' });
         }
     </script>
-    <div class="form-feedback">
+    <div class="form-feedback" role="alert" tabindex="-1">
         <p><%= mensajeError %></p>
     </div>
+<% } %>
+<% if (enviado || errorCode) { %>
+    <script>
+        // El navegador vuelve arriba tras el POST, pero el foco se queda en el body: quien
+        // navega con teclado o con lector de pantalla no se entera de la respuesta.
+        document.querySelector('.form-feedback').focus();
+    </script>
 <% } %>

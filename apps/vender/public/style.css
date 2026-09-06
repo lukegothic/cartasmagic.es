@@ -635,12 +635,18 @@ ol.plain-list li::before {
     font-size: 1rem;
 }
 
-.lead-form input:focus,
-.lead-form select:focus,
-.lead-form textarea:focus {
-    outline: none;
+.lead-form input:focus-visible,
+.lead-form select:focus-visible,
+.lead-form textarea:focus-visible {
+    outline: 2px solid var(--mtg-primary);
+    outline-offset: 2px;
     border-color: var(--mtg-primary);
     box-shadow: 0 0 0 3px var(--mtg-primary-glow);
+}
+
+.form-feedback:focus {
+    outline: 2px solid var(--mtg-primary);
+    outline-offset: 2px;
 }
 
 .lead-form textarea {

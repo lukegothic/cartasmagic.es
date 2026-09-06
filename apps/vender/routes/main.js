@@ -152,6 +152,7 @@ module.exports = (app) => {
       enviado: false,
       errorCode: null,
       etiquetaConversion: 'valoracion',
+      valores: {},
       textoRecibido: 'Te escribimos a tu correo con la etiqueta de envío y la dirección. Si no lo ves en unas horas, mira la carpeta de spam.',
       ...extra
     }));
@@ -159,14 +160,14 @@ module.exports = (app) => {
   app.get('/valoracion-cartas-magic', (req, res) => vistaValoracion(res));
 
   app.post('/valoracion-cartas-magic', async (req, res) => {
-    const { error, lead } = validarLead(req.body);
-    if (error) return vistaValoracion(res.status(400), { errorCode: error });
+    const { error, lead, valores } = validarLead(req.body);
+    if (error) return vistaValoracion(res.status(400), { errorCode: error, valores });
 
     try {
       await enviarAviso(componerCorreo(lead));
     } catch (err) {
       console.error('Fallo al enviar el aviso de lead:', err);
-      return vistaValoracion(res.status(500), { errorCode: 'ENVIO_FALLIDO' });
+      return vistaValoracion(res.status(500), { errorCode: 'ENVIO_FALLIDO', valores });
     }
 
     vistaValoracion(res, { enviado: true });
@@ -197,8 +198,8 @@ module.exports = (app) => {
       enviado: false,
       errorCode: null,
       etiquetaConversion: 'manabox',
+      valores: {},
       textoRecibido: 'Ya tenemos tu lista. Te llegará el presupuesto al correo en unos minutos. Si no lo ves, mira la carpeta de spam.',
-      url: '',
       ...extra
     }));
 
@@ -207,14 +208,14 @@ module.exports = (app) => {
   app.get('/presupuesto-manabox', (req, res) => vistaManabox(res));
 
   app.post('/presupuesto-manabox', async (req, res) => {
-    const { error, lead } = validarLeadMazo(req.body);
-    if (error) return vistaManabox(res.status(400), { errorCode: error, url: req.body.url });
+    const { error, lead, valores } = validarLeadMazo(req.body);
+    if (error) return vistaManabox(res.status(400), { errorCode: error, valores });
 
     // Se limita por mazo y no por ip: detrás de un proxy, de un operador móvil o de una red
     // compartida, muchos visitantes distintos llegan con la misma ip, y un limite por ip
     // bloquearía a gente que no ha hecho nada. Repetir el mismo mazo si es abuso.
     if (!permitirPresupuesto(`mazo:${lead.idMazo}`)) {
-      return vistaManabox(res.status(429), { errorCode: 'DEMASIADOS_INTENTOS', url: lead.url });
+      return vistaManabox(res.status(429), { errorCode: 'DEMASIADOS_INTENTOS', valores });
     }
 
     let mazo;
@@ -222,14 +223,14 @@ module.exports = (app) => {
       mazo = await descargarMazo(lead.idMazo);
     } catch (err) {
       // Un fallo aquí es casi siempre un mazo privado o borrado, así que es un 400 y no un 500.
-      return vistaManabox(res.status(400), { errorCode: err.code ?? 'MAZO_NO_ACCESIBLE', url: lead.url });
+      return vistaManabox(res.status(400), { errorCode: err.code ?? 'MAZO_NO_ACCESIBLE', valores });
     }
 
     try {
       await enviarAviso(componerCorreoMazo({ lead, mazo, cartas: mazo.cartas }));
     } catch (err) {
       console.error('Fallo al enviar el presupuesto de ManaBox:', err);
-      return vistaManabox(res.status(500), { errorCode: 'ENVIO_FALLIDO', url: lead.url });
+      return vistaManabox(res.status(500), { errorCode: 'ENVIO_FALLIDO', valores });
     }
 
     vistaManabox(res, { enviado: true });
