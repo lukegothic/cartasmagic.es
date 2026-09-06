@@ -15,3 +15,8 @@ DATOS-LEGALES.md
 colecciones*.csv
 *compradas*.csv
 datos/
+
+# Claves de cuenta de servicio de Google: el nombre que les pone la consola lleva el
+# proyecto y un hash. Nunca al repositorio.
+*-[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f].json
+credenciales*.json

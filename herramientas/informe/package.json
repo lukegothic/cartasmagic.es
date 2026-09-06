@@ -1,0 +1,19 @@
+{
+  "name": "cartasmagic-informe",
+  "version": "1.0.0",
+  "description": "Lee GSC y GA4 de los dos dominios y saca que keywords y copys tocar",
+  "main": "informe.js",
+  "private": true,
+  "scripts": {
+    "test": "node --test \"test/*.test.js\"",
+    "informe": "node informe.js",
+    "diario": "node diario.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "google-auth-library": "^11.0.2",
+    "nodemailer": "^10.0.0"
+  }
+}
