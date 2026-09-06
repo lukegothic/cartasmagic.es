@@ -749,14 +749,6 @@ ol.plain-list li::before {
     flex-shrink: 0;
 }
 
-/* El mismo logo en la cabecera de la pagina de destino, para confirmar la marca.
-   Lo centra el text-align del contenedor, que la imagen es inline. */
-.cabecera-manabox-logo {
-    width: 64px;
-    height: auto;
-    margin-bottom: 8px;
-}
-
 .atajo-manabox-texto {
     flex: 1;
     min-width: 0;
