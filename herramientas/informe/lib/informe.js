@@ -87,7 +87,12 @@ const bloqueGSC = async (auth, dominio, ventana) => {
     )
   );
 
-  return { texto: lineas.join('\n'), consultas: consultas.map((f) => ({ ...f, dominio })) };
+  return {
+    texto: lineas.join('\n'),
+    consultas: consultas.map((f) => ({ ...f, dominio })),
+    paginas,
+    total
+  };
 };
 
 const bloqueGA4 = async (auth, { dominio, ga4 }, ventana) => {

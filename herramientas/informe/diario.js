@@ -1,9 +1,10 @@
 const { cliente } = require('./lib/google');
-const { construirIndice } = require('./lib/keywords');
+const { construirIndice, leerLlms } = require('./lib/keywords');
 const { SITIOS, fechas, bloqueGSC, bloqueGA4, bloqueKeywords, hallazgos } = require('./lib/informe');
 const { leer, guardar, firmar, comparar, esDiaDeEmbudo } = require('./lib/estado');
 const { enviar } = require('./lib/correo');
 const { numero, decimal, titulo, seccion } = require('./lib/formato');
+const { componerMarkdown } = require('./lib/markdown');
 
 const VENTANA_KEYWORDS = 90;
 
@@ -58,10 +59,12 @@ const principal = async () => {
 
   const consultas = [];
   const bloquesGSC = [];
+  const porDominio = [];
   for (const { dominio } of SITIOS) {
     const gsc = await bloqueGSC(auth, dominio, ventana);
     consultas.push(...gsc.consultas);
     bloquesGSC.push(gsc.texto);
+    porDominio.push({ dominio, total: gsc.total, consultas: gsc.consultas, paginas: gsc.paginas });
   }
 
   const encontrados = hallazgos(consultas, indice);
@@ -78,14 +81,36 @@ const principal = async () => {
 
   const partes = [cuerpoDiario(nuevas, resueltas, encontrados, indice, consultas)];
 
+  const bloquesEmbudo = [];
   if (conEmbudo) {
     partes.push(titulo('Resumen semanal'));
     partes.push(...bloquesGSC);
-    for (const sitio of SITIOS) partes.push(await bloqueGA4(auth, sitio, ventana));
+    for (const sitio of SITIOS) {
+      const bloque = await bloqueGA4(auth, sitio, ventana);
+      partes.push(bloque);
+      bloquesEmbudo.push(bloque);
+    }
   }
 
   const etiqueta = nuevas.length ? `${nuevas.length} aviso${nuevas.length > 1 ? 's' : ''} nuevo${nuevas.length > 1 ? 's' : ''}` : 'resumen semanal';
-  await enviar({ asunto: `cartasmagic: ${etiqueta}`, texto: partes.join('\n') });
+
+  // El adjunto es lo que se le pasa a un agente para que aplique los cambios: lleva el
+  // fichero y la linea de cada accion, no solo las cifras.
+  const markdown = componerMarkdown({
+    ventana,
+    indice,
+    hallazgos: encontrados,
+    consultas,
+    porDominio,
+    llms: leerLlms(),
+    embudo: conEmbudo ? bloquesEmbudo.join('\n') : null
+  });
+
+  await enviar({
+    asunto: `cartasmagic: ${etiqueta}`,
+    texto: partes.join('\n'),
+    adjuntos: [{ nombre: `informe-${ventana.hasta}.md`, contenido: markdown }]
+  });
 
   guardar(firmas);
   console.log(`Enviado: ${etiqueta}. ${firmas.length} avisos en total.`);

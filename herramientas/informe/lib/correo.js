@@ -16,14 +16,15 @@ const crearTransporte = (entorno = process.env) =>
     socketTimeout: TIEMPO_MAXIMO_MS * 2
   });
 
-const enviar = async ({ asunto, texto }, entorno = process.env) => {
+const enviar = async ({ asunto, texto, adjuntos = [] }, entorno = process.env) => {
   if (!entorno.SMTP_HOST) throw new Error('Falta SMTP_HOST: sin correo el informe no llega a ningun sitio');
 
   await crearTransporte(entorno).sendMail({
     from: entorno.EMAIL_FROM,
     to: entorno.INFORME_EMAIL_TO || entorno.EMAIL_TO,
     subject: asunto,
-    text: texto
+    text: texto,
+    attachments: adjuntos.map(({ nombre, contenido }) => ({ filename: nombre, content: contenido }))
   });
 };
 

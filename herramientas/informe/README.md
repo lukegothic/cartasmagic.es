@@ -176,6 +176,42 @@ avisos como si fuera el primer día.
 
 Si `INFORME_EMAIL_TO` no está, se usa `EMAIL_TO`, que es el mismo que ya usa vender.
 
+## El adjunto del correo
+
+Cada correo lleva un `informe-<fecha>.md` adjunto. Es el fichero que se le pasa a un
+agente para que aplique los cambios: cada accion lleva el fichero y la linea exacta, asi
+que no hay que ir a buscar nada.
+
+Secciones, por orden de utilidad:
+
+1. **Acciones.** Que tocar, por que, en que fichero y en que linea.
+2. **Intencion local.** Consultas que mencionan una provincia o ciudad, agrupadas por
+   zona, y si alguna tiene volumen para una pagina propia.
+3. **Huecos de contenido.** Consultas con impresiones que ninguna pagina reclama,
+   agrupadas por tema, para decidir el proximo articulo con datos.
+4. **Cobertura de llm.txt.** Consultas reales que el llm.txt no responde. Es la parte
+   GEO: un modelo no cita lo que no encuentra escrito.
+5. **Canibalizacion interna.** La misma keyword declarada en varias paginas del mismo
+   dominio, que se quitan posiciones entre ellas.
+6. **Datos en bruto.** Las tablas completas de consultas y paginas.
+
+### Sobre las paginas por provincia
+
+El umbral para proponer una pagina de zona son 150 impresiones. Por debajo, 52 paginas
+casi iguales compitiendo entre ellas son doorway pages, que es de lo poco que Google
+penaliza de forma explicita. Hoy la zona con mas demanda es Madrid, con 19 impresiones,
+asi que el informe dice que no y explica por que. Cuando alguna zona pase del umbral lo
+dira solo.
+
+Mientras tanto lo que si cabe es nombrar las zonas con demanda dentro de una pagina que
+ya existe, sin crear ninguna nueva.
+
+### Como se calcula la cobertura del llm.txt
+
+Cada palabra de la consulta pesa menos cuanto mas se repite en el texto. Sin eso,
+"cartas magic sueltas" salia cubierta al 100 % en el hub solo porque "cartas" y "magic"
+aparecen en cada parrafo, aunque de vender sueltas no se hable en ninguna parte.
+
 ## Qué mira y qué no
 
 El reparto entre los dos dominios sale de `docs/reparto-keywords.md`: el hub explica y
