@@ -12,7 +12,7 @@ fichero concreto que editar:
 | Tabla | Qué significa | Qué se hace con ella |
 |---|---|---|
 | Los dos dominios compiten | La misma búsqueda saca las dos webs | Quitar la keyword del dominio que no le toca |
-| Rankea el dominio que no toca | El hub sale por una transaccional, o vender por una informacional | Mover la keyword según `docs/reparto-keywords.md` |
+| Rankea el dominio que no toca | El hub sale por una transaccional, o vender por una informacional | Mover la keyword según `docs/reparto-keywords.md`, o reforzar el copy si ya la declara quien debe |
 | Nadie la reclama | Hay impresiones para algo que ninguna página declara | Meterla en las keywords y en el copy de la página que corresponda |
 | Buena posición y casi ningún clic | Sale arriba pero el título no convence | Reescribir title y description, no tocar la keyword |
 
@@ -216,8 +216,11 @@ aparecen en cada parrafo, aunque de vender sueltas no se hable en ninguna parte.
 
 El reparto entre los dos dominios sale de `docs/reparto-keywords.md`: el hub explica y
 vender vende. El informe lo comprueba contra las keywords que cada página declara de
-verdad, leyéndolas de `apps/*/routes/main.js` y del front matter de cada artículo, así
+verdad, leyéndolas de `apps/*/lib/metadatos.js` y del front matter de cada artículo, así
 que un artículo nuevo entra solo.
+
+Si los metadatos cambian de sitio otra vez, el índice se queda sin páginas y el informe
+falla en vez de dar por huérfanas keywords que sí están declaradas.
 
 Cuando una página declara una keyword, eso manda sobre el patrón de palabras. Es lo que
 hace que `valoracion cartas magic` cuente como de vender: no lleva ningún verbo de venta

@@ -5,11 +5,11 @@ const { derivarAcciones } = require('../lib/acciones');
 const HUB = 'cartasmagic.es';
 const VENDER = 'vendercartasmagic.es';
 
-const paginaHub = { dominio: HUB, ruta: '/', fichero: 'apps/hub/routes/main.js', numeroLinea: 60 };
+const paginaHub = { dominio: HUB, ruta: '/', fichero: 'apps/hub/lib/metadatos.js', numeroLinea: 60 };
 const paginaVender = {
   dominio: VENDER,
   ruta: '/',
-  fichero: 'apps/vender/routes/main.js',
+  fichero: 'apps/vender/lib/metadatos.js',
   numeroLinea: 75
 };
 
@@ -34,11 +34,12 @@ test('la accion de mover trae la ubicacion de quien la declara', () => {
       }
     ]
   };
-  const porKeyword = new Map([['tasar cartas magic', [paginaHub]]]);
+  // La declara vender, que es justo el dominio al que no le toca: por eso hay que moverla.
+  const porKeyword = new Map([['tasar cartas magic', [paginaVender]]]);
   const [accion] = derivarAcciones(hallazgos, { porKeyword, paginas: indice.paginas });
 
   assert.match(accion.titulo, /Mover "tasar cartas magic" a cartasmagic\.es/);
-  assert.deepEqual(accion.donde, [{ fichero: 'apps/hub/routes/main.js', numeroLinea: 60 }]);
+  assert.deepEqual(accion.donde, [{ fichero: 'apps/vender/lib/metadatos.js', numeroLinea: 75 }]);
   assert.match(accion.hacer, /Quitarla del meta keywords de \//);
 });
 
@@ -76,7 +77,7 @@ test('la accion de reclamar apunta a una pagina del dominio que toca', () => {
   const [accion] = derivarAcciones(hallazgos, indice);
 
   assert.match(accion.titulo, /Reclamar "vender cartas"/);
-  assert.equal(accion.donde[0].fichero, 'apps/vender/routes/main.js');
+  assert.equal(accion.donde[0].fichero, 'apps/vender/lib/metadatos.js');
   assert.equal(accion.donde[0].numeroLinea, 75);
 });
 
@@ -195,4 +196,48 @@ test('avisa cuando la accion se apoya en pocas impresiones', () => {
 
   assert.equal(derivarAcciones(flojo, indice)[0].esRuido, true);
   assert.equal(derivarAcciones(solido, indice)[0].esRuido, false);
+});
+
+// Si quien declara la keyword ya es el dominio correcto, no hay nada que mover: lo que
+// pasa es que la pagina todavia no rankea. Decir "quitala de X y anadela en X" mandaba a
+// borrar una declaracion que estaba bien.
+test('si ya la declara el dominio que toca, no manda moverla', () => {
+  const hallazgos = {
+    malDominio: [
+      {
+        consulta: 'tasar cartas magic',
+        impresiones: 10,
+        actual: { dominio: VENDER, posicion: 15.3 },
+        deberia: HUB
+      }
+    ],
+    sinDuenno: [],
+    ctrBajo: []
+  };
+  const porKeyword = new Map([['tasar cartas magic', [paginaHub]]]);
+  const [accion] = derivarAcciones(hallazgos, { porKeyword, paginas: [paginaHub, paginaVender] });
+
+  assert.doesNotMatch(accion.hacer, /Quitarla/);
+  assert.match(accion.titulo, /^Ganar posicion para "tasar cartas magic" en cartasmagic\.es$/);
+  assert.deepEqual(accion.donde, [{ fichero: paginaHub.fichero, numeroLinea: paginaHub.numeroLinea }]);
+});
+
+// Una consulta que el reparto deja sin dominio a proposito (la intencion de compra) no
+// genera accion: no hay pagina a la que anadirla, y colgarla del dominio que hoy rankea
+// era mandar a quien quiere comprar al formulario de venta.
+test('lo que el reparto deja sin dominio no se propone reclamar', () => {
+  const hallazgos = {
+    ...vacio,
+    sinDuenno: [
+      {
+        consulta: 'compra cartas magic',
+        impresiones: 12,
+        clics: 0,
+        mejor: { dominio: VENDER, posicion: 15.8 },
+        deberia: null
+      }
+    ]
+  };
+
+  assert.deepEqual(derivarAcciones(hallazgos, indice), []);
 });

@@ -57,7 +57,7 @@ saber qué le dan por ella.
 ## Antes de publicar un artículo
 
 Comprobar que ninguna de sus keywords aparece en las de vender, en
-`apps/vender/routes/main.js`. Si el tema pide una keyword transaccional, no es un
+`apps/vender/lib/metadatos.js`. Si el tema pide una keyword transaccional, no es un
 artículo del hub: es una página de vender.
 
 ## El caso que hay que revisar

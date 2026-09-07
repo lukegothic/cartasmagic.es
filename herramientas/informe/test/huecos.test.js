@@ -33,8 +33,8 @@ test('detecta dos paginas del mismo dominio compitiendo', () => {
     [
       'valor cartas magic',
       [
-        { dominio: 'cartasmagic.es', ruta: '/', fichero: 'apps/hub/routes/main.js' },
-        { dominio: 'cartasmagic.es', ruta: '/blog', fichero: 'apps/hub/routes/main.js' },
+        { dominio: 'cartasmagic.es', ruta: '/', fichero: 'apps/hub/lib/metadatos.js' },
+        { dominio: 'cartasmagic.es', ruta: '/blog', fichero: 'apps/hub/lib/metadatos.js' },
         { dominio: 'cartasmagic.es', ruta: '/blog/como-saber', fichero: 'apps/hub/content/x.md' }
       ]
     ]

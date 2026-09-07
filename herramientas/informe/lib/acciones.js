@@ -14,23 +14,33 @@ const ubicacion = ({ fichero, numeroLinea }) => ({ fichero, numeroLinea });
 
 const moverDeDominio = ({ consulta, impresiones, actual, deberia }, porKeyword) => {
   const duenno = porKeyword.get(consulta) || [];
+  // Que la declare ya el dominio correcto y rankee el otro no es un error de reparto: la
+  // declaracion esta bien y lo que falta es que la pagina se gane la posicion. Mandar a
+  // quitarla de donde debe estar era borrar lo unico correcto que habia.
+  const yaEstaBien = duenno.length && duenno.every(({ dominio }) => dominio === deberia);
 
   return {
     firma: `dominio:${consulta}:${deberia}`,
     impresiones,
-    titulo: `Mover "${consulta}" a ${deberia}`,
-    porque:
-      `${numero(impresiones)} impresiones en posicion ${decimal(actual.posicion)}, pero rankea ` +
-      `${actual.dominio} y segun el reparto es de ${deberia}.`,
+    titulo: yaEstaBien
+      ? `Ganar posicion para "${consulta}" en ${deberia}`
+      : `Mover "${consulta}" a ${deberia}`,
+    porque: yaEstaBien
+      ? `${numero(impresiones)} impresiones en posicion ${decimal(actual.posicion)}: la declara ` +
+        `${deberia}, que es de quien es, pero quien rankea es ${actual.dominio}.`
+      : `${numero(impresiones)} impresiones en posicion ${decimal(actual.posicion)}, pero rankea ` +
+        `${actual.dominio} y segun el reparto es de ${deberia}.`,
     donde: duenno.map(ubicacion),
-    hacer: duenno.length
-      ? `Quitarla del meta keywords de ${duenno.map(({ ruta }) => ruta).join(', ')} y anadirla en la pagina equivalente de ${deberia}.`
-      : `Anadirla al meta keywords de la pagina de ${deberia} que cubra ese tema.`
+    hacer: yaEstaBien
+      ? `Reforzar ${duenno.map(({ ruta }) => ruta).join(', ')} con esas palabras en el copy visible, y comprobar que ${actual.dominio} no las lleva en su meta.`
+      : duenno.length
+        ? `Quitarla del meta keywords de ${duenno.map(({ ruta }) => ruta).join(', ')} y anadirla en la pagina equivalente de ${deberia}.`
+        : `Anadirla al meta keywords de la pagina de ${deberia} que cubra ese tema.`
   };
 };
 
 const reclamar = ({ consulta, impresiones, clics, mejor, deberia }, paginas) => {
-  const destino = paginas.filter(({ dominio }) => dominio === (deberia || mejor.dominio));
+  const destino = paginas.filter(({ dominio }) => dominio === deberia);
 
   return {
     firma: `huerfana:${consulta}`,
@@ -65,7 +75,12 @@ const derivarAcciones = ({ malDominio, sinDuenno, ctrBajo }, { porKeyword, pagin
 
   return [
     ...malDominio.map((h) => moverDeDominio(h, porKeyword)),
-    ...sinDuenno.slice(0, MAXIMO_HUERFANAS).map((h) => reclamar(h, paginas)),
+    // Las que el reparto deja sin dominio a proposito no se proponen: no hay pagina que
+    // pueda responderlas. Ver docs/reparto-keywords.md.
+    ...sinDuenno
+      .filter(({ deberia }) => deberia)
+      .slice(0, MAXIMO_HUERFANAS)
+      .map((h) => reclamar(h, paginas)),
     ...ctrBajo.slice(0, MAXIMO_CTR).map(reescribirTitle)
   ].map((accion) => ({
     ...accion,

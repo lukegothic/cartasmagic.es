@@ -3,15 +3,14 @@ const path = require('node:path');
 
 const RAIZ = path.resolve(__dirname, '..', '..', '..');
 
-// Las keywords viven en dos sitios con formatos distintos: como opcion de render en los
-// dos routes y como front matter en cada articulo del hub. El indice las lee de donde
-// estan en vez de mantener una copia, que se quedaria desincronizada al primer articulo
-// nuevo.
-// Se ancla en el bloque de opciones de render, no en el app.get: dos paginas de vender
-// se pintan desde una funcion auxiliar declarada antes de su ruta, y buscar hacia
-// delante desde app.get no las encuentra nunca. El canonical va siempre en el mismo
-// bloque que las keywords y ademas trae la URL real, que es lo que se compara con GSC.
-const BLOQUE = /keywords:\s*\n?\s*'([^']*)'[\s\S]{0,400}?canonical:\s*(?:`([^`]*)`|'([^']*)')/g;
+// Las keywords viven en dos sitios con formatos distintos: como constantes de metadatos
+// de cada aplicacion y como front matter en cada articulo del hub. El indice las lee de
+// donde estan en vez de mantener una copia, que se quedaria desincronizada al primer
+// articulo nuevo.
+// Se ancla en el bloque que declara las keywords, no en la ruta que lo pinta: el
+// canonical va siempre en ese mismo bloque y ademas trae la URL real, que es lo que se
+// compara con GSC.
+const BLOQUE = /keywords:\s*\n?\s*'([^']*)'[\s\S]{0,400}?canonical:\s*(?:`([^`]*)`|'([^']*)'|(\w+))/g;
 
 const normalizar = (texto) =>
   texto
@@ -27,15 +26,19 @@ const separar = (linea) =>
     .map(normalizar)
     .filter(Boolean);
 
-const leerRoutes = (app, dominio) => {
-  const fichero = path.join(RAIZ, 'apps', app, 'routes', 'main.js');
+const leerMetadatos = (app, dominio) => {
+  const fichero = path.join(RAIZ, 'apps', app, 'lib', 'metadatos.js');
   const fuente = fs.readFileSync(fichero, 'utf8');
   const relativo = path.relative(RAIZ, fichero).replace(/\\/g, '/');
 
-  return [...fuente.matchAll(BLOQUE)]
+  const paginas = [...fuente.matchAll(BLOQUE)]
     .map((coincidencia) => {
-      const [, linea, plantilla, literal] = coincidencia;
-      const canonical = (plantilla || literal).replace('${PORTADA}', `https://${dominio}`);
+      const [, linea, plantilla, literal, constante] = coincidencia;
+      // Cada aplicacion nombra su constante de dominio a su manera (PORTADA en el hub,
+      // DOMINIO en vender), y la portada de vender la usa a secas en vez de interpolarla
+      // dentro de una plantilla. Los dos casos se resuelven a la URL real.
+      const raiz = `https://${dominio}`;
+      const canonical = constante ? raiz : (plantilla || literal).replace(/\$\{\w+\}/, raiz);
       return {
         dominio,
         ruta: new URL(canonical).pathname || '/',
@@ -46,6 +49,15 @@ const leerRoutes = (app, dominio) => {
       };
     })
     .filter(({ keywords }) => keywords.length);
+
+  // Un fichero que existe pero del que no sale ninguna pagina significa que los
+  // metadatos han cambiado de sitio o de forma. Callarse aqui es lo que hizo que el
+  // informe del 4 de septiembre de 2026 diera por huerfanas seis keywords declaradas.
+  if (!paginas.length) {
+    throw new Error(`No se ha leido ninguna keyword de ${relativo}: revisa si los metadatos han cambiado de forma.`);
+  }
+
+  return paginas;
 };
 
 const leerArticulos = (dominio) => {
@@ -77,9 +89,9 @@ const leerArticulos = (dominio) => {
 // busqueda.
 const construirIndice = () => {
   const paginas = [
-    ...leerRoutes('hub', 'cartasmagic.es'),
+    ...leerMetadatos('hub', 'cartasmagic.es'),
     ...leerArticulos('cartasmagic.es'),
-    ...leerRoutes('vender', 'vendercartasmagic.es')
+    ...leerMetadatos('vender', 'vendercartasmagic.es')
   ];
 
   const porKeyword = new Map();

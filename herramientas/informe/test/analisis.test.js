@@ -42,7 +42,7 @@ test('lo declarado en la pagina manda sobre el patron de palabras', () => {
   const porKeyword = new Map([
     [
       'valoracion cartas magic',
-      [{ dominio: VENDER, ruta: '/valoracion-cartas-magic', fichero: 'apps/vender/routes/main.js' }]
+      [{ dominio: VENDER, ruta: '/valoracion-cartas-magic', fichero: 'apps/vender/lib/metadatos.js' }]
     ]
   ]);
   assert.equal(dominioQueTocaria('valoracion cartas magic'), HUB);
@@ -91,7 +91,7 @@ test('detecta una consulta que rankea sin que ninguna pagina la reclame', () => 
 
 test('no la da por huerfana si una pagina la lleva en su meta', () => {
   const porKeyword = new Map([
-    ['valorar cartas magic', [{ dominio: HUB, ruta: '/blog', fichero: 'apps/hub/routes/main.js' }]]
+    ['valorar cartas magic', [{ dominio: HUB, ruta: '/blog', fichero: 'apps/hub/lib/metadatos.js' }]]
   ]);
   const filas = [{ dominio: HUB, claves: ['valorar cartas magic'], clics: 0, impresiones: 36, posicion: 12 }];
   const { sinDuenno } = avisos(agrupar(filas), porKeyword);
@@ -100,9 +100,42 @@ test('no la da por huerfana si una pagina la lleva en su meta', () => {
 
 test('avisa de posicion buena con CTR pobre', () => {
   const porKeyword = new Map([
-    ['vender cartas magic', [{ dominio: VENDER, ruta: '/', fichero: 'apps/vender/routes/main.js' }]]
+    ['vender cartas magic', [{ dominio: VENDER, ruta: '/', fichero: 'apps/vender/lib/metadatos.js' }]]
   ]);
   const filas = [{ dominio: VENDER, claves: ['vender cartas magic'], clics: 1, impresiones: 200, posicion: 7 }];
   const { ctrBajo } = avisos(agrupar(filas), porKeyword);
   assert.equal(ctrBajo.length, 1);
+});
+
+// El reparto deja fuera a proposito las consultas de compra: mientras no exista
+// comprarcartasmagic.es, ninguna pagina puede responderlas y mandarlas al formulario de
+// venta es una visita perdida. Ver docs/reparto-keywords.md.
+test('la intencion de compra no es de nadie', () => {
+  for (const consulta of [
+    'compra cartas magic',
+    'comprar cartas magic',
+    'comprar cartas magic sueltas',
+    'compro cartas magic',
+    'comprar magic the gathering'
+  ]) {
+    assert.equal(intencion(consulta), 'compra', consulta);
+    assert.equal(dominioQueTocaria(consulta, new Map()), null, consulta);
+  }
+});
+
+test('compra venta sigue siendo de vender, porque quien la busca quiere vender', () => {
+  assert.equal(dominioQueTocaria('compra venta cartas magic', new Map()), VENDER);
+});
+
+test('vender no se confunde con comprar', () => {
+  assert.equal(intencion('vender cartas magic'), 'transaccional');
+  assert.equal(intencion('donde vender cartas magic'), 'transaccional');
+});
+
+// "quien compra cartas magic" lo escribe quien quiere vender: pregunta por un comprador,
+// no busca comprar. Es de vender pese a llevar el verbo comprar.
+test('preguntar quien compra es intencion de venta', () => {
+  assert.equal(intencion('quien compra cartas magic'), 'transaccional');
+  assert.equal(dominioQueTocaria('quien compra cartas magic', new Map()), VENDER);
+  assert.equal(intencion('quien compra colecciones magic'), 'transaccional');
 });

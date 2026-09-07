@@ -6,11 +6,17 @@ const VENDER = 'vendercartasmagic.es';
 // La frontera de reparto-keywords.md, en forma comprobable. El posesivo manda sobre todo
 // lo demas: "cuanto valen mis cartas" es de vender aunque lleve "valor".
 const POSESIVO = /\bmis?\b/;
-const TRANSACCIONAL = /\b(vender|vendo|comprar|compran|compra|pagan|precio que|quien compra|donde vender)\b/;
+// Hay dos formas de escribir el verbo comprar queriendo vender: "compra venta", que es
+// el nombre del sector, y "quien compra", que pregunta por un comprador. Ninguna de las
+// dos cuenta como intencion de compra aunque lleven la misma palabra.
+const COMPRA_PERO_VENDE = /\b(compra\s*-?\s*venta|quien\s+compra)\b/;
+const COMPRA = /\b(comprar|compra|compro|compramos)\b/;
+const TRANSACCIONAL = /\b(vender|vendo|venta|pagan|precio que|quien compra|donde vender)\b/;
 const INFORMACIONAL = /\b(valor|vale|valen|valorar|tasar|tasacion|valoracion|estado|near mint|nm|edicion|ediciones|antiguas?|cuanto)\b/;
 
 const intencion = (consulta) => {
   if (POSESIVO.test(consulta) && INFORMACIONAL.test(consulta)) return 'transaccional';
+  if (COMPRA.test(consulta) && !COMPRA_PERO_VENDE.test(consulta)) return 'compra';
   if (TRANSACCIONAL.test(consulta)) return 'transaccional';
   if (INFORMACIONAL.test(consulta)) return 'informacional';
   return 'otra';
@@ -30,6 +36,8 @@ const dominioQueTocaria = (consulta, porKeyword) => {
   const tipo = intencion(consulta);
   if (tipo === 'transaccional') return VENDER;
   if (tipo === 'informacional') return HUB;
+  // La intencion de compra se queda sin dominio a proposito: ninguna de las dos paginas
+  // responde a lo que se busca. Ver docs/reparto-keywords.md.
   return null;
 };
 
