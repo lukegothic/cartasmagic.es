@@ -1,0 +1,64 @@
+<script>
+// Los dos formularios se podian enviar tantas veces como se pulsara el boton: el navegador
+// no bloquea nada por su cuenta y el POST tarda lo suyo, asi que el segundo clic llegaba
+// antes de que respondiera el primero. Eso duplicaba el lead y, en ManaBox, repetia la
+// descarga del mazo. Aqui se cierra el formulario al primer envio valido.
+(function () {
+    var form = document.querySelector('.lead-form');
+    if (!form) return;
+
+    var boton = form.querySelector('button[type="submit"]');
+    if (!boton) return;
+
+    // El rotulo se lee del propio boton en vez de incrustarlo aqui: dentro de una cadena de
+    // JavaScript, EJS escapa la comilla simple como &#39; y cerraria la cadena antes de
+    // tiempo, dejando el bloqueo sin cargar en cuanto un boton llevara un apostrofo.
+    var rotulo = boton.textContent;
+    var enviando = false;
+
+    form.addEventListener('submit', function (e) {
+        // El guardia va antes de tocar el boton porque el navegador vuelve a disparar submit
+        // cuando la validacion nativa frena el primero: sin esto, un formulario incompleto
+        // dejaria el boton deshabilitado para siempre y nadie podria corregirlo.
+        if (!form.checkValidity()) return;
+
+        if (enviando) {
+            e.preventDefault();
+            // Se corta aqui para que el clic repetido no llegue a medicion-embudo: ese
+            // partial cuenta un intento_envio por cada submit, y apuntar los que no salen
+            // del navegador abre un hueco falso contra el generate_lead con el que se
+            // compara. Por eso este include va antes que el suyo en las dos vistas.
+            e.stopImmediatePropagation();
+            return;
+        }
+
+        enviando = true;
+
+        // El texto se sustituye entero, asi que el lector de pantalla lo canta como estado
+        // nuevo en lugar de leer el rotulo original del boton. El aviso va por JSON.stringify
+        // porque acaba dentro de una cadena de JavaScript, donde el escapado de EJS para
+        // HTML no sirve: una comilla simple cerraria la cadena y tumbaria el script.
+        boton.innerHTML = '<span class="envio-spinner" aria-hidden="true"></span><span role="status"></span>';
+        boton.querySelector('[role="status"]').textContent = <%- JSON.stringify(textos.ENVIANDO[etiquetaConversion]) %>;
+        boton.setAttribute('aria-busy', 'true');
+
+        // El disabled se deja para el turno siguiente a proposito: si se pone durante el
+        // propio evento, Chrome y Safari dan por cancelado el envio que acaba de empezar y
+        // el formulario no llega a salir. Para entonces la peticion ya va de camino, y la
+        // bandera de arriba cubre el hueco de este turno.
+        setTimeout(function () {
+            boton.disabled = true;
+        }, 0);
+    });
+
+    // Al volver atras, Firefox y Safari restauran la pagina tal y como estaba, con el boton
+    // todavia deshabilitado. Sin esto el formulario queda muerto y hay que recargar a mano.
+    window.addEventListener('pageshow', function (e) {
+        if (!e.persisted) return;
+        enviando = false;
+        boton.disabled = false;
+        boton.removeAttribute('aria-busy');
+        boton.textContent = rotulo;
+    });
+})();
+</script>

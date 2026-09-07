@@ -141,6 +141,15 @@ const FORMULARIO = {
   recibido: 'Recibido'
 };
 
+// Lo que se lee mientras el envio esta en marcha, uno por formulario porque no tardan lo
+// mismo: la valoracion solo manda un correo, mientras que ManaBox descarga antes la lista
+// entera y puede tardar bastantes segundos. La clave es la misma etiquetaConversion que ya
+// reciben las vistas, asi que la plantilla no necesita saber en cual de las dos esta.
+const ENVIANDO = {
+  valoracion: 'Enviando la solicitud',
+  manabox: 'Leyendo la lista de ManaBox'
+};
+
 const VALORACION = {
   h1: '¿Cuánto vale tu colección de cartas Magic?',
   intro: 'Cuéntanos qué tienes en cuatro palabras. Te mandamos la etiqueta de envío, ya pagada, y un día laborable después de que llegue el paquete recibes un precio definitivo en el correo.',
@@ -287,6 +296,6 @@ const ERRORES = {
 const ERROR_GENERICO = 'No se ha podido completar la operación. Prueba otra vez o escribe a contacto@vendercartasmagic.es';
 
 module.exports = {
-  MARCA, PIE, PROCESO_FAQ, PORTADA, FORMULARIO, VALORACION, MANABOX,
+  MARCA, PIE, PROCESO_FAQ, PORTADA, FORMULARIO, ENVIANDO, VALORACION, MANABOX,
   ATAJO_MANABOX, COMPARATIVA, AVISO_LEGAL, ERRORES, ERROR_GENERICO
 };
