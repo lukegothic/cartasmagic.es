@@ -124,7 +124,12 @@ test('el spinner se pinta con la paleta del sitio', () => {
   assert.match(estilos, /@keyframes\s+giro-envio/);
 });
 
-// Sin esto el spinner gira eternamente para quien pidio no ver animaciones.
-test('el spinner respeta prefers-reduced-motion', () => {
-  assert.match(estilos, /prefers-reduced-motion/);
+// Windows con los efectos de animacion desactivados entra por esta rama, asi que la ve mas
+// gente de la que parece. Parar el aro del todo la dejaba sin ninguna senal de que el envio
+// seguia vivo: se frena, pero no se para.
+test('con prefers-reduced-motion el aro se frena pero no se para', () => {
+  const bloque = estilos.match(/@media \(prefers-reduced-motion: reduce\) \{[\s\S]*?\n\}/);
+  assert.ok(bloque, 'no hay bloque de prefers-reduced-motion');
+  assert.doesNotMatch(bloque[0], /animation:\s*none|animation-name:\s*none/);
+  assert.match(bloque[0], /animation-duration:/);
 });

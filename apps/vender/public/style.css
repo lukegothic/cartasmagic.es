@@ -693,11 +693,14 @@ ol.plain-list li::before {
     to { transform: rotate(360deg); }
 }
 
-/* Quien pide no ver animaciones no puede quedarse sin señal de que algo sigue en marcha:
-   el aro deja de girar pero se queda pintado al lado del aviso. */
+/* Quien pide no ver animaciones sigue necesitando saber que el envio esta en marcha: un
+   aro parado no lo dice, parece que se ha colgado. Se deja girando pero mucho mas despacio
+   y sin sobresaltos, que es lo que molesta de una animacion, no el movimiento en si.
+   Nota: Windows con "Efectos de animacion" desactivado ya entra por aqui, asi que esta es
+   la rama que ve mas gente de la que parece. */
 @media (prefers-reduced-motion: reduce) {
     .envio-spinner {
-        animation: none;
+        animation-duration: 2.5s;
     }
 }
 
