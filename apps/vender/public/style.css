@@ -676,6 +676,20 @@ ol.plain-list li::before {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
+/* Mientras el envio viaja, los campos se ven apagados y dejan de responder. El aviso del
+   boton se queda a plena luz, que es lo unico que hay que leer en ese momento. */
+.lead-form-enviando label,
+.lead-form-enviando input,
+.lead-form-enviando select,
+.lead-form-enviando textarea,
+.lead-form-enviando .atajo-envio {
+    opacity: 0.5;
+}
+
+.lead-form-enviando select {
+    pointer-events: none;
+}
+
 /* El aro toma el color del texto del boton en lugar de fijar uno: asi sigue leyendose si
    manana cambia el color del boton, sin tener que acordarse de tocarlo aqui tambien. */
 .envio-spinner {

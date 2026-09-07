@@ -62,6 +62,15 @@ test('el clic repetido no llega a los demas oyentes del submit', () => {
   assert.match(partial, /stopImmediatePropagation\(\)/);
 });
 
+// Con solo el boton bloqueado, los campos siguen editables mientras el POST viaja: se puede
+// cambiar el correo despues de darle a enviar y creer que se ha mandado lo nuevo. Se apagan
+// todos, pero con readOnly en vez de disabled donde se pueda, porque un campo deshabilitado
+// no viaja en el POST y aqui el formulario todavia se esta enviando.
+test('los campos se bloquean sin vaciar lo que se manda', () => {
+  assert.match(partial, /readOnly\s*=\s*true/);
+  assert.doesNotMatch(partial, /campo\.disabled\s*=\s*true/);
+});
+
 // El aviso acaba dentro de una cadena de JavaScript, no en el HTML. Escapado con <%= sale
 // como &#39; y &amp;, que ahi no los interpreta nadie: el visitante los leeria tal cual en
 // el boton. Se comprueba pintando con un texto que lleva justo esos caracteres.

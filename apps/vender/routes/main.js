@@ -44,11 +44,22 @@ module.exports = (app) => {
       ...extra
     }));
 
+  // Se limita por correo y no por ip por lo mismo que en manabox: detras de un proxy o de
+  // un operador movil muchos visitantes distintos comparten ip, y el tope acabaria frenando
+  // a quien no ha repetido nada. Repetir el mismo correo si es lo que delata el abuso.
+  const permitirValoracion = crearLimitador();
+
   app.get('/valoracion-cartas-magic', (req, res) => vistaValoracion(res));
 
   app.post('/valoracion-cartas-magic', async (req, res) => {
     const { error, lead, valores } = validarLead(req.body);
     if (error) return vistaValoracion(res.status(400), { errorCode: error, valores });
+
+    // El bloqueo del navegador no cubre a quien manda el POST con curl o con dos pestanas,
+    // y cada repeticion es un correo mas.
+    if (!permitirValoracion(`correo:${lead.email}`)) {
+      return vistaValoracion(res.status(429), { errorCode: 'DEMASIADOS_INTENTOS', valores });
+    }
 
     try {
       await enviarAviso(componerCorreo(lead));

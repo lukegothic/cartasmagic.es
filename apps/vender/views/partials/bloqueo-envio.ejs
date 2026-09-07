@@ -16,6 +16,8 @@
     var rotulo = boton.textContent;
     var enviando = false;
 
+    var frenar = function (e) { e.preventDefault(); };
+
     form.addEventListener('submit', function (e) {
         // El guardia va antes de tocar el boton porque el navegador vuelve a disparar submit
         // cuando la validacion nativa frena el primero: sin esto, un formulario incompleto
@@ -48,6 +50,18 @@
         // bandera de arriba cubre el hueco de este turno.
         setTimeout(function () {
             boton.disabled = true;
+
+            // Los campos se apagan con readOnly, no con disabled: un campo deshabilitado no
+            // viaja en el POST, y este formulario se esta enviando justo ahora. El desplegable
+            // no entiende readOnly, asi que se le frena el teclado y el raton a mano.
+            Array.prototype.forEach.call(form.querySelectorAll('input, textarea'), function (campo) {
+                campo.readOnly = true;
+            });
+            Array.prototype.forEach.call(form.querySelectorAll('select'), function (campo) {
+                campo.addEventListener('mousedown', frenar);
+                campo.addEventListener('keydown', frenar);
+            });
+            form.classList.add('lead-form-enviando');
         }, 0);
     });
 
@@ -59,6 +73,15 @@
         boton.disabled = false;
         boton.removeAttribute('aria-busy');
         boton.textContent = rotulo;
+
+        Array.prototype.forEach.call(form.querySelectorAll('input, textarea'), function (campo) {
+            campo.readOnly = false;
+        });
+        Array.prototype.forEach.call(form.querySelectorAll('select'), function (campo) {
+            campo.removeEventListener('mousedown', frenar);
+            campo.removeEventListener('keydown', frenar);
+        });
+        form.classList.remove('lead-form-enviando');
     });
 })();
 </script>

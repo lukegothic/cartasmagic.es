@@ -287,7 +287,7 @@ const ERRORES = {
   MAZO_NO_ACCESIBLE: 'No se ha podido abrir el mazo. Comprueba que el enlace es público y vuelve a probar',
   MAZO_NO_LEIBLE: 'No se ha podido leer la lista de cartas. Comprueba que el enlace es público y vuelve a probar',
   MAZO_VACIO: 'Ese mazo no tiene cartas',
-  DEMASIADOS_INTENTOS: 'Has pedido varios presupuestos seguidos. Espera un rato y vuelve a probar',
+  DEMASIADOS_INTENTOS: 'Se han recibido varios envíos seguidos. Conviene esperar un rato antes de volver a probar',
   ENVIO_FALLIDO: 'No se ha podido enviar. Prueba otra vez o escribe a contacto@vendercartasmagic.es'
 };
 
