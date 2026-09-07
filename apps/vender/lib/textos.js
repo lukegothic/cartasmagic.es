@@ -64,7 +64,7 @@ const PROCESO_FAQ = [
 
 const PORTADA = {
   h1: 'Vende tus cartas Magic sin listar, fotografiar ni negociar',
-  reclamo: 'Compramos en cualquier idioma y en cualquier estado. Metes los mazos y los álbumes en una caja de magics, la mandas con la etiqueta que pagamos nosotros y un día laborable después tienes un precio definitivo. Aceptas y cobras por transferencia.',
+  reclamo: 'Nos dedicamos a la venta de cartas Magic por el otro lado: compramos la colección entera, en cualquier idioma y en cualquier estado. Metes los mazos y los álbumes en una caja de magics, la mandas con la etiqueta que pagamos nosotros y un día laborable después tienes un precio definitivo. Aceptas y cobras por transferencia.',
   llamadaPrincipal: 'Saber cuánto vale mi colección',
   notaMinuto: 'Se tarda un minuto &middot; sin compromiso &middot; el envío es gratis, lo pagamos nosotros',
   notaCardmarket: 'Vendedor en Cardmarket desde 2011 &middot; más de 3.200 valoraciones positivas',
@@ -81,7 +81,7 @@ const PORTADA = {
     titulo: 'Vender cartas Magic sin montar una tienda',
     parrafos: [
       'Lo dejaste hace unos meses o hace unos años. La colección sigue ahí, ocupando sitio, y cada vez que piensas en venderla te acuerdas de lo que costaría hacerlo bien: abrir cuenta en Cardmarket, fotografiar, mirar carta por carta de qué set es y en qué estado está, listarlas una a una, esperar meses a que se vendan las buenas mientras la mayoría no se vende nunca, y bajar a Correos cada vez que alguien te compra una carta de dos euros.',
-      'Eso son semanas de trabajo repartidas en meses. Si te apetece hacerlo, hazlo: sacarás más dinero y es la opción honesta para quien disfruta del proceso. Si lo que quieres es que la caja de magics deje de estar ahí y cobrar por ella, nosotros somos esa opción.'
+      'Eso son semanas de trabajo repartidas en meses. Si te apetece hacerlo, hazlo: sacarás más dinero y es la opción honesta para quien disfruta del proceso. Si lo que quieres es vender Magic sin dedicarle meses, que la caja de magics deje de estar ahí y cobrar por ella, nosotros somos esa opción.'
     ]
   },
   queCompramos: {

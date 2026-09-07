@@ -36,7 +36,7 @@ const PORTADA = {
   intro: {
     titulo: 'Cuánto valen tus cartas Magic',
     cuerpo:
-      'Casi nadie sabe qué tiene guardado en el armario. Una colección de los años noventa puede valer cuatro mil euros o cuarenta, y la diferencia casi nunca está donde la gente cree: no la marcan las cartas más vistosas sino la edición, el estado y si se juegan hoy. Aquí explicamos cómo se calcula ese precio, con las mismas referencias que usamos cuando compramos una colección.'
+      'Casi nadie sabe qué tiene guardado en el armario. Una colección de los años noventa puede valer cuatro mil euros o cuarenta, y la diferencia casi nunca está donde la gente cree: no la marcan las cartas más vistosas sino la edición, el estado y si se juegan hoy. Aquí explicamos cómo valorar cartas Magic, con las mismas referencias que usamos para tasar las colecciones que compramos.'
   },
   guias: {
     titulo: 'Guías sobre el valor de las cartas',

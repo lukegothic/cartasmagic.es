@@ -5,9 +5,9 @@ fecha: 2026-09-05
 keywords: cartas magic antiguas, cartas magic antiguas valor, coleccion magic años 90, ediciones magic caras, revised magic valor
 ---
 
-Que una carta sea vieja no la hace valiosa. Lo que la hace valiosa es que se imprimieran
-pocas y que alguien las siga queriendo. En los noventa pasaron las dos cosas a la vez en
-unas cuantas ediciones, y la contraria en muchas otras.
+Que una carta sea vieja no la hace valiosa. Lo que hace valiosas a las cartas Magic
+antiguas es que se imprimieran pocas y que alguien las siga queriendo. En los noventa
+pasaron las dos cosas a la vez en unas cuantas ediciones, y la contraria en muchas otras.
 
 La buena noticia es que separar unas de otras no exige saber de Magic. Basta con mirar el
 borde.
