@@ -18,9 +18,9 @@ horas. Si lo rechaza, la devolución cuesta 11,90 euros a su cargo.
 ## Cómo valoramos una colección
 
 El precio de una carta no lo marca la rareza por sí sola. Los factores que pesan son
-la edición, la versión exacta, el idioma, el estado de conservación, si es foil, la
-demanda actual y la liquidez. Valoramos con los precios de Cardmarket del día en que
-llega el paquete.
+la edición, la versión exacta, el idioma, el estado de conservación, el acabado (normal,
+foil y el resto de acabados especiales), la demanda actual y la liquidez. Valoramos con
+los precios de Cardmarket del día en que llega el paquete.
 
 ## Titular
 
