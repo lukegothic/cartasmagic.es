@@ -28,6 +28,19 @@ const enlaceMedido = (md_, campana) => {
   };
 };
 
+// El alt no vive en los atributos del token sino en sus hijos, asi que se delega en la
+// regla original en vez de pintar el token a mano: hacerlo a mano deja las fotos sin
+// texto alternativo.
+const imagenOriginal = md.renderer.rules.image;
+
+// Las guias comparativas llevan decenas de fotos a tamano completo. Sin la carga
+// diferida el navegador se las trae todas antes de pintar la primera pantalla.
+md.renderer.rules.image = (tokens, i, opciones, env, self) => {
+  tokens[i].attrSet('loading', 'lazy');
+  tokens[i].attrSet('decoding', 'async');
+  return imagenOriginal(tokens, i, opciones, env, self);
+};
+
 // El slug sale del nombre del fichero y acaba tal cual en la URL y en el canonical.
 const SLUG_VALIDO = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 

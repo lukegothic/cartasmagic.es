@@ -8,7 +8,10 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(expressLayouts);
 
-app.use(express.static(path.join(__dirname, 'public')));
+// redirect: false porque las fotos de los articulos viven en public/blog/<slug>/. Con el
+// valor por defecto, static ve que ese directorio existe y manda un 301 a la URL con
+// barra final, quedandose con /blog y con la del articulo antes de que las vean las rutas.
+app.use(express.static(path.join(__dirname, 'public'), { redirect: false }));
 
 require('./routes/main')(app);
 

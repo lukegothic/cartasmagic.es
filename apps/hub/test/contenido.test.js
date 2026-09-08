@@ -173,3 +173,33 @@ test('no toca los enlaces internos del propio hub', () => {
   assert.match(entrada.html, /href="\/blog\/otra-guia"/);
   assert.ok(!entrada.html.includes('utm_'));
 });
+
+// Las guias con fotos comparativas necesitan que la sintaxis de imagen de markdown
+// llegue como <img>, aunque el renderizador escape el HTML que venga escrito a mano.
+test('pinta las imagenes escritas con la sintaxis de markdown', () => {
+  const dir = conDirectorio({
+    'con-foto.md':
+      '---\ntitulo: T\ndescripcion: d\nfecha: 2026-09-05\n---\n\n' +
+      '![Reverso de una carta autentica](/blog/con-foto/green-dot-real.jpg)\n'
+  });
+
+  const [entrada] = leerEntradas(dir);
+
+  assert.match(entrada.html, /<img[^>]+src="\/blog\/con-foto\/green-dot-real\.jpg"/);
+  assert.match(entrada.html, /alt="Reverso de una carta autentica"/);
+});
+
+// Una guia comparativa lleva decenas de fotos y pesa varios megas: sin carga diferida
+// el navegador se las trae todas antes de pintar nada.
+test('difiere la carga de las imagenes', () => {
+  const dir = conDirectorio({
+    'con-foto.md':
+      '---\ntitulo: T\ndescripcion: d\nfecha: 2026-09-05\n---\n\n' +
+      '![Un reverso](/blog/con-foto/reverso.jpg)\n'
+  });
+
+  const [entrada] = leerEntradas(dir);
+
+  assert.match(entrada.html, /loading="lazy"/);
+  assert.match(entrada.html, /decoding="async"/);
+});

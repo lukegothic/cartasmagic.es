@@ -470,6 +470,13 @@ footer p {
     margin-bottom: 0.5rem;
 }
 
+.articulo-cuerpo h4 {
+    font-size: 0.94rem;
+    font-weight: 600;
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
 .articulo-cuerpo p {
     margin-bottom: 1rem;
     color: var(--text-primary);
@@ -515,6 +522,23 @@ footer p {
     padding-left: 1rem;
     margin: 0 0 1rem 0;
     color: var(--text-secondary);
+}
+
+/* Las guias comparativas alternan foto y pie: la imagen se pega al parrafo que la
+   explica para que se lean como una unidad. */
+.articulo-cuerpo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    margin: 1.5rem 0 0.75rem;
+}
+
+.articulo-cuerpo img + p {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
 }
 
 /* El cierre comercial de cada articulo: todo contenido termina llevando a vender. */
