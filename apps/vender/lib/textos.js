@@ -20,7 +20,10 @@ const PIE = {
     enlace: 'guías sobre el valor de las cartas Magic',
     despues: 'en CartasMagic.es'
   },
-  titular: 'Iván Pérez &middot; NIF 72808254Y &middot; Pamplona (Navarra)',
+  // Sin el NIF ni la calle: el articulo 10 de la LSSI los exige en el aviso legal, que
+  // se enlaza justo debajo, no en el pie de cada pagina. El alias es con el que se le
+  // conoce en Cardmarket, que es donde puede comprobarse quien hay detras.
+  titular: 'Iván (ivan-the-seller) &middot; Navarra',
   avisoLegal: 'Aviso legal y condiciones'
 };
 
@@ -174,7 +177,8 @@ const VALORACION = {
       'Si rechazas el precio, la devolución cuesta 11,90 € y la paga quien rechaza, por transferencia, antes de devolver el paquete.',
       'Si decidimos no valorar tu colección, la devolución la pagamos nosotros.',
       'Compramos mazos, álbumes y colecciones en cualquier idioma y estado. No compramos cajas que sean solo comunes, otros juegos ni falsificaciones.',
-      'Hasta 2 kg por paquete. Si tienes más, avísanos antes de enviar.'
+      'Hasta 2 kg por paquete. Si tienes más, avísanos antes de enviar.',
+      'La etiqueta es para enviar la colección que quieres vender. Si el paquete llega sin cartas, no se valora y la vuelta la paga quien lo mandó.'
     ],
     enlace: 'Leer las condiciones completas'
   },
