@@ -5,60 +5,92 @@ const path = require('node:path');
 const ejs = require('ejs');
 const textos = require('../lib/textos');
 const meta = require('../lib/metadatos');
+const { ACTUALIZADA, CARTAS, formatoPrecio } = require('../lib/hotlist-cartas');
 
-const { HOTLIST } = textos;
 const sitemap = fs.readFileSync(path.join(__dirname, '../public/sitemap.xml'), 'utf8');
+const estilos = fs.readFileSync(path.join(__dirname, '../public/style.css'), 'utf8');
+const ENLACE_ESTADOS = 'https://cartasmagic.es/blog/estado-de-la-carta-nm-ex-gd-lp?utm_source=vendercartasmagic&utm_medium=hotlist&utm_campaign=estados';
+
 // Se renderiza de verdad en vez de leer la plantilla como texto: asi se comprueba lo que
 // acaba viendo el visitante, incluidos los precios, que la plantilla no lleva escritos.
 const vista = ejs.render(
   fs.readFileSync(path.join(__dirname, '../views/hotlist.ejs'), 'utf8'),
-  { textos }
+  { textos, cartas: CARTAS, actualizada: ACTUALIZADA, formatoPrecio, enlaceEstados: ENLACE_ESTADOS }
 );
 
 // Una hotlist es una oferta publica: quien lee una cifra y manda la carta espera cobrarla.
-// Si una entrada se queda sin precio o sin estado, lo que se publica es un compromiso que
+// Si una entrada se queda sin precio o sin imagen, lo que se publica es un compromiso que
 // no se sabe honrar, y eso se descubre cuando alguien ya ha enviado el paquete.
-test('cada carta publicada lleva nombre, edicion, estado y precio', () => {
-  assert.ok(HOTLIST.cartas.length >= 10, 'una hotlist de menos de diez cartas no merece pagina');
+test('cada carta publicada lleva nombre, edicion, imagen y precio', () => {
+  assert.ok(CARTAS.length >= 10, 'una hotlist de menos de diez cartas no merece pagina');
 
-  HOTLIST.cartas.forEach((carta) => {
-    assert.ok(carta.nombre, 'una carta sin nombre no se puede identificar');
-    assert.ok(carta.edicion, `${carta.nombre} no dice de que edicion`);
-    assert.ok(carta.estado, `${carta.nombre} no dice en que estado se paga ese precio`);
-    assert.ok(Number.isFinite(carta.precio) && carta.precio > 0, `${carta.nombre} no tiene un precio pagable`);
+  CARTAS.forEach((carta) => {
+    assert.ok(carta.name, 'una carta sin nombre no se puede identificar');
+    assert.ok(carta.set_name, `${carta.name} no dice de que edicion`);
+    assert.ok(carta.image_uris?.normal, `${carta.name} no tiene imagen`);
+    assert.ok(Number.isFinite(carta.pagamos) && carta.pagamos > 0, `${carta.name} no tiene un precio pagable`);
   });
 });
 
-// El precio se publica por carta y por estado. Repetir nombre y edicion sin cambiar el
-// estado son dos ofertas distintas por lo mismo, y gana la que lea el cliente.
-test('no hay dos entradas para la misma carta en el mismo estado', () => {
-  const claves = HOTLIST.cartas.map(({ nombre, edicion, estado }) => `${nombre}|${edicion}|${estado}`);
+// Los campos son los de Scryfall a proposito, para que la salida del script que las baje
+// entre sin renombrar nada. Si alguien los castellaniza, el script deja de encajar.
+test('las cartas conservan los nombres de campo de Scryfall', () => {
+  CARTAS.forEach((carta) => {
+    assert.ok(!('nombre' in carta), `${carta.name} usa nombre en vez de name`);
+    assert.ok(!('edicion' in carta), `${carta.name} usa edicion en vez de set_name`);
+  });
+});
+
+// El precio se publica por carta y edicion. Repetir la misma impresion son dos ofertas
+// distintas por lo mismo, y gana la que lea el cliente.
+test('no hay dos entradas para la misma impresion', () => {
+  const claves = CARTAS.map(({ name, set_name }) => `${name}|${set_name}`);
   assert.equal(new Set(claves).size, claves.length);
 });
 
 // Los precios salen en euros y con coma decimal: la referencia es Cardmarket, no las
-// hotlists americanas de las que se copia el formato.
+// hotlists americanas de las que se copia el formato. Se comprueban varias magnitudes
+// porque el fallo tipico del separador de millares es colocar solo el primero.
 test('los precios se pintan en euros con coma decimal', () => {
   assert.match(vista, /€/);
   assert.doesNotMatch(vista, /\$/);
-  // Se comprueban varias magnitudes porque el fallo tipico del separador de millares es
-  // colocar solo el primero: con una sola cifra de cuatro digitos la prueba no lo ve.
-  assert.equal(HOTLIST.formatoPrecio(38), '38,00 €');
-  assert.equal(HOTLIST.formatoPrecio(420), '420,00 €');
-  assert.equal(HOTLIST.formatoPrecio(1234.5), '1.234,50 €');
-  assert.equal(HOTLIST.formatoPrecio(1234567), '1.234.567,00 €');
+  assert.equal(formatoPrecio(38), '38,00 €');
+  assert.equal(formatoPrecio(420), '420,00 €');
+  assert.equal(formatoPrecio(1234.5), '1.234,50 €');
+  assert.equal(formatoPrecio(1234567), '1.234.567,00 €');
 });
 
-// El estado es la letra pequena de cualquier hotlist: sin decir sobre que estado se cotiza,
-// la cifra alta se lee como si valiera para una carta jugada.
-test('se avisa de sobre que estado se cotizan los precios', () => {
-  assert.match(HOTLIST.aviso, /Near Mint|impecable/i);
+// El idioma y el estado son la letra pequena de cualquier hotlist: sin decir que la cifra
+// es de una inglesa impecable, la misma carta en aleman y jugada se lee como si valiera eso.
+test('se avisa de que los precios son de inglesa y Near Mint', () => {
+  assert.match(textos.HOTLIST.aviso.antes, /inglés/);
+  assert.match(textos.HOTLIST.aviso.antes, /Near Mint/);
+});
+
+// El aviso se pinta arriba y abajo. Quien baja directo a mirar cifras no pasa por el
+// encabezado, y es justo a quien mas le cambia la cuenta.
+test('el aviso se lee sin tener que buscarlo', () => {
+  assert.equal(vista.split(textos.HOTLIST.aviso.enlace).length - 1, 2);
+});
+
+// Decir "Near Mint" sin explicarlo deja fuera al que vende una coleccion vieja y no sabe
+// la escala. La guia esta en el hub, que es donde vive el contenido.
+test('el aviso enlaza a la guia de estados del hub', () => {
+  assert.match(vista, /cartasmagic\.es\/blog\/estado-de-la-carta-nm-ex-gd-lp/);
+  assert.match(vista, /utm_source=vendercartasmagic/);
+});
+
+// La imagen es lo que hace reconocer la carta sin saberse el nombre en ingles.
+test('cada carta se pinta con su imagen', () => {
+  assert.equal((vista.match(/<img/g) || []).length, CARTAS.length);
+  assert.match(vista, /loading="lazy"/);
+  assert.match(estilos, /\.hotlist-rejilla/);
 });
 
 // La cifra sale de precios de Cardmarket que se mueven. Publicarla sin fecha la convierte
 // en una oferta indefinida que se acaba honrando a perdida.
 test('la lista dice de cuando es', () => {
-  assert.match(HOTLIST.actualizada, /^\d{2}\/\d{2}\/\d{4}$/);
+  assert.match(ACTUALIZADA, /^\d{2}\/\d{2}\/\d{4}$/);
   assert.match(vista, /actualizada/i);
 });
 
@@ -83,8 +115,13 @@ test('se llega a la hotlist desde cualquier pagina', () => {
 // El precio publicado sale de un porcentaje fijo sobre Cardmarket. Si una fila se sale de
 // la regla, o se paga de mas o la lista miente sobre lo que ofrece.
 test('ninguna carta se paga por encima de lo que se anuncia', () => {
-  const porcentaje = HOTLIST.condiciones.puntos.find(({ destacado }) => /60 %/.test(destacado));
+  const porcentaje = textos.HOTLIST.condiciones.puntos.find(({ destacado }) => /60 %/.test(destacado));
   assert.ok(porcentaje, 'la pagina ya no dice que porcentaje paga');
+
+  CARTAS.forEach(({ name, pagamos, prices }) => {
+    const mercado = Number(prices.eur);
+    assert.ok(pagamos < mercado, `${name} se paga a ${pagamos} y en el mercado vale ${mercado}`);
+  });
 });
 
 // La devolucion cuesta 11,90 € y en una carta suelta se lleva media. Es la condicion que
@@ -98,7 +135,7 @@ test('la hotlist avisa de lo que cuesta la devolucion', () => {
 test('el marcado declara compra, no venta', () => {
   const grafo = JSON.parse(meta.hotlistLdJson())['@graph'];
   const lista = grafo.find(({ '@type': tipo }) => tipo === 'ItemList');
-  assert.equal(lista.numberOfItems, HOTLIST.cartas.length);
+  assert.equal(lista.numberOfItems, CARTAS.length);
   lista.itemListElement.forEach(({ item }) => {
     assert.equal(item['@type'], 'BuyAction');
     assert.equal(item.priceSpecification.priceCurrency, 'EUR');

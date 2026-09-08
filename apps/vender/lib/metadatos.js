@@ -2,7 +2,8 @@
 // visitante. Separado de textos.js a proposito, porque se edita por otros motivos y con
 // otro criterio (longitud, keywords) que la copy de la interfaz.
 
-const { PROCESO_FAQ, HOTLIST: COPY_HOTLIST } = require('./textos');
+const { PROCESO_FAQ } = require('./textos');
+const { ACTUALIZADA, CARTAS } = require('./hotlist-cartas');
 
 const DOMINIO = 'https://vendercartasmagic.es';
 
@@ -132,26 +133,26 @@ const HOTLIST = {
 // venta por 235 euros. Lo que corresponde es demandar la carta, que es lo que expresa
 // BuyAction con su priceSpecification.
 const hotlistLdJson = () => {
-  const [dia, mes, anio] = COPY_HOTLIST.actualizada.split('/');
+  const [dia, mes, anio] = ACTUALIZADA.split('/');
   return grafo({
     '@type': 'ItemList',
     name: 'Cartas Magic que compramos',
     url: `${DOMINIO}/hotlist`,
     dateModified: `${anio}-${mes}-${dia}`,
-    numberOfItems: COPY_HOTLIST.cartas.length,
-    itemListElement: COPY_HOTLIST.cartas.map(({ nombre, edicion, estado, precio }, i) => ({
+    numberOfItems: CARTAS.length,
+    itemListElement: CARTAS.map(({ name, set_name, pagamos }, i) => ({
       '@type': 'ListItem',
       position: i + 1,
       item: {
         '@type': 'BuyAction',
-        name: `${nombre} (${edicion})`,
+        name: `${name} (${set_name})`,
         agent: { '@id': 'https://vendercartasmagic.es/#negocio' },
-        object: { '@type': 'Product', name: `${nombre} (${edicion})` },
+        object: { '@type': 'Product', name: `${name} (${set_name})` },
         priceSpecification: {
           '@type': 'PriceSpecification',
           priceCurrency: 'EUR',
-          price: precio,
-          description: `Precio de compra para ${estado}`
+          price: pagamos,
+          description: 'Precio de compra para una carta en inglés y en estado Near Mint'
         }
       }
     }))

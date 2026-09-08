@@ -288,48 +288,22 @@ const COMPARATIVA = {
 const HOTLIST = {
   h1: 'Qué cartas Magic buscamos ahora y a cuánto las pagamos',
   intro: 'Estas son las cartas que más nos hacen falta ahora mismo, con la cifra que pagamos por cada una. No hace falta que tengas la colección entera: si tienes alguna de estas sueltas, también las compramos. El envío lo seguimos pagando nosotros.',
-  actualizada: '08/09/2026',
   actualizadaEtiqueta: 'Lista actualizada el',
-  aviso: 'Los precios son para cartas en estado Near Mint, es decir, impecables o casi. Una carta jugada se paga menos, y cuánto menos depende del desgaste que traiga. Si no sabes en qué estado están las tuyas, mándalas igual y ya lo miramos nosotros.',
-  columnas: { carta: 'Carta', edicion: 'Edición', estado: 'Estado', precio: 'Pagamos' },
-  // Los nombres van en ingles porque es como aparecen impresos en la carta y como se buscan.
-  // La edicion se escribe entera para que no haya que saberse los codigos de tres letras.
-  // Cada precio es el 60 % del valor de esa carta en Cardmarket, redondeado. Si se anade una
-  // carta o se revisan las cifras, aplicar el mismo porcentaje: publicar precios sueltos sin
-  // regla detras es lo que hace que unas cartas se paguen caras y otras no salgan a cuenta.
-  cartas: [
-    { nombre: "Gaea's Cradle", edicion: "Urza's Saga", estado: 'Near Mint', precio: 695 },
-    { nombre: 'Mox Diamond', edicion: 'Stronghold', estado: 'Near Mint', precio: 500 },
-    { nombre: 'Underground Sea', edicion: 'Revised', estado: 'Near Mint', precio: 430 },
-    { nombre: 'Volcanic Island', edicion: 'Revised', estado: 'Near Mint', precio: 345 },
-    { nombre: "Lion's Eye Diamond", edicion: 'Mirage', estado: 'Near Mint', precio: 320 },
-    { nombre: 'Imperial Seal', edicion: 'Portal Three Kingdoms', estado: 'Near Mint', precio: 240 },
-    { nombre: 'Tundra', edicion: 'Revised', estado: 'Near Mint', precio: 235 },
-    { nombre: 'Bayou', edicion: 'Revised', estado: 'Near Mint', precio: 185 },
-    { nombre: 'Grim Monolith', edicion: "Urza's Legacy", estado: 'Near Mint', precio: 185 },
-    { nombre: 'The One Ring', edicion: 'El Señor de los Anillos', estado: 'Near Mint', precio: 53 },
-    { nombre: 'Sheoldred, the Apocalypse', edicion: 'Dominaria United', estado: 'Near Mint', precio: 45 },
-    { nombre: 'Force of Will', edicion: 'Alliances', estado: 'Near Mint', precio: 36 },
-    { nombre: 'Wasteland', edicion: 'Tempest', estado: 'Near Mint', precio: 28 },
-    { nombre: 'Mana Crypt', edicion: 'Eternal Masters', estado: 'Near Mint', precio: 24 },
-    { nombre: 'Jeweled Lotus', edicion: 'Commander Legends', estado: 'Near Mint', precio: 23 },
-    { nombre: 'Cavern of Souls', edicion: 'Avacyn Restored', estado: 'Near Mint', precio: 23 },
-    { nombre: 'Orcish Bowmasters', edicion: 'El Señor de los Anillos', estado: 'Near Mint', precio: 21 },
-    { nombre: 'Rhystic Study', edicion: 'Prophecy', estado: 'Near Mint', precio: 21 },
-    { nombre: 'Ragavan, Nimble Pilferer', edicion: 'Modern Horizons 2', estado: 'Near Mint', precio: 20 }
-  ],
-  // Punto para los millares y coma para los decimales, que es como se escribe una cifra en
-  // castellano. Se delega en toLocaleString, igual que el euros de correo-plantilla.js, en vez
-  // de recortar la cifra a mano: una dual de cuatro digitos ya necesita el punto de los millares.
-  formatoPrecio: (precio) =>
-    `${precio.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: 'always' })} €`,
+  // El aviso va arriba y abajo. Es la condicion que decide si la cifra de al lado de la
+  // carta vale para lo que tiene el visitante en la mano, y leerla despues de haber
+  // enviado el paquete no sirve de nada.
+  aviso: {
+    antes: 'Los precios son para cartas en inglés y en estado Near Mint, es decir, impecables o casi. Una carta jugada, o en otro idioma, se paga menos. Si no sabes en qué estado están las tuyas, mándalas igual y lo miramos nosotros, o mira antes la',
+    enlace: 'guía de estados de una carta',
+    despues: 'para hacerte una idea'
+  },
+  pagamosEtiqueta: 'Pagamos',
   condiciones: {
     titulo: 'Cómo funciona esta lista',
     puntos: [
       { destacado: 'La cifra es la que se paga si la carta llega como dice la lista.', resto: 'Es lo único que se cotiza sin verlo antes, y solo porque son cartas concretas en un estado concreto. Al abrirla se comprueba el estado, y si coincide no hay regateo a la baja. Una colección entera sigue sin tener precio hasta que llega, porque ahí no se sabe qué viene dentro.' },
       { destacado: 'Cada precio es el 60 % de lo que vale esa carta en Cardmarket.', resto: 'La diferencia es lo que cuesta revenderla: comisiones, envíos y el tiempo que tarde en salir. Preferimos decir el porcentaje a que lo tengas que calcular tú.' },
       { destacado: 'Los precios valen mientras la lista esté publicada.', resto: 'Se revisan cada pocas semanas siguiendo los precios de Cardmarket. La fecha de arriba dice de cuándo es la versión que estás leyendo.' },
-      { destacado: 'El estado manda.', resto: 'Las cifras son de Near Mint salvo que la fila diga otra cosa. Una carta con desgaste, doblada o con el canto blanco se valora aparte.' },
       { destacado: 'Se compran cartas sueltas.', resto: 'No hace falta mínimo ni vender la colección entera. Si tienes una sola de estas, escríbenos y te mandamos la etiqueta igual.' },
       { destacado: 'Se cobra por transferencia.', resto: 'No damos vales ni crédito de tienda. Se paga en dinero, dentro de las 24 horas siguientes a que aceptes.' },
       { destacado: 'Si al final no aceptas, la devolución cuesta 11,90 €.', resto: 'Es lo que suman el envío de ida y el de vuelta, y la paga quien rechaza. En una carta de 20 € se lleva media carta, así que para cantidades pequeñas conviene preguntar antes por correo que enviar sin más.' }

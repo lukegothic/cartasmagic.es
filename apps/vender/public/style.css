@@ -839,3 +839,61 @@ ol.plain-list li::before {
         text-align: center;
     }
 }
+
+/* Hotlist: las cartas se ven, que es lo que hace reconocer la propia en la estanteria.
+   La rejilla se adapta sola al ancho, sin puntos de ruptura, porque las cartas de Magic
+   tienen todas la misma proporcion y caben en columnas de ancho fijo. */
+.hotlist-rejilla {
+    list-style: none;
+    padding: 0;
+    margin: 24px 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 24px;
+}
+
+.hotlist-carta {
+    text-align: center;
+}
+
+.hotlist-carta img {
+    width: 100%;
+    height: auto;
+    border-radius: 4.75% / 3.5%;
+    display: block;
+}
+
+.hotlist-nombre {
+    margin: 8px 0 0;
+    font-weight: 600;
+    font-size: 0.95em;
+}
+
+.hotlist-edicion {
+    margin: 2px 0 0;
+    color: var(--mtg-text-muted);
+    font-size: 0.85em;
+}
+
+.hotlist-precio {
+    margin: 6px 0 0;
+    color: var(--mtg-primary);
+    font-weight: 700;
+    font-size: 1.15em;
+}
+
+.hotlist-precio-etiqueta {
+    display: block;
+    color: var(--mtg-text-muted);
+    font-weight: 400;
+    font-size: 0.7em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.hotlist-aviso {
+    border-left: 3px solid var(--mtg-primary);
+    padding-left: 12px;
+    color: var(--mtg-text-muted);
+    font-size: 0.95em;
+}

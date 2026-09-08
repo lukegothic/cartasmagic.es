@@ -6,6 +6,7 @@ const { enviarAviso } = require('../lib/mailer');
 const { mensajeDeError } = require('../lib/mensajes-error');
 const textos = require('../lib/textos');
 const meta = require('../lib/metadatos');
+const { ACTUALIZADA, CARTAS, formatoPrecio } = require('../lib/hotlist-cartas');
 
 // El mensaje se deriva del codigo ya fusionado, asi que ninguna llamada puede pintar un
 // aviso vacio por olvidarse de pasarlo.
@@ -118,12 +119,20 @@ module.exports = (app) => {
     vistaManabox(res, { enviado: true });
   });
 
+  // El enlace a la guia de estados va al hub, que es donde vive el contenido. Con utm para
+  // saber cuanta gente cruza de un dominio al otro, igual que el enlace del pie.
+  const ENLACE_ESTADOS = 'https://cartasmagic.es/blog/estado-de-la-carta-nm-ex-gd-lp?utm_source=vendercartasmagic&utm_medium=hotlist&utm_campaign=estados';
+
   app.get('/hotlist', (req, res) => {
     res.render('hotlist', {
       ...meta.HOTLIST,
       ld_json: meta.hotlistLdJson(),
       textos,
-      faq: null
+      faq: null,
+      cartas: CARTAS,
+      actualizada: ACTUALIZADA,
+      formatoPrecio,
+      enlaceEstados: ENLACE_ESTADOS
     });
   });
 

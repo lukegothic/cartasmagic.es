@@ -1,31 +1,30 @@
 <div class="main-container">
     <h1><%= textos.HOTLIST.h1 %></h1>
     <p><%= textos.HOTLIST.intro %></p>
-    <p class="text-muted"><%= textos.HOTLIST.actualizadaEtiqueta %> <%= textos.HOTLIST.actualizada %></p>
-    <p><%= textos.HOTLIST.aviso %></p>
+    <p class="text-muted"><%= textos.HOTLIST.actualizadaEtiqueta %> <%= actualizada %></p>
 
-    <div class="table-container">
-        <table class="example-table">
-            <thead>
-                <tr>
-                    <th><%= textos.HOTLIST.columnas.carta %></th>
-                    <th><%= textos.HOTLIST.columnas.edicion %></th>
-                    <th><%= textos.HOTLIST.columnas.estado %></th>
-                    <th><%= textos.HOTLIST.columnas.precio %></th>
-                </tr>
-            </thead>
-            <tbody>
-                <% textos.HOTLIST.cartas.forEach(({ nombre, edicion, estado, precio }) => { %>
-                <tr>
-                    <td><%= nombre %></td>
-                    <td><%= edicion %></td>
-                    <td><%= estado %></td>
-                    <td><%= textos.HOTLIST.formatoPrecio(precio) %></td>
-                </tr>
-                <% }) %>
-            </tbody>
-        </table>
-    </div>
+    <p class="hotlist-aviso">
+        <%= textos.HOTLIST.aviso.antes %>
+        <a href="<%= enlaceEstados %>" rel="noopener"><%= textos.HOTLIST.aviso.enlace %></a>
+        <%= textos.HOTLIST.aviso.despues %>
+    </p>
+
+    <ul class="hotlist-rejilla">
+        <% cartas.forEach(({ name, set_name, image_uris, pagamos }) => { %>
+        <li class="hotlist-carta">
+            <img src="<%= image_uris.normal %>" alt="<%= name %>" width="244" height="340" loading="lazy">
+            <p class="hotlist-nombre"><%= name %></p>
+            <p class="hotlist-edicion"><%= set_name %></p>
+            <p class="hotlist-precio"><span class="hotlist-precio-etiqueta"><%= textos.HOTLIST.pagamosEtiqueta %></span> <%= formatoPrecio(pagamos) %></p>
+        </li>
+        <% }) %>
+    </ul>
+
+    <p class="hotlist-aviso">
+        <%= textos.HOTLIST.aviso.antes %>
+        <a href="<%= enlaceEstados %>" rel="noopener"><%= textos.HOTLIST.aviso.enlace %></a>
+        <%= textos.HOTLIST.aviso.despues %>
+    </p>
 
     <h2><%= textos.HOTLIST.condiciones.titulo %></h2>
     <ul class="plain-list">
