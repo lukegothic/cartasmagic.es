@@ -1,0 +1,15 @@
+{
+  "name": "cartasmagic-hotlist-fuentes",
+  "version": "1.0.0",
+  "description": "Mira que compran las tiendas de referencia y saca que ha cambiado cada dia",
+  "main": "hotlist.js",
+  "private": true,
+  "scripts": {
+    "test": "node --test \"test/*.test.js\"",
+    "hotlist": "node hotlist.js",
+    "solo-leer": "node hotlist.js --solo-leer"
+  },
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}

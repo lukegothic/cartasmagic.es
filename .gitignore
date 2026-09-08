@@ -24,4 +24,3 @@ credenciales*.json
 # Fotos diarias e informes de las hotlists ajenas: se regeneran solos cada dia y solo
 # valen en la maquina que los saca.
 herramientas/hotlist-fuentes/datos/
-__pycache__/

@@ -7,44 +7,63 @@ buscar y cuáles han cambiado de precio. Sirve para decidir qué entra en nuestr
 ## Lo primero: los precios de fuera no son nuestros precios
 
 Las cifras que saca esta herramienta son en dólares y en dólares canadienses, sobre el
-mercado americano, con los costes y la demanda de allí. Nuestro precio sale de Cardmarket
-y lo decide el negocio carta por carta.
+mercado americano, con los costes y la demanda de allí. Nuestro precio sale de Cardmarket y
+lo decide el negocio carta por carta.
 
-Lo que aporta el informe es la señal, no la cifra: si tres tiendas empiezan a pagar más por
+Lo que aporta el informe es la señal, no la cifra: si dos tiendas empiezan a pagar más por
 la misma carta la misma semana, conviene ir a mirar esa carta a Cardmarket. Ese es el uso.
 
 ## Uso
 
 ```bash
 cd herramientas/hotlist-fuentes
-python hotlist_fuentes.py
+node hotlist.js
 ```
 
-No hace falta instalar nada: solo biblioteca estándar de Python 3.12.
+No hay que instalar nada: solo biblioteca estándar de Node. No tiene dependencias, así que
+tampoco hace falta `npm ci` antes de ejecutarlo.
 
 | Orden | Qué hace |
 |---|---|
-| `python hotlist_fuentes.py` | Lee las fuentes, compara con la última vez y saca el informe |
-| `python hotlist_fuentes.py --solo-leer` | Guarda la foto del día sin sacar informe, para empezar el histórico |
-| `python -m unittest discover -s test` | Pruebas, sin tocar la red |
-
-Deja dos ficheros en `datos/`, que no van al repositorio:
-
-- `ultimo.json`, la foto de hoy, que mañana sirve de comparación
-- `cambios-<fecha>.md`, el informe legible del día
+| `npm run hotlist` | Lee las fuentes, compara con la última vez y saca el informe |
+| `npm run solo-leer` | Guarda la foto del día sin sacar informe, para empezar el histórico |
+| `npm test` | Pruebas, sin tocar la red |
 
 La primera vez todo sale como nuevo, porque no hay con qué comparar. Conviene arrancar con
-`--solo-leer` y empezar a leer los informes al día siguiente.
+`solo-leer` y empezar a leer los informes al día siguiente.
+
+## Dónde deja lo que genera
+
+Dos ficheros, `ultimo.json` (la foto de hoy, que mañana sirve de comparación) y
+`cambios-<fecha>.md` (el informe legible). Van a `datos/` al lado del código, salvo que se
+diga otra cosa con `HOTLIST_ESTADO_DIR`.
+
+En el servidor conviene que vayan fuera del repositorio, porque el clon se actualiza con
+`git pull` cada día:
+
+```sh
+HOTLIST_ESTADO_DIR=/etc/dokploy/hotlist/estado
+```
 
 ## Para que corra solo cada día
 
-En el servidor, con cron, a una hora de poco tráfico:
+Se despliega como **schedule de tipo servidor** en Dokploy, igual que el informe diario.
+Los schedules corren dentro del contenedor de Dokploy, que trae Node y no trae Python: por
+eso esta herramienta es de Node y no de Python, para no mantener dos lenguajes en los
+schedules ni levantar un contenedor aparte solo para esto.
 
-```cron
-30 6 * * * cd /ruta/cartasmagic.es/herramientas/hotlist-fuentes && python hotlist_fuentes.py >> datos/registro.log 2>&1
+Cron `30 6 * * *`, a una hora de poco tráfico, con este script:
+
+```sh
+cd /etc/dokploy/informe/repo && git pull -q
+cd herramientas/hotlist-fuentes
+HOTLIST_ESTADO_DIR=/etc/dokploy/hotlist/estado node hotlist.js
 ```
 
-Devuelve 1 si no ha podido leer ni una sola fuente, así que cron avisa si se cae todo. Si
+El repositorio ya está clonado en `/etc/dokploy/informe/repo`, que es el mismo que usa el
+informe diario. No hace falta otro clon.
+
+Devuelve 1 si no ha podido leer ni una sola fuente, así que Dokploy avisa si se cae todo. Si
 solo se cae una, el informe lo dice en su propia sección y las demás siguen.
 
 ## Las cuatro fuentes
@@ -63,7 +82,7 @@ enumera cartas de compra. No es un fallo de la herramienta, es que no hay datos.
 **Star City Games** no trae las cartas en el html: las pide un Meilisearch firmando con una
 clave de api que viaja dentro de su javascript. Esa clave es suya, no nuestra, y usarla
 desde un proceso automático es usar una credencial ajena. No se hace. Los caminos limpios
-están en el comentario de `fuentes/starcitygames.py`; el primero es escribirles y pedir
+están en el comentario de `fuentes/starcitygames.js`; el primero es escribirles y pedir
 acceso, que tienen programa de socios.
 
 ## Cómo se portan las fuentes
@@ -76,7 +95,10 @@ acceso, que tienen programa de socios.
 
 ## Al añadir una fuente
 
-Un fichero por fuente en `fuentes/`, que devuelva una lista de `Anuncio`. Lo único que hay
-que respetar es la diferencia entre lista vacía y `FuenteCaida`: una tienda puede quedarse
-sin cartas que buscar, y eso es un dato, pero que su web esté caída no lo es. Confundirlos
-haría que el informe dijera que han dejado de comprar.
+Un fichero por fuente en `fuentes/`, que devuelva una lista de anuncios con la forma que
+describe `fuentes/comun.js`. Cada fuente recibe su lector como parámetro, con el de red por
+defecto, y así se prueba sin tocar la red.
+
+Lo único que hay que respetar es la diferencia entre lista vacía y `FuenteCaida`: una tienda
+puede quedarse sin cartas que buscar, y eso es un dato, pero que su web esté caída no lo es.
+Confundirlos haría que el informe dijera que han dejado de comprar.
