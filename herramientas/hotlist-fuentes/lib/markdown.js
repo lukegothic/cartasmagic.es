@@ -4,8 +4,15 @@ const { PENDIENTE } = require('../fuentes/starcitygames');
 
 const MAXIMO_FILAS = 40;
 
-// Punto para millares y coma para decimales, como en formato.js del informe.
-const cifra = (n) => n.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+// Punto para millares y coma para decimales. useGrouping siempre, porque por defecto el es-ES
+// se salta el punto en las cifras de cuatro digitos: en una columna de precios quedaba
+// 3400,00 al lado de 15.000,00. Mismo motivo que en formatoPrecio de hotlist-cartas.js.
+const cifra = (n) =>
+  n.toLocaleString('es-ES', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    useGrouping: 'always'
+  });
 
 // Se compone a mano en vez de con toLocaleDateString porque el contenedor de Dokploy trae
 // otros datos de ICU que Windows y escribia 8/9/2026 donde aqui sale 08/09/2026. La fecha la

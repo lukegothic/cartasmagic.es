@@ -67,6 +67,14 @@ test('las cifras del informe van en formato castellano', () => {
   assert.match(componerMarkdown(cambios, 1, []), /15\.000,00 CAD/);
 });
 
+// El es-ES por defecto se salta el punto en las cifras de cuatro digitos, asi que en la misma
+// columna salia 3400,00 justo encima de 15.000,00. Con 15000 sola la prueba no lo veia.
+test('las cifras de cuatro digitos tambien llevan el punto de los millares', () => {
+  const cambios = { nuevas: [anuncio("Mishra's Workshop", 3400)], retiradas: [], movidas: [] };
+
+  assert.match(componerMarkdown(cambios, 1, []), /3\.400,00 CAD/);
+});
+
 // El contenedor de Dokploy trae otros datos de ICU que Windows: con toLocaleDateString salia
 // 8/9/2026 en el servidor y 08/09/2026 aqui, para el mismo dia.
 test('la fecha se escribe igual corra donde corra', () => {
