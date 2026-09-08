@@ -130,10 +130,38 @@ const AVISO_LEGAL = {
 const avisoLegalLdJson = () =>
   JSON.stringify({ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Aviso legal' });
 
+const CONTACTO = {
+  title: 'Contacto | VenderCartasMagic.es',
+  description: 'Cómo ponerse en contacto para vender una colección de cartas Magic, resolver una duda del proceso o consultar si una carta es auténtica.',
+  keywords: 'contacto vendercartasmagic, comprar colecciones cartas magic espana',
+  canonical: `${DOMINIO}/contacto`,
+  og_title: 'Contacto',
+  og_description: 'Dudas sobre una colección, sobre el proceso de venta o sobre la autenticidad de una carta.',
+  og_url: `${DOMINIO}/contacto`
+};
+
+// El correo y el telefono se repiten aqui a proposito: en el grafo son datos que leen los
+// buscadores, y en textos.js son la copy que lee el visitante. Se editan por motivos
+// distintos.
+const contactoLdJson = () =>
+  JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'ContactPage',
+    name: 'Contacto',
+    url: `${DOMINIO}/contacto`,
+    mainEntity: {
+      '@type': 'Organization',
+      name: 'VenderCartasMagic',
+      email: 'contacto@vendercartasmagic.es',
+      telephone: '+34644154365'
+    }
+  });
+
 module.exports = {
   INDEX, indexLdJson,
   COMPARATIVA, comparativaLdJson,
   VALORACION, valoracionLdJson,
   MANABOX, manaboxLdJson,
-  AVISO_LEGAL, avisoLegalLdJson
+  AVISO_LEGAL, avisoLegalLdJson,
+  CONTACTO, contactoLdJson
 };

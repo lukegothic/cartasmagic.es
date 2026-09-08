@@ -118,6 +118,15 @@ module.exports = (app) => {
     vistaManabox(res, { enviado: true });
   });
 
+  app.get('/contacto', (req, res) => {
+    res.render('contacto', {
+      ...meta.CONTACTO,
+      ld_json: meta.contactoLdJson(),
+      textos,
+      faq: null
+    });
+  });
+
   app.get('/aviso-legal', (req, res) => {
     res.render('aviso-legal', {
       ...meta.AVISO_LEGAL,

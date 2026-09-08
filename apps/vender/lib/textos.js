@@ -280,6 +280,22 @@ const AVISO_LEGAL = {
   llamada: 'Quiero vender mi colección'
 };
 
+const CONTACTO = {
+  h1: 'Contacto',
+  entradilla: 'Para cualquier duda sobre una colección, sobre el proceso de venta o sobre la autenticidad de una carta.',
+  correoTitulo: 'Correo',
+  correo: 'contacto@vendercartasmagic.es',
+  correoNota: 'Se responde dentro del día laborable siguiente.',
+  telefonoTitulo: 'Teléfono',
+  telefono: '+34 644 154 365',
+  telefonoLegible: '644 154 365',
+  autenticidadTitulo: '¿Dudas de si una carta es auténtica?',
+  autenticidad: 'Conviene adjuntar fotos del anverso, del reverso y del canto, a ser posible con algo de aumento. Con eso suele bastar para salir de dudas.',
+  valoracionTitulo: '¿Quieres vender una colección?',
+  valoracion: 'El formulario de valoración recoge lo necesario para dar un precio, así que es más rápido que escribir un correo.',
+  llamada: 'Valorar mi colección'
+};
+
 // El texto de cada error de validacion. La vista solo pide el mensaje por su codigo, asi
 // que anadir una validacion nueva no obliga a tocar cada formulario. La funcion que los
 // resuelve vive en mensajes-error.js.
@@ -301,5 +317,5 @@ const ERROR_GENERICO = 'No se ha podido completar la operación. Prueba otra vez
 
 module.exports = {
   MARCA, PIE, PROCESO_FAQ, PORTADA, FORMULARIO, ENVIANDO, VALORACION, MANABOX,
-  ATAJO_MANABOX, COMPARATIVA, AVISO_LEGAL, ERRORES, ERROR_GENERICO
+  ATAJO_MANABOX, COMPARATIVA, AVISO_LEGAL, CONTACTO, ERRORES, ERROR_GENERICO
 };
