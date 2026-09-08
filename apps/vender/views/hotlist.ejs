@@ -1,0 +1,42 @@
+<div class="main-container">
+    <h1><%= textos.HOTLIST.h1 %></h1>
+    <p><%= textos.HOTLIST.intro %></p>
+    <p class="text-muted"><%= textos.HOTLIST.actualizadaEtiqueta %> <%= textos.HOTLIST.actualizada %></p>
+    <p><%= textos.HOTLIST.aviso %></p>
+
+    <div class="table-container">
+        <table class="example-table">
+            <thead>
+                <tr>
+                    <th><%= textos.HOTLIST.columnas.carta %></th>
+                    <th><%= textos.HOTLIST.columnas.edicion %></th>
+                    <th><%= textos.HOTLIST.columnas.estado %></th>
+                    <th><%= textos.HOTLIST.columnas.precio %></th>
+                </tr>
+            </thead>
+            <tbody>
+                <% textos.HOTLIST.cartas.forEach(({ nombre, edicion, estado, precio }) => { %>
+                <tr>
+                    <td><%= nombre %></td>
+                    <td><%= edicion %></td>
+                    <td><%= estado %></td>
+                    <td><%= textos.HOTLIST.formatoPrecio(precio) %></td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <h2><%= textos.HOTLIST.condiciones.titulo %></h2>
+    <ul class="plain-list">
+        <% textos.HOTLIST.condiciones.puntos.forEach(({ destacado, resto }) => { %>
+        <li><strong><%= destacado %></strong> <%= resto %></li>
+        <% }) %>
+    </ul>
+
+    <h2><%= textos.HOTLIST.faltaTuCarta.titulo %></h2>
+    <p><%= textos.HOTLIST.faltaTuCarta.cuerpo %></p>
+
+    <p class="center-text"><a href="/valoracion-cartas-magic" class="btn-mythic"><%= textos.HOTLIST.llamada %></a></p>
+    <p class="center-text text-muted"><%= textos.HOTLIST.notaLlamada %></p>
+</div>

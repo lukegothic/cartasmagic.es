@@ -2,7 +2,7 @@
 // visitante. Separado de textos.js a proposito, porque se edita por otros motivos y con
 // otro criterio (longitud, keywords) que la copy de la interfaz.
 
-const { PROCESO_FAQ } = require('./textos');
+const { PROCESO_FAQ, HOTLIST: COPY_HOTLIST } = require('./textos');
 
 const DOMINIO = 'https://vendercartasmagic.es';
 
@@ -117,6 +117,47 @@ const manaboxLdJson = () =>
     mainEntity: { '@id': 'https://vendercartasmagic.es/#negocio' }
   });
 
+const HOTLIST = {
+  title: 'Cartas Magic que compramos ahora y a qué precio | VenderCartasMagic.es',
+  description: 'Lista de cartas Magic que buscamos ahora mismo con el precio exacto que pagamos por cada una. Cartas sueltas también, envío pagado y cobro por transferencia.',
+  keywords: 'vender cartas magic sueltas, precio compra cartas magic, cuanto pagan por cartas magic, compramos cartas magic, vender dual lands, vender cartas magic caras',
+  canonical: `${DOMINIO}/hotlist`,
+  og_title: 'Cartas Magic que compramos ahora y a qué precio',
+  og_description: 'Las cartas que más nos hacen falta, con la cifra que pagamos por cada una. Cartas sueltas también.',
+  og_url: `${DOMINIO}/hotlist`
+};
+
+// Cada fila es una oferta de COMPRA, no de venta. Un Offer con price diria que aqui se
+// vende esa carta a ese precio, y el buscador la indexaria como una tienda: un Tundra a la
+// venta por 235 euros. Lo que corresponde es demandar la carta, que es lo que expresa
+// BuyAction con su priceSpecification.
+const hotlistLdJson = () => {
+  const [dia, mes, anio] = COPY_HOTLIST.actualizada.split('/');
+  return grafo({
+    '@type': 'ItemList',
+    name: 'Cartas Magic que compramos',
+    url: `${DOMINIO}/hotlist`,
+    dateModified: `${anio}-${mes}-${dia}`,
+    numberOfItems: COPY_HOTLIST.cartas.length,
+    itemListElement: COPY_HOTLIST.cartas.map(({ nombre, edicion, estado, precio }, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'BuyAction',
+        name: `${nombre} (${edicion})`,
+        agent: { '@id': 'https://vendercartasmagic.es/#negocio' },
+        object: { '@type': 'Product', name: `${nombre} (${edicion})` },
+        priceSpecification: {
+          '@type': 'PriceSpecification',
+          priceCurrency: 'EUR',
+          price: precio,
+          description: `Precio de compra para ${estado}`
+        }
+      }
+    }))
+  });
+};
+
 const AVISO_LEGAL = {
   title: 'Aviso legal y condiciones del servicio | VenderCartasMagic.es',
   description: 'Datos identificativos, condiciones de compra de colecciones, plazos, devoluciones y política de privacidad.',
@@ -162,6 +203,7 @@ module.exports = {
   COMPARATIVA, comparativaLdJson,
   VALORACION, valoracionLdJson,
   MANABOX, manaboxLdJson,
+  HOTLIST, hotlistLdJson,
   AVISO_LEGAL, avisoLegalLdJson,
   CONTACTO, contactoLdJson
 };

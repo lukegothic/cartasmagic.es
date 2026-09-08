@@ -98,6 +98,14 @@ como Pokémon o Yu-Gi-Oh, y reproducciones no oficiales. Las reproducciones no o
 aparezcan en un envío se apartan, no se pagan y se devuelven o se destruyen según
 indique el vendedor.
 
+## Cartas sueltas
+
+Además de colecciones completas se compran cartas sueltas de la lista publicada en
+https://vendercartasmagic.es/hotlist, que recoge las cartas que más falta hacen en cada
+momento con el precio exacto que se paga por cada una. No hay mínimo de cartas ni
+obligación de vender el resto de la colección. Los precios de esa lista son para estado
+Near Mint y se revisan cada pocas semanas siguiendo Cardmarket.
+
 ## Ámbito
 
 Toda España. El contacto y la gestión son por correo electrónico.
@@ -108,6 +116,8 @@ Toda España. El contacto y la gestión son por correo electrónico.
 - https://vendercartasmagic.es/como-vender-cartas-magic - comparativa de las cuatro
   formas de vender cartas Magic en España (Cardmarket, tienda local, particulares y
   comprador especializado)
+- https://vendercartasmagic.es/hotlist - lista de cartas concretas que se buscan ahora
+  mismo, con el precio de compra en euros de cada una y el estado sobre el que se cotiza
 - https://vendercartasmagic.es/valoracion-cartas-magic - formulario para iniciar el
   proceso
 - https://vendercartasmagic.es/aviso-legal - condiciones completas y protección de datos

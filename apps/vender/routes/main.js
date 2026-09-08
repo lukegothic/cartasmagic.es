@@ -118,6 +118,15 @@ module.exports = (app) => {
     vistaManabox(res, { enviado: true });
   });
 
+  app.get('/hotlist', (req, res) => {
+    res.render('hotlist', {
+      ...meta.HOTLIST,
+      ld_json: meta.hotlistLdJson(),
+      textos,
+      faq: null
+    });
+  });
+
   app.get('/contacto', (req, res) => {
     res.render('contacto', {
       ...meta.CONTACTO,
