@@ -1,0 +1,106 @@
+{
+  "_comentario": [
+    "Las tiendas que se miran cada dia. Anadir una es anadir una entrada aqui, no escribir codigo.",
+    "",
+    "tipo dice como se lee, y de eso depende cuanto se puede sacar automaticamente:",
+    "  shopify  la coleccion en /collections/<handle>/products.json. Sale todo: carta, edicion y precio.",
+    "  tabla    una tabla html. Sale lo que tenga la tabla, y hay que decirle que columna es cual.",
+    "  imagen   la lista va en una foto o un cartel. No se lee sola: se descarga para mirarla a mano.",
+    "  html     cualquier otra pagina. Se guarda el texto para revisarlo a mano.",
+    "",
+    "Ninguna fuente se descarta por no poder leerse entera. Lo que no se sepa extraer se deja",
+    "en el informe con su enlace para mirarlo, que para eso lo revisa una persona."
+  ],
+  "fuentes": [
+    {
+      "id": "crypt",
+      "tienda": "Crypt MTG",
+      "pais": "Canada",
+      "moneda": "CAD",
+      "tipo": "shopify",
+      "tienda_url": "https://cryptmtg.com",
+      "coleccion": "mtg-hotlist",
+      "nota": "Hotlist curada, con precio por estado. Se coge la variante en ingles y sin foil.",
+      "variantes": [
+        "Near Mint"
+      ],
+      "formato_titulo": "simple"
+    },
+    {
+      "id": "cardmonster",
+      "tienda": "Card Monster Games",
+      "pais": "EE. UU.",
+      "moneda": "USD",
+      "tipo": "tabla",
+      "url": "https://cardmonstergames.com/pages/hotlist",
+      "recortar_desde": "mtg_logo",
+      "recortar_hasta": "files/(?!mtg_logo)[a-z0-9_]+_logo",
+      "columnas": {
+        "edicion": 0,
+        "nombre": 1,
+        "estado": 4,
+        "precio": 5
+      },
+      "nota": "La pagina lista tambien Pokemon y Yu-Gi-Oh, por eso se recorta la seccion de Magic."
+    },
+    {
+      "id": "95mtg",
+      "tienda": "95 Game Center",
+      "pais": "EE. UU.",
+      "moneda": "USD",
+      "tipo": "imagen",
+      "url": "https://www.95gamecenter.com",
+      "patron_imagen": "static\\.wixstatic\\.com/media/[a-zA-Z0-9_~.]+\\.(?:jpg|png|webp)",
+      "nota": "Cartel de unas 90 cartas, solo nombre y precio, en NM. Hay que mirarlo a ojo."
+    },
+    {
+      "id": "facetoface",
+      "tienda": "Face to Face Games",
+      "pais": "Canada",
+      "moneda": "CAD",
+      "tipo": "shopify",
+      "tienda_url": "https://www.facetofacegames.com",
+      "coleccion": "hotlists-magic",
+      "formato_titulo": "corchetes",
+      "variantes": [
+        "NM",
+        "NM-Mint",
+        "Near Mint"
+      ],
+      "nota": "Hotlist semanal, solo Magic (tienen otra por juego). Mezcla cajas de sobres con cartas: las cajas se descartan solas."
+    },
+    {
+      "id": "chimera",
+      "tienda": "Chimera Gaming",
+      "pais": "Canada",
+      "moneda": "CAD",
+      "tipo": "shopify",
+      "tienda_url": "https://chimeragamingonline.com",
+      "coleccion": "magic-the-gathering-hot-buylist-cards",
+      "formato_titulo": "simple",
+      "variantes": [
+        "NM-Mint",
+        "Near Mint"
+      ],
+      "nota": "Su hotlist estaba casi vacia al darla de alta, 1 carta. Si sigue asi semanas, revisar si han cambiado de sitio la lista."
+    },
+    {
+      "id": "cardbrawlers",
+      "tienda": "Card Brawlers",
+      "pais": "EE. UU.",
+      "moneda": "USD",
+      "tipo": "html",
+      "url": "https://cardbrawlers.com/pages/hotlist",
+      "nota": "Tienen pagina de hotlist pero no una coleccion de Shopify que la sirva. Hay que mirar como la publican."
+    },
+    {
+      "id": "starcitygames",
+      "tienda": "Star City Games",
+      "pais": "EE. UU.",
+      "moneda": "USD",
+      "tipo": "pendiente",
+      "url": "https://sellyourcards.starcitygames.com/mtg/hotlist",
+      "nota": "Sus condiciones prohiben el scraping sin permiso por escrito, asi que no se lee sola. Se pide el permiso en help.starcitygames.com/en-US/contact, asunto Selling Cards to SCG. Mientras tanto se mira a mano, que si lo permiten. No usar la clave de su javascript: es suya, no nuestra."
+    }
+  ]
+}

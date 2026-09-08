@@ -7,7 +7,8 @@
   "scripts": {
     "test": "node --test \"test/*.test.js\"",
     "hotlist": "node hotlist.js",
-    "solo-leer": "node hotlist.js --solo-leer"
+    "solo-leer": "node hotlist.js --solo-leer",
+    "cambios": "node hotlist.js --cambios"
   },
   "author": "",
   "license": "ISC",

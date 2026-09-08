@@ -1,6 +1,5 @@
 // El informe del dia, en markdown para que se lea igual en el log de Dokploy que en un fichero.
 
-const { PENDIENTE } = require('../fuentes/starcitygames');
 
 const MAXIMO_FILAS = 40;
 
@@ -68,7 +67,6 @@ const componerMarkdown = ({ nuevas, retiradas, movidas }, total, fallos, dia = n
     lineas.push('## Fuentes que no se han podido leer', '', ...fallos.map((f) => `- ${f}`), '');
   }
 
-  lineas.push('## Fuentes pendientes', '', `- ${PENDIENTE}`, '');
   return lineas.join('\n');
 };
 

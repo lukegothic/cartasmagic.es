@@ -13,6 +13,24 @@ lo decide el negocio carta por carta.
 Lo que aporta el informe es la señal, no la cifra: si dos tiendas empiezan a pagar más por
 la misma carta la misma semana, conviene ir a mirar esa carta a Cardmarket. Ese es el uso.
 
+## Cómo añadir una tienda
+
+Editando `fuentes.json`. No hay que escribir código: cada entrada dice de dónde se lee y de
+qué forma. El `tipo` decide cuánto se saca solo:
+
+| tipo | De dónde | Qué sale |
+|---|---|---|
+| `shopify` | `/collections/<handle>/products.json` | Todo: carta, edición y precio |
+| `tabla` | Una tabla html, diciendo qué columna es cuál | Lo que tenga la tabla |
+| `imagen` | Una página con la lista en un cartel | Los enlaces de las imágenes, para mirarlas |
+| `html` | Cualquier otra página | El enlace y el tamaño, para mirarla |
+| `pendiente` | No se pide nada | Solo el recordatorio de por qué no se lee |
+
+**Ninguna fuente se descarta por no poder leerse entera.** Lo que no se sepa extraer sale en
+el informe con su enlace, porque quien revisa esto es una persona y un cartel de noventa
+cartas vale más que su ausencia. Esa es la diferencia con la primera versión, que solo servía
+para fuentes que se pudieran analizar enteras.
+
 ## Uso
 
 ```bash
@@ -25,7 +43,8 @@ tampoco hace falta `npm ci` antes de ejecutarlo.
 
 | Orden | Qué hace |
 |---|---|
-| `npm run hotlist` | Lee las fuentes, compara con la última vez y saca el informe |
+| `npm run hotlist` | Recoge las fuentes y saca el informe para revisar a mano |
+| `npm run cambios` | Además, compara con la última vez y dice qué ha cambiado |
 | `npm run solo-leer` | Guarda la foto del día sin sacar informe, para empezar el histórico |
 | `npm test` | Pruebas, sin tocar la red |
 
@@ -70,10 +89,15 @@ solo se cae una, el informe lo dice en su propia sección y las demás siguen.
 
 | Fuente | Cómo se lee | Estado |
 |---|---|---|
-| Card Monster Games | Tabla escrita a mano dentro de la página | Funciona, 28 cartas de Magic |
-| La Crypte (cryptmtg) | `products.json` de la colección de Shopify | Funciona, 21 cartas |
-| Alchemist's Refuge | No publica la lista | No hay nada que leer |
-| Star City Games | Meilisearch con clave propia | Pendiente, ver abajo |
+| La Crypte (cryptmtg) | `products.json` de la colección de Shopify | Se lee sola, 21 cartas |
+| Card Monster Games | Tabla dentro de la página | Se lee sola, 28 cartas |
+| 95 Game Center | Cartel en una imagen | Hay que mirarla a ojo |
+| Star City Games | Sus condiciones lo prohíben | Pendiente, ver abajo |
+| Alchemist's Refuge | No publica la lista | Descartada, no hay nada que leer |
+
+Las listas que van en una imagen son el formato más común entre las tiendas pequeñas: un
+cartel con noventa nombres y su precio, sin edición ni estado. No se leen solas, y por eso la
+herramienta se limita a dejar el enlace a la vista.
 
 **Alchemist's Refuge** anuncia una hot list en su página de buylist pero no la publica:
 remite a preguntar en la tienda. Se comprobaron sus 250 colecciones de Shopify y ninguna

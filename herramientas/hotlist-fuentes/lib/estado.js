@@ -23,9 +23,9 @@ const guardar = (anuncios) => {
   fs.writeFileSync(rutaUltimo(), JSON.stringify(anuncios, null, 1));
 };
 
-const guardarInforme = (texto, dia = new Date()) => {
+const guardarInforme = (texto, dia = new Date(), nombre = 'cambios') => {
   fs.mkdirSync(directorio(), { recursive: true });
-  const fichero = path.join(directorio(), `cambios-${dia.toISOString().slice(0, 10)}.md`);
+  const fichero = path.join(directorio(), `${nombre}-${dia.toISOString().slice(0, 10)}.md`);
   fs.writeFileSync(fichero, texto);
   return fichero;
 };

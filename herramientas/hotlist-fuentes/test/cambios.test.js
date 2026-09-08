@@ -56,10 +56,6 @@ test('una fuente caida sale en el informe', () => {
   assert.match(componerMarkdown(SIN_CAMBIOS, 3, ['crypt: HTTP 503']), /crypt: HTTP 503/);
 });
 
-// La hotlist de SCG sigue sin leerse: si el informe no lo dijera, parecerian dos fuentes.
-test('el informe recuerda que Star City Games sigue pendiente', () => {
-  assert.match(componerMarkdown(SIN_CAMBIOS, 0, []), /Star City Games/);
-});
 
 test('las cifras del informe van en formato castellano', () => {
   const cambios = { nuevas: [anuncio('Black Lotus', 15000)], retiradas: [], movidas: [] };

@@ -51,4 +51,20 @@ const pedirJson = async (url) => {
 
 const pedirTexto = async (url) => (await pedir(url)).text();
 
-module.exports = { AGENTE, FuenteCaida, clave, pedirJson, pedirTexto };
+// Para las fuentes que hay que mirar a ojo: dice si el enlace sigue en pie y cuanto pesa, sin
+// descargarse el fichero entero. Una imagen de lista puede ocupar un mega y no se va a leer
+// aqui, asi que basta con saber que esta.
+const pedirCabecera = async (url) => {
+  const respuesta = await fetch(url, {
+    method: 'HEAD',
+    headers: { 'User-Agent': AGENTE },
+    signal: AbortSignal.timeout(TIEMPO_LIMITE)
+  });
+  return {
+    ok: respuesta.ok,
+    tipo: respuesta.headers.get('content-type') ?? '',
+    bytes: Number(respuesta.headers.get('content-length') ?? 0)
+  };
+};
+
+module.exports = { AGENTE, FuenteCaida, clave, pedirJson, pedirTexto, pedirCabecera };

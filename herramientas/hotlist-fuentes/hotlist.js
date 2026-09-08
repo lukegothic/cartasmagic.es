@@ -1,51 +1,45 @@
-// Mira cada dia que compran las tiendas de referencia y saca que ha cambiado.
+// Mira que compran las tiendas de referencia y deja lo que publican para revisarlo.
 //
-// Lo que responde es "que cartas han empezado a buscar y cuales han subido de precio", no
-// "cuanto pagan". Los precios de fuera son en dolares y en dolares canadienses, sobre otro
-// mercado y con otros costes, asi que no sirven para poner los nuestros: sirven como aviso de
-// que algo se esta moviendo, para ir a mirarlo a Cardmarket.
+// Lo que responde es "que cartas quieren y que ha cambiado", no "cuanto pagamos nosotros". Los
+// precios de fuera son en dolares y en dolares canadienses, sobre otro mercado y con otros
+// costes: sirven como aviso de que algo se mueve, para ir a mirarlo a Cardmarket.
+//
+// Las fuentes se declaran en fuentes.json, no aqui. Anadir una tienda es anadir una entrada.
 //
 // Uso:
-//   node hotlist.js               lee las fuentes y compara con la ultima vez
-//   node hotlist.js --solo-leer   lee y guarda la foto, sin informe (para el primer dia)
+//   node hotlist.js               recoge y saca el informe de revision
+//   node hotlist.js --cambios     ademas, compara con la ultima vez y dice que ha cambiado
+//   node hotlist.js --solo-leer   recoge y guarda la foto, sin informe (para el primer dia)
 
-const { FuenteCaida } = require('./fuentes/comun');
-const { cardmonster } = require('./fuentes/cardmonster');
-const { crypt } = require('./fuentes/shopify');
-const { starcitygames } = require('./fuentes/starcitygames');
+const fs = require('node:fs');
+const path = require('node:path');
+
+const { recogerTodas } = require('./lib/recoger');
+const { componerRevision } = require('./lib/revision');
 const { porClave, comparar } = require('./lib/cambios');
 const { componerMarkdown } = require('./lib/markdown');
 const { leer, guardar, guardarInforme } = require('./lib/estado');
 
-const FUENTES = { cardmonster, crypt, starcitygames };
+const leerFuentes = () =>
+  JSON.parse(fs.readFileSync(path.join(__dirname, 'fuentes.json'), 'utf8')).fuentes;
 
-// Una fuente caida no cancela las demas: se anota y se sigue. Que Crypt este en mantenimiento
-// no es motivo para quedarse sin saber que ha hecho Card Monster.
-const recoger = async () => {
-  const anuncios = [];
-  const fallos = [];
-
-  for (const [nombre, leerFuente] of Object.entries(FUENTES)) {
-    try {
-      anuncios.push(...(await leerFuente()));
-    } catch (error) {
-      if (!(error instanceof FuenteCaida)) throw error;
-      fallos.push(`${nombre}: ${error.message}`);
-    }
-  }
-
-  return { anuncios, fallos };
-};
+// Solo entran en la comparacion las cartas que se han sabido extraer. Las fuentes que hay que
+// mirar a ojo no tienen precio con el que comparar, y meterlas como si estuvieran vacias diria
+// cada dia que han retirado toda su lista.
+const cartasDe = (recogidas) =>
+  recogidas.flatMap(({ id, moneda, cartas }) =>
+    cartas.map((carta) => ({ ...carta, fuente: id, moneda })));
 
 const principal = async () => {
   const soloLeer = process.argv.includes('--solo-leer');
-  const { anuncios, fallos } = await recoger();
+  const conCambios = process.argv.includes('--cambios');
 
-  if (!anuncios.length) {
-    // Sin una sola oferta no hay nada que comparar, y guardar la foto vacia haria que manana
-    // todas las cartas parecieran nuevas.
-    fallos.forEach((fallo) => console.error(`  ${fallo}`));
-    console.error('Ninguna fuente ha devuelto nada. No se toca el historico.');
+  const recogidas = await recogerTodas(leerFuentes());
+  const anuncios = cartasDe(recogidas);
+
+  if (!anuncios.length && recogidas.every(({ estado }) => estado === 'caida')) {
+    recogidas.forEach(({ tienda, aviso }) => console.error(`  ${tienda}: ${aviso}`));
+    console.error('Ninguna fuente ha contestado. No se toca el historico.');
     process.exitCode = 1;
     return;
   }
@@ -55,13 +49,19 @@ const principal = async () => {
   guardar(hoy);
 
   if (soloLeer) {
-    console.log(`${anuncios.length} ofertas guardadas.`);
+    console.log(`${anuncios.length} cartas de ${recogidas.length} fuentes guardadas.`);
     return;
   }
 
-  const texto = componerMarkdown(comparar(hoy, ayer), anuncios.length, fallos);
-  console.log(texto);
-  console.error(`\nGuardado en ${guardarInforme(texto)}`);
+  const revision = componerRevision(recogidas);
+  console.log(revision);
+  console.error(`\nGuardado en ${guardarInforme(revision, new Date(), 'revision')}`);
+
+  if (conCambios) {
+    const cambios = componerMarkdown(comparar(hoy, ayer), anuncios.length, []);
+    console.log(`\n---\n\n${cambios}`);
+    console.error(`Guardado en ${guardarInforme(cambios, new Date(), 'cambios')}`);
+  }
 };
 
 principal().catch((error) => {
