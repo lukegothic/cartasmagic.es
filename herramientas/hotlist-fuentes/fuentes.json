@@ -89,9 +89,9 @@
       "tienda": "Card Brawlers",
       "pais": "EE. UU.",
       "moneda": "USD",
-      "tipo": "html",
+      "tipo": "pendiente",
       "url": "https://cardbrawlers.com/pages/hotlist",
-      "nota": "Tienen pagina de hotlist pero no una coleccion de Shopify que la sirva. Hay que mirar como la publican."
+      "nota": "Su pagina de hotlist son instrucciones, no una lista: para ver precios hay que crear cuenta y entrar. No hay nada publico que leer. Se deja anotada por si algun dia publican la lista."
     },
     {
       "id": "starcitygames",
@@ -100,7 +100,7 @@
       "moneda": "USD",
       "tipo": "pendiente",
       "url": "https://sellyourcards.starcitygames.com/mtg/hotlist",
-      "nota": "Sus condiciones prohiben el scraping sin permiso por escrito, asi que no se lee sola. Se pide el permiso en help.starcitygames.com/en-US/contact, asunto Selling Cards to SCG. Mientras tanto se mira a mano, que si lo permiten. No usar la clave de su javascript: es suya, no nuestra."
+      "nota": "Sus condiciones prohiben el acceso automatizado sin permiso por escrito, tambien con navegador automatizado. Ver docs/scg-peticion-permiso.md, que lleva el correo listo para mandar. Mientras tanto se mira a mano, que si lo permiten."
     }
   ]
 }
