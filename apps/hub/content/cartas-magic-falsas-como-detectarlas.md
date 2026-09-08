@@ -10,9 +10,9 @@ Hace falta una lupa, una báscula de precisión y saber dónde mirar.
 
 ## ¿Hay que tener miedo a las falsificaciones?
 
-Lo primero: no hay motivo para temer que una colección esté llena de cartas falsas. Three
-For One Trading, que compra más de 600.000 cartas y vende más de 400.000 al año,
-encuentra muy pocas falsificaciones entre ellas.
+Lo primero: no hay motivo para temer que una colección esté llena de cartas falsas. Entre
+cientos de miles de cartas que pasan cada año por manos de compradores profesionales, las
+falsificaciones son muy pocas.
 
 El motivo principal es sencillo: las falsificaciones lo bastante buenas como para pasar
 un examen a simple vista son casi inexistentes.
@@ -369,9 +369,3 @@ vistazo.
 Y si lo que quieres es saber cuánto vale lo que tienes, empieza por
 [los siete factores que determinan el precio de una carta Magic](/blog/como-saber-cuanto-vale-una-carta-magic)
 y por [el estado de la carta](/blog/estado-de-la-carta-nm-ex-gd-lp).
-
----
-
-Las fotografías y la estructura de esta guía proceden del artículo
-[Fake Magic Cards - How to Identify Counterfeits](https://www.threeforonetrading.com/en/fake-magic-cards/)
-de Philippe Zens, de Three For One Trading, reproducidas con su permiso.
