@@ -30,26 +30,25 @@ diferentes. Los falsificadores, por su parte, también han ido mejorando.
 El asunto es complejo y esta guía no pretende agotarlo. Lo que busca es dar pistas
 sencillas y aplicables.
 
-## Consultar a una tienda o a un comprador
+## Qué hace falta
 
-Juzgar una carta a partir de fotos es difícil. Conviene pedir una segunda opinión en la
-tienda de confianza más cercana: casi siempre pueden hacer alguna de estas pruebas y
-verificar la carta en persona.
+Con una báscula de precisión y una lupa de joyero de 20 aumentos se hacen todas las
+pruebas de esta guía. Las dos cosas son baratas y no hace falta nada más: un microscopio
+solo sirve para mirar con más comodidad lo mismo que ya se ve con la lupa.
 
-## Los tres tests más importantes
+Conviene tener delante una carta auténtica de la misma colección y del mismo color que la
+sospechosa. Comparar es lo que convierte cada prueba en concluyente.
 
-Hay exactamente tres pruebas fundamentales para comprobar la autenticidad de una carta
-Magic. Cada una mira una zona diferente:
+## Las tres pruebas
+
+Cada una mira una zona diferente de la carta:
 
 - El peso
 - La calidad de impresión
 - La luz
 
-Además de estas tres, conviene conocer dos terrenos donde aparecen falsificaciones con
-características propias:
-
-- Los reversos pegados y el recorte de Alpha
-- Las falsificaciones modernas
+Después de las tres hay dos terrenos con falsificaciones de características propias: las
+cartas antiguas de Alpha y Beta, y las falsificaciones modernas.
 
 ### 1. El peso
 
@@ -76,37 +75,18 @@ suficiente para sospechar.
 
 ### 2. La calidad de impresión
 
-Para esta prueba vale cualquier lupa. Una de joyero de 20 aumentos es suficiente.
-
 Una carta auténtica tiene rasgos que hasta hoy no se han conseguido replicar. Las cartas
 de Magic se imprimen de forma industrial: en un primer paso, todos los colores se
 imprimen punto a punto y capa a capa. Esos puntos y esas capas componen la imagen de la
 carta. Este tipo de impresión no puede producir bordes nítidos, líneas rectas ni texto.
 
-Por eso el marco negro y el texto de la carta se imprimen con otra técnica distinta, que
-las falsificaciones no suelen reproducir y que se ve con una lupa.
+Por eso el marco negro, el texto y los símbolos de expansión y de maná se imprimen
+aparte, en una capa superior y con otra técnica. Ahí es donde fallan las falsificaciones,
+y se ve con una lupa.
 
-![Lupa de joyero de 20 aumentos](/blog/cartas-magic-falsas-como-detectarlas/lupa-joyero-1.jpg)
-
-![Lupa de joyero apoyada sobre una carta](/blog/cartas-magic-falsas-como-detectarlas/lupa-joyero-2.jpg)
-
-**Lupa de joyero, 20 aumentos.** Para la mayoría de los jugadores, una lupa sencilla como
-esta basta para comprobar la autenticidad de una carta. Es barata y eficaz.
-
-![Microscopio digital de 500 aumentos](/blog/cartas-magic-falsas-como-detectarlas/microscopio-digital-1.jpg)
-
-![Imagen de una carta vista con el microscopio digital](/blog/cartas-magic-falsas-como-detectarlas/microscopio-digital-2.jpg)
-
-**Microscopio digital, 500 aumentos.** Para profesionales y coleccionistas serios. La
-mayoría permite además guardar imágenes para compararlas después o dejar constancia. Uno
-barato cumple de sobra.
-
-![Microscopio digital Carson zPIX 300](/blog/cartas-magic-falsas-como-detectarlas/microscopio-carson-1.jpg)
-
-![Detalle de una carta visto con el Carson zPIX 300](/blog/cartas-magic-falsas-como-detectarlas/microscopio-carson-2.jpg)
-
-**Carson zPIX 300, 569 aumentos.** El microscopio para los casos más dudosos. Permite
-acercarse mucho y ajustar el enfoque y el brillo.
+De todo lo que sigue, lo más rápido son las tres marcas del reverso: el punto verde, la T
+y los cuernos de Deckmaster. Con mirar esas tres se descarta la mayoría de las
+falsificaciones.
 
 #### 2.1 El punto verde
 
@@ -154,55 +134,35 @@ falsificaciones suelen faltar.
 
 **Falsa.** Aunque la impresión tiene buen aspecto, faltan los cuernos.
 
-#### 2.4 El símbolo de expansión y los símbolos de maná
+#### 2.4 Las líneas y los puntos
 
-En el primer paso de la impresión, todos los colores se imprimen punto a punto y capa a
-capa, y esos puntos y capas forman la imagen de la carta. Con ese proceso no se pueden
-imprimir bordes nítidos, líneas rectas ni texto.
+Las tres marcas anteriores son sitios concretos donde mirar. Esta es la misma idea
+aplicada a toda la carta: como los puntos de color no pueden formar un borde nítido,
+cualquier línea recta del diseño delata la falsificación si está hecha de puntos.
 
-Por eso el borde negro, el texto y los símbolos de expansión y de maná se añaden aparte,
-con otro proceso de impresión.
+Sirve cualquier línea: el símbolo de expansión, el recuadro que rodea la palabra
+Deckmaster o el borde del cuadro de texto. En una carta auténtica esas líneas destacan
+nítidas y continuas sobre el patrón de puntos, porque se imprimieron encima y en otra
+pasada. En una falsificación se deshacen en puntos negros que se mezclan con los azules,
+rojos, amarillos y verdes de debajo.
 
-Elementos concretos como el símbolo de expansión se imprimen en una capa superior, es
-decir, encima de las capas que ya están.
-
-Las falsificaciones no se producen con ese cuidado, y la diferencia se detecta sin mucha
-dificultad con una lupa.
+El patrón de puntos de color, por su parte, tiene que verse regular y nítido. Si se ve
+borroso o caótico, la carta no es auténtica.
 
 ![Capas de impresión del símbolo de expansión en una carta auténtica](/blog/cartas-magic-falsas-como-detectarlas/capas-impresion-autentica.jpg)
 
-**Auténtica.** Así se ven las capas de impresión en una carta real. Las líneas negras del
-símbolo de expansión se distinguen con claridad de los puntos de color impresos.
+**Auténtica.** Las líneas negras del símbolo de expansión se distinguen con claridad de
+los puntos de color impresos.
 
 ![Capas de impresión del símbolo de expansión en una carta falsa](/blog/cartas-magic-falsas-como-detectarlas/capas-impresion-falsa.jpg)
 
 **Falsa.** Aquí las líneas están hechas de puntos negros y se mezclan directamente con
-los puntos azules, rojos, amarillos y verdes.
-
-#### 2.5 Las líneas rectas
-
-Igual que con el resto de la calidad de impresión, conviene fijarse en las líneas y los
-bordes del propio diseño de la carta. Un buen ejemplo es el recuadro que rodea la palabra
-Deckmaster en el reverso. Esas líneas tienen que ser rectas y continuas.
-
-![Líneas del recuadro de Deckmaster en una carta auténtica](/blog/cartas-magic-falsas-como-detectarlas/lineas-rectas-autentica.jpg)
-
-**Auténtica.** Las líneas negras destacan nítidas sobre el fondo.
-
-![Líneas del recuadro de Deckmaster en una carta falsa](/blog/cartas-magic-falsas-como-detectarlas/lineas-rectas-falsa.jpg)
-
-**Falsa.** Las líneas negras están pixeladas, son irregulares y se funden un poco con el
-fondo.
-
-#### 2.6 El patrón de roseta
-
-El patrón de puntos de color tiene que ser nítido y regular, nunca borroso. Se comprueba
-con una lupa.
+los puntos de color.
 
 ![Patrón de roseta de una carta auténtica](/blog/cartas-magic-falsas-como-detectarlas/roseta-autentica.jpg)
 
-**Auténtica.** Los puntos y las líneas son de una nitidez absoluta. Además, el recuadro
-del texto se distingue sin esfuerzo del patrón de roseta.
+**Auténtica.** Los puntos y las líneas son de una nitidez absoluta, y el recuadro del
+texto se distingue sin esfuerzo del patrón de puntos.
 
 ![Patrón de roseta de una carta falsa](/blog/cartas-magic-falsas-como-detectarlas/roseta-falsa.jpg)
 
@@ -211,12 +171,9 @@ patrón reconocible.
 
 ### 3. La luz
 
-Conviene comparar siempre la carta sospechosa con otra auténtica y parecida. Lo que se
-mira sobre todo es cuánta luz deja pasar, aunque el tipo de núcleo de la carta también
-cuenta.
-
-Es importante comparar la carta sospechosa con una de la misma colección y del mismo
-color. Saltarse este paso lleva con facilidad a un falso positivo.
+Lo que se mira sobre todo es cuánta luz deja pasar la carta, aunque el tipo de núcleo
+también cuenta. Aquí es donde más importa comparar con una carta de la misma colección y
+del mismo color: saltarse ese paso lleva con facilidad a un falso positivo.
 
 #### 3.1 La capa azul
 
@@ -255,9 +212,9 @@ colecciones, como Ice Age.
 **Falsa.** Aquí también hay diferencias claras a contraluz. Lo más llamativo es que la
 luz que atraviesa la carta suele quedar mortecina o demasiado intensa.
 
-## 4. Falsificaciones de Alpha y Beta
+## Dos casos particulares
 
-### 4.1 Reversos pegados
+### Las cartas de Alpha y Beta
 
 En los primeros años de Magic: The Gathering, los falsificadores usaban cartas de
 Collectors Edition e International Edition para fabricar cartas de Beta.
@@ -270,46 +227,28 @@ A veces son también algo más pequeñas, porque se recortaron para ajustar el p
 Si tras las primeras pruebas queda alguna duda, se puede comparar la alineación de los
 símbolos de maná, que es claramente diferente entre Alpha, Beta, Unlimited e IE/CE.
 
-![Carta con el reverso pegado, vista de frente](/blog/cartas-magic-falsas-como-detectarlas/reverso-pegado-1.jpg)
-
 ![Carta con el reverso pegado, vista de canto](/blog/cartas-magic-falsas-como-detectarlas/reverso-pegado-2.jpg)
 
 Estas cartas suelen tener restos de pegamento y arrugas en los bordes, donde quien las
-manipuló intentó apretar las dos capas todo lo posible.
+manipuló intentó apretar las dos capas todo lo posible. De canto, el adhesivo a veces se
+confunde con la capa azul del núcleo y cuesta más verlo.
 
 ![Restos de pegamento en el borde de una carta con el reverso pegado](/blog/cartas-magic-falsas-como-detectarlas/reverso-pegado-restos-1.jpg)
 
-![Arrugas en el borde de una carta con el reverso pegado](/blog/cartas-magic-falsas-como-detectarlas/reverso-pegado-restos-2.jpg)
-
-También se reconocen de canto. Ahí suele haber restos de adhesivo, o el adhesivo se
-confunde con la capa azul del núcleo y cuesta más verlo.
-
-Estas cartas nunca superan la prueba del peso: el adhesivo las deja más pesadas que las
-originales.
-
-### 4.2 Cartas de Beta recortadas como Alpha
+Ninguna supera la prueba del peso: el adhesivo las deja más pesadas que las originales.
 
 Otra práctica antigua consistía en recortar cartas de Beta redondeando las esquinas para
-que parecieran de Alpha.
-
-Se reconocen por unas esquinas irregulares, demasiado redondeadas o poco redondeadas.
-Además, las esquinas de Alpha tienen un pequeño reborde y el troquelado se ve con
-claridad en el reverso.
+que parecieran de Alpha. Se reconocen por unas esquinas irregulares, demasiado
+redondeadas o poco redondeadas. Además, las esquinas de Alpha tienen un pequeño reborde y
+el troquelado se ve con claridad en el reverso.
 
 ![Una carta de Alpha auténtica junto a una de Beta recortada](/blog/cartas-magic-falsas-como-detectarlas/alpha-frente-a-beta-recortada.jpg)
 
-Puestas una al lado de la otra, una carta de Alpha auténtica y una de Beta con recorte de
-Alpha se parecen mucho.
-
 ![Esquina de una carta de Alpha vista de cerca](/blog/cartas-magic-falsas-como-detectarlas/esquina-alpha-1.jpg)
-
-![Esquina de una carta de Beta recortada vista de cerca](/blog/cartas-magic-falsas-como-detectarlas/esquina-alpha-2.jpg)
 
 El reborde de las esquinas es lo que delata cuál de las dos es la de Alpha.
 
-## 5. Falsificaciones modernas
-
-### 5.1 Cartas de doble cara
+### Las falsificaciones modernas
 
 Están apareciendo más falsificaciones de cartas de doble cara. El motivo es sencillo: si
 el reverso está impreso, no hay forma de comprobar en él las marcas de seguridad. Aun
@@ -317,50 +256,34 @@ así, quedan cosas donde fijarse:
 
 - Suelen notarse brillantes al tacto, por llevar más plástico. La mejor forma de
   apreciarlo es compararlas con una carta auténtica.
-- Se detectan irregularidades, sobre todo en el símbolo de expansión y en líneas que no
-  quedan rectas, como se explica en la calidad de impresión y en las líneas rectas.
+- Se detectan irregularidades en el símbolo de expansión y en las líneas que no quedan
+  rectas, como se explica en las líneas y los puntos.
 - Suelen tener el núcleo negro en lugar de azul. Se comprueba mirando el canto con una
   lupa, sin necesidad de romper la carta.
 
 ![Carta de doble cara falsificada](/blog/cartas-magic-falsas-como-detectarlas/carta-doble-cara-falsa.jpg)
 
-### 5.2 La impresión de los Collector Booster
-
-Hay diferencias notables de calidad de impresión entre cartas nuevas procedentes de
-Collector Boosters o de sobres promocionales de Wizards, seguramente por los distintos
-lugares de producción: Japón, Europa y Estados Unidos.
-
-El núcleo azul se ve a menudo morado o incluso anaranjado. Las cartas suelen pesar algo
-de más y se aprecia que el troquelado va del reverso al anverso. Además, el tacto es
-diferente, más mate o más brillante.
+Conviene saber además que no toda rareza es una falsificación. Entre cartas nuevas de
+Collector Booster o de sobres promocionales hay diferencias notables de calidad, porque
+se fabrican en Japón, en Europa y en Estados Unidos. El núcleo azul se ve a veces morado
+o anaranjado, el peso se va un poco y el tacto cambia.
 
 ![Dos ejemplares de la misma carta impresos en fábricas diferentes](/blog/cartas-magic-falsas-como-detectarlas/collector-booster-1.jpg)
 
-![Detalle de la impresión de un Collector Booster](/blog/cartas-magic-falsas-como-detectarlas/collector-booster-2.jpg)
-
-![Comparación del canto de dos cartas de Collector Booster](/blog/cartas-magic-falsas-como-detectarlas/collector-booster-3.jpg)
-
-![Detalle del núcleo de una carta de Collector Booster](/blog/cartas-magic-falsas-como-detectarlas/collector-booster-4.jpg)
-
-![Troquelado de una carta de Collector Booster](/blog/cartas-magic-falsas-como-detectarlas/collector-booster-5.jpg)
-
-Comparando por ejemplo dos ejemplares de Solitude de Modern Horizons 2, cualquiera diría
-sin dudarlo que una de las dos es falsa. Y sin embargo solo se fabricaron en sitios
-diferentes.
-
-¿En qué se puede confiar entonces? Las marcas generales de calidad de impresión siguen
-valiendo:
-
-- El punto verde, la T y los cuernos de Deckmaster
-- El símbolo de expansión
-- Las líneas rectas
+Comparando dos ejemplares de Solitude de Modern Horizons 2, cualquiera diría sin dudarlo
+que una de las dos es falsa. Y sin embargo solo se fabricaron en sitios diferentes. Ante
+una carta así, lo que sigue valiendo son las marcas de impresión: el punto verde, la T,
+los cuernos de Deckmaster y las líneas.
 
 ## En resumen
 
-Para comprobar si una carta sospechosa es falsa, lo recomendable es combinar varias de
-las pruebas de esta guía: el peso, la calidad de impresión y la luz. Ninguna vale por sí
-sola, y conviene tener siempre delante una carta auténtica de la misma colección para
-comparar.
+Para comprobar si una carta sospechosa es falsa conviene combinar el peso, la calidad de
+impresión y la luz. Ninguna prueba vale por sí sola, y hay que tener siempre delante una
+carta auténtica de la misma colección para comparar.
+
+Juzgar una carta a partir de fotos es difícil, así que ante la duda lo razonable es
+enseñarla en persona. En la tienda de confianza más cercana suelen poder hacer estas
+mismas pruebas.
 
 Si tienes una carta guardada desde hace años, o acabas de comprar una y dudas de su
 autenticidad, [escríbenos](https://vendercartasmagic.es/contacto) y le echamos un
