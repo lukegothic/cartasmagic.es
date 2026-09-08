@@ -1,6 +1,6 @@
 const path = require('node:path');
 const { leerEntradas } = require('../lib/contenido');
-const { enlaceVender, VENDER, VALORACION } = require('../lib/enlaces');
+const { enlaceVender, VENDER, VALORACION, AVISO_LEGAL } = require('../lib/enlaces');
 const textos = require('../lib/textos');
 const {
   PORTADA, grafo, urlArticulo, INDEX, BLOG, NO_ENCONTRADA, articulo, coleccionBlog, articuloSchema
@@ -11,6 +11,11 @@ const {
 const ENTRADAS = leerEntradas(path.join(__dirname, '..', 'content'));
 
 module.exports = (app) => {
+  // Lo pinta el pie del layout, que sale en todas las paginas: si fuera un local de ruta
+  // habria que acordarse de pasarlo en cada una, y la que se olvidase se quedaria sin el
+  // enlace al aviso legal sin que fallase nada.
+  app.locals.avisoLegal = enlaceVender(AVISO_LEGAL, 'pie-legal');
+
   app.get('/', (req, res) => {
     res.render('index', {
       ...INDEX,

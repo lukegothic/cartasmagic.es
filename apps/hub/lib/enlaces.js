@@ -9,6 +9,7 @@ const DOMINIO = 'https://vendercartasmagic.es';
 
 const VENDER = '/';
 const VALORACION = '/valoracion-cartas-magic';
+const AVISO_LEGAL = '/aviso-legal';
 
 const CAMPANA_VALIDA = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -27,4 +28,4 @@ const enlaceVender = (ruta, campana) => {
   return url.toString();
 };
 
-module.exports = { enlaceVender, VENDER, VALORACION };
+module.exports = { enlaceVender, VENDER, VALORACION, AVISO_LEGAL };

@@ -17,7 +17,11 @@ const NAV = {
 const PIE = {
   // El año se deja fijo a proposito: lo pinta el copyright, no una fecha de sistema.
   copyright: '2026 CartasMagic.es',
-  titular: 'Iván Pérez, NIF 72808254Y, Pamplona',
+  // Sin el NIF ni la calle: el articulo 10 de la LSSI los exige en el aviso legal, no en
+  // el pie de cada pagina. El hub no tiene aviso legal propio, asi que enlaza al de
+  // vender, donde vive la identidad fiscal completa.
+  titular: 'Iván (ivan-the-seller), Navarra',
+  avisoLegal: 'Aviso legal y condiciones',
   correo: 'contacto@vendercartasmagic.es'
 };
 
