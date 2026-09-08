@@ -18,7 +18,7 @@ const conDirectorio = (ficheros) => {
 
 const ARTICULO = `---
 titulo: Cómo saber cuánto vale una carta Magic
-descripcion: Los siete factores que fijan el precio
+descripcion: Los siete factores que establecen el precio
 fecha: 2026-09-05
 ---
 
@@ -34,7 +34,7 @@ test('lee una entrada con su frontmatter y su cuerpo en HTML', () => {
 
   assert.equal(entrada.slug, 'valor-carta');
   assert.equal(entrada.titulo, 'Cómo saber cuánto vale una carta Magic');
-  assert.equal(entrada.descripcion, 'Los siete factores que fijan el precio');
+  assert.equal(entrada.descripcion, 'Los siete factores que establecen el precio');
   assert.equal(entrada.fecha, '2026-09-05');
   assert.match(entrada.html, /<h2>Los factores<\/h2>/);
 });
