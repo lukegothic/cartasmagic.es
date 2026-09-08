@@ -9,6 +9,10 @@ Que una carta sea vieja no la hace valiosa. Lo que hace valiosas a las cartas Ma
 antiguas es que se imprimieran pocas y que alguien las siga queriendo. En los noventa
 pasaron las dos cosas a la vez en unas cuantas ediciones, y la contraria en muchas otras.
 
+No todas las cartas Magic antiguas valen lo mismo, ni de lejos: de las ediciones que
+salieron hasta 2003 hay unas cuantas que se pagan bien y otras tantas que hoy se venden
+por kilos.
+
 La buena noticia es que separar unas de otras no exige saber de Magic. Basta con mirar el
 borde.
 
@@ -108,5 +112,5 @@ la [edición exacta, el idioma, el estado y la
 demanda](/blog/como-saber-cuanto-vale-una-carta-magic) de cada carta, y eso hay que
 mirarlo una a una.
 
-Si tienes cartas con el marco antiguo, merece la pena una valoración de verdad antes de
-venderlas a peso o regalarlas.
+Si entre tus cartas Magic antiguas hay alguna con el marco antiguo, merece la pena una
+valoración de verdad antes de venderlas a peso o regalarlas.
