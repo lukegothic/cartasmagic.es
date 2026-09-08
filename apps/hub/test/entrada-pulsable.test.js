@@ -3,7 +3,9 @@ const assert = require('node:assert');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const css = fs.readFileSync(path.join(__dirname, '../public/style.css'), 'utf8');
+// Normalizado para que un selector de varias lineas se busque igual venga el fichero con
+// CRLF o con LF, que es lo unico que cambia de una maquina a otra.
+const css = fs.readFileSync(path.join(__dirname, '../public/style.css'), 'utf8').replace(/\r\n/g, '\n');
 
 const bloque = (selector) => {
   const i = css.indexOf(selector + ' {');
@@ -26,4 +28,21 @@ test('toda la tarjeta de una entrada lleva al articulo', () => {
 // entera, quien navega con teclado no ve donde esta.
 test('la tarjeta se marca cuando el enlace recibe el foco', () => {
   assert.ok(css.includes('.entrada:has(h3 a:focus-visible)'), 'falta el foco sobre la tarjeta');
+});
+
+// El resumen se sube por encima de la capa para poder seleccionarlo, y al subirlo se queda
+// tambien por delante para el raton: se tragaba el clic en casi toda la tarjeta, que es
+// justo donde se pulsa. En la portada se nota mas que en el indice, porque alli la tarjeta
+// no lleva fecha y el resumen ocupa todo lo que hay debajo del titulo.
+test('el resumen deja pasar el clic a la capa que lleva al articulo', () => {
+  const texto = bloque('.entrada p,\n.entrada time');
+
+  assert.match(texto, /position:\s*relative/);
+  assert.match(texto, /pointer-events:\s*none/);
+});
+
+// Con pointer-events en none el texto tampoco se puede arrastrar para copiarlo, asi que hay
+// que devolverselo: lo que sobra es que intercepte el clic, no que se pueda seleccionar.
+test('el resumen se sigue pudiendo seleccionar', () => {
+  assert.match(bloque('.entrada p::selection,\n.entrada time::selection'), /pointer-events:\s*auto/);
 });
