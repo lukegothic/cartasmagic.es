@@ -45,8 +45,7 @@ el lote entero en una sola operación.
 ## Titular
 
 - Nombre: Iván Pérez
-- NIF: 72808254Y
-- Domicilio: Calle Manuel Iribarren 10, 31008 Pamplona (Navarra), España
+- Sede: Pamplona (Navarra), España
 - Correo: contacto@vendercartasmagic.es
 - Teléfono: +34 644 154 365
 - Vendedor en Cardmarket desde 2011 con más de 3.200 valoraciones positivas
