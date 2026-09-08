@@ -302,7 +302,7 @@ const HOTLIST = {
     titulo: 'Cómo funciona esta lista',
     puntos: [
       { destacado: 'La cifra es la que se paga si la carta llega como dice la lista.', resto: 'Es lo único que se cotiza sin verlo antes, y solo porque son cartas concretas en un estado concreto. Al abrirla se comprueba el estado, y si coincide no hay regateo a la baja. Una colección entera sigue sin tener precio hasta que llega, porque ahí no se sabe qué viene dentro.' },
-      { destacado: 'Cada precio es el 60 % de lo que vale esa carta en Cardmarket.', resto: 'La diferencia es lo que cuesta revenderla: comisiones, envíos y el tiempo que tarde en salir. Preferimos decir el porcentaje a que lo tengas que calcular tú.' },
+      { destacado: 'El precio lo ponemos nosotros, carta por carta.', resto: 'No sale de aplicar un porcentaje fijo a una tabla: depende de la falta que nos haga esa carta y de lo que cueste revenderla. Por eso hay cartas que se pagan mejor de lo que esperarías y otras que no entran en la lista.' },
       { destacado: 'Los precios valen mientras la lista esté publicada.', resto: 'Se revisan cada pocas semanas siguiendo los precios de Cardmarket. La fecha de arriba dice de cuándo es la versión que estás leyendo.' },
       { destacado: 'Se compran cartas sueltas.', resto: 'No hace falta mínimo ni vender la colección entera. Si tienes una sola de estas, escríbenos y te mandamos la etiqueta igual.' },
       { destacado: 'Se cobra por transferencia.', resto: 'No damos vales ni crédito de tienda. Se paga en dinero, dentro de las 24 horas siguientes a que aceptes.' },

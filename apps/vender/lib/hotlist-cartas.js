@@ -8,20 +8,25 @@
 // y quedarse solo con lo que hace falta ahora obligaria a volver a bajarlo todo el dia que
 // haga falta la rareza, el idioma o el numero de coleccion.
 //
-// De Scryfall se leen: name, set_name, image_uris.normal y prices.eur. Los nombres de campo
-// son los suyos, no se renombran, para que la salida del script entre sin traducir nada.
+// De Scryfall se leen name, set_name e image_uris.normal. Los nombres de campo son los
+// suyos, no se renombran, para que la salida del script entre sin traducir nada.
+//
+// prices.eur NO es lo que se paga: es la estimacion de mercado que Scryfall trae con la
+// carta, util como referencia al recotizar y nada mas. La oferta es pagamos, se decide
+// aqui y no se calcula a partir de ese campo. La pagina nunca publica prices.eur.
 //
 // Para anadir una carta a mano:
 //   1. Buscarla en https://scryfall.com en la edicion concreta.
 //   2. Copiar su json (https://api.scryfall.com/cards/<id>) como una entrada mas.
-//   3. Poner pagamos: el 60 % de prices.eur, que es el porcentaje que anuncia la pagina.
+//   3. Poner en pagamos lo que se vaya a pagar por ella. La cifra la decide el negocio:
+//      cuanta falta hace la carta y lo que cueste revenderla, no una formula.
 //   4. Actualizar ACTUALIZADA con la fecha del dia.
 
 // La pagina publica esta fecha. Una lista que dice ser de anteayer cuando es de hace ocho
 // meses promete una cotizacion al dia que no cumple.
 const ACTUALIZADA = '08/09/2026';
 
-// pagamos es lo unico que no viene de Scryfall: es la oferta, en euros.
+// pagamos es lo unico que no viene de Scryfall: es la oferta que se publica, en euros.
 const CARTAS = [
   {
     name: "Gaea's Cradle",
