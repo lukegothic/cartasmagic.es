@@ -199,9 +199,9 @@ Secciones, por orden de utilidad:
 
 El umbral para proponer una pagina de zona son 150 impresiones. Por debajo, 52 paginas
 casi iguales compitiendo entre ellas son doorway pages, que es de lo poco que Google
-penaliza de forma explicita. Hoy la zona con mas demanda es Madrid, con 19 impresiones,
-asi que el informe dice que no y explica por que. Cuando alguna zona pase del umbral lo
-dira solo.
+penaliza de forma explicita. Hoy la zona con mas demanda es Madrid y no llega ni de
+lejos al umbral, asi que el informe dice que no y explica por que. Cuando alguna zona
+pase del umbral lo dira solo.
 
 Mientras tanto lo que si cabe es nombrar las zonas con demanda dentro de una pagina que
 ya existe, sin crear ninguna nueva.
