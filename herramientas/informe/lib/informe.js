@@ -35,16 +35,18 @@ const fechas = (dias) => {
   };
 };
 
-const bloqueGSC = async (auth, dominio, ventana) => {
-  const [consultas, paginas] = await Promise.all([
-    consultaGSC(auth, dominio, { ...ventana, dimensiones: ['query'] }),
-    consultaGSC(auth, dominio, { ...ventana, dimensiones: ['page'] })
+const bloqueGSC = async (auth, dominio, ventana, pedirGSC = consultaGSC) => {
+  // El total va aparte y sin desglosar. Sumar la dimension query se queda corto porque
+  // GSC oculta las consultas de pocas busquedas, y sumar la dimension page se pasa
+  // porque una consulta que saca dos paginas cuenta en las dos.
+  const [consultas, paginas, [totales]] = await Promise.all([
+    pedirGSC(auth, dominio, { ...ventana, dimensiones: ['query'] }),
+    pedirGSC(auth, dominio, { ...ventana, dimensiones: ['page'] }),
+    pedirGSC(auth, dominio, { ...ventana, dimensiones: [] })
   ]);
 
-  const total = consultas.reduce(
-    (t, { clics, impresiones }) => ({ clics: t.clics + clics, impresiones: t.impresiones + impresiones }),
-    { clics: 0, impresiones: 0 }
-  );
+  // Sin desglosar GSC devuelve una fila unica, o ninguna si la propiedad aun no tiene datos.
+  const total = totales || { clics: 0, impresiones: 0 };
 
   const lineas = [seccion(`GSC ${dominio}`)];
   lineas.push(
