@@ -5,7 +5,7 @@ const path = require('node:path');
 const ejs = require('ejs');
 const textos = require('../lib/textos');
 const meta = require('../lib/metadatos');
-const { ACTUALIZADA, CARTAS, formatoPrecio } = require('../lib/hotlist-cartas');
+const { ACTUALIZADA, CARTAS, PUBLICADAS, publicables, formatoPrecio } = require('../lib/hotlist-cartas');
 
 const sitemap = fs.readFileSync(path.join(__dirname, '../public/sitemap.xml'), 'utf8');
 const estilos = fs.readFileSync(path.join(__dirname, '../public/style.css'), 'utf8');
@@ -15,16 +15,16 @@ const ENLACE_ESTADOS = 'https://cartasmagic.es/blog/estado-de-la-carta-nm-ex-gd-
 // acaba viendo el visitante, incluidos los precios, que la plantilla no lleva escritos.
 const vista = ejs.render(
   fs.readFileSync(path.join(__dirname, '../views/hotlist.ejs'), 'utf8'),
-  { textos, cartas: CARTAS, actualizada: ACTUALIZADA, formatoPrecio, enlaceEstados: ENLACE_ESTADOS }
+  { textos, cartas: PUBLICADAS, actualizada: ACTUALIZADA, formatoPrecio, enlaceEstados: ENLACE_ESTADOS }
 );
 
 // Una hotlist es una oferta publica: quien lee una cifra y manda la carta espera cobrarla.
 // Si una entrada se queda sin precio o sin imagen, lo que se publica es un compromiso que
 // no se sabe honrar, y eso se descubre cuando alguien ya ha enviado el paquete.
 test('cada carta publicada lleva nombre, edicion, imagen y precio', () => {
-  assert.ok(CARTAS.length >= 10, 'una hotlist de menos de diez cartas no merece pagina');
+  assert.ok(PUBLICADAS.length >= 10, 'una hotlist de menos de diez cartas no merece pagina');
 
-  CARTAS.forEach((carta) => {
+  PUBLICADAS.forEach((carta) => {
     assert.ok(carta.name, 'una carta sin nombre no se puede identificar');
     assert.ok(carta.set_name, `${carta.name} no dice de que edicion`);
     assert.ok(carta.image_uris?.normal, `${carta.name} no tiene imagen`);
@@ -35,6 +35,38 @@ test('cada carta publicada lleva nombre, edicion, imagen y precio', () => {
     // despliegue.
     assert.ok(Number.isFinite(carta.pagamos) && carta.pagamos > 0, `${carta.name} no tiene una oferta pagable`);
   });
+});
+
+// Una carta puede entrar en el fichero antes de que el negocio decida lo que paga por ella:
+// asi se anota lo que sale en las hotlists de fuera sin tener que cotizarla el mismo dia.
+// Mientras no tenga pagamos es un borrador, y un borrador no se publica.
+test('las cartas sin precio no se publican', () => {
+  const sinPrecio = CARTAS.filter(({ pagamos }) => pagamos === undefined);
+  sinPrecio.forEach(({ name, set_name }) => {
+    assert.ok(
+      !PUBLICADAS.some((carta) => carta.name === name && carta.set_name === set_name),
+      `${name} no tiene precio y aun asi se publica`
+    );
+  });
+  assert.equal(PUBLICADAS.length, CARTAS.length - sinPrecio.length);
+});
+
+// El borrador no llega a la pagina: ni su nombre ni su imagen. Publicar la carta sin la
+// cifra invita a mandarla sin saber lo que se cobra por ella.
+test('la pagina no pinta ninguna carta sin precio', () => {
+  CARTAS.filter(({ pagamos }) => pagamos === undefined).forEach(({ name }) => {
+    assert.ok(!vista.includes(name), `${name} no tiene precio y sale en la pagina`);
+  });
+  assert.doesNotMatch(vista, /NaN/);
+});
+
+// Poner la cifra en el fichero es lo unico que hace falta para publicar una carta: en cuanto
+// pagamos tiene un numero, la carta entra en la pagina y en el marcado sin tocar nada mas.
+test('poner el precio publica la carta', () => {
+  const borrador = { name: 'X', set_name: 'Y', image_uris: { normal: 'u' } };
+
+  assert.equal(publicables([borrador]).length, 0);
+  assert.equal(publicables([{ ...borrador, pagamos: 12 }]).length, 1);
 });
 
 // Los campos son los de Scryfall a proposito, para que la salida del script que las baje
@@ -87,7 +119,7 @@ test('el aviso enlaza a la guia de estados del hub', () => {
 
 // La imagen es lo que hace reconocer la carta sin saberse el nombre en ingles.
 test('cada carta se pinta con su imagen', () => {
-  assert.equal((vista.match(/<img/g) || []).length, CARTAS.length);
+  assert.equal((vista.match(/<img/g) || []).length, PUBLICADAS.length);
   assert.match(vista, /loading="lazy"/);
   assert.match(estilos, /\.hotlist-rejilla/);
 });
@@ -128,7 +160,7 @@ test('la hotlist avisa de lo que cuesta la devolucion', () => {
 test('el marcado declara compra, no venta', () => {
   const grafo = JSON.parse(meta.hotlistLdJson())['@graph'];
   const lista = grafo.find(({ '@type': tipo }) => tipo === 'ItemList');
-  assert.equal(lista.numberOfItems, CARTAS.length);
+  assert.equal(lista.numberOfItems, PUBLICADAS.length);
   lista.itemListElement.forEach(({ item }) => {
     assert.equal(item['@type'], 'BuyAction');
     assert.equal(item.priceSpecification.priceCurrency, 'EUR');

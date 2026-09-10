@@ -21,6 +21,12 @@
 //   3. Poner en pagamos lo que se vaya a pagar por ella. La cifra la decide el negocio:
 //      cuanta falta hace la carta y lo que cueste revenderla, no una formula.
 //   4. Actualizar ACTUALIZADA con la fecha del dia.
+//
+// El paso 3 se puede dejar para despues. Una entrada sin pagamos es un borrador: se queda
+// anotada aqui con sus datos de Scryfall, pero no se publica. Sirve para apuntar lo que
+// buscan las tiendas de fuera (herramientas/hotlist-fuentes) el dia que se ve, sin tener
+// que cotizarlo en ese momento. En cuanto se le pone la cifra entra en la pagina y en el
+// marcado, y entonces si hay que actualizar ACTUALIZADA.
 
 // La pagina publica esta fecha. Una lista que dice ser de anteayer cuando es de hace ocho
 // meses promete una cotizacion al dia que no cumple.
@@ -160,12 +166,41 @@ const CARTAS = [
     image_uris: { normal: 'https://cards.scryfall.io/normal/front/a/9/a9738cda-adb1-47fb-9f4c-ecd930228c4d.jpg' },
     prices: { eur: '33.76' },
     pagamos: 20
+  },
+  // Las tres de abajo salieron el 10/09/2026 en la revision de hotlists de fuera: Card
+  // Monster compra las tres en varias impresiones a la vez, que es señal de que le hacen
+  // falta, no de que hayan subido. Quedan sin pagamos hasta que se miren en Cardmarket.
+  {
+    name: 'Ancient Tomb',
+    set_name: 'Tempest',
+    image_uris: { normal: 'https://cards.scryfall.io/normal/front/3/0/30e401e3-282b-4524-87e1-c6cd50cd6d00.jpg' },
+    prices: { eur: '109.55' }
+  },
+  {
+    name: 'Wooded Foothills',
+    set_name: 'Onslaught',
+    image_uris: { normal: 'https://cards.scryfall.io/normal/front/c/d/cdad38f7-9dfa-4f1b-9fac-41ab2b253f53.jpg' },
+    prices: { eur: '87.13' }
+  },
+  {
+    name: 'Food Chain',
+    set_name: 'Mercadian Masques',
+    image_uris: { normal: 'https://cards.scryfall.io/normal/front/1/8/18a1bb9e-006c-495e-8f99-d451183d2669.jpg' },
+    prices: { eur: '28.08' }
   }
 ];
+
+// Una carta se anota aqui en cuanto se ve que las tiendas de fuera la buscan, sin esperar a
+// cotizarla. Hasta que el negocio no decide su pagamos es un borrador: se queda en CARTAS,
+// pero no sale ni en la pagina ni en el marcado. Publicarla sin cifra seria pedir que manden
+// la carta sin decir lo que se cobra por ella.
+const publicables = (cartas) => cartas.filter(({ pagamos }) => Number.isFinite(pagamos));
+
+const PUBLICADAS = publicables(CARTAS);
 
 // Punto para los millares y coma para los decimales, que es como se escribe una cifra en
 // castellano. Se delega en toLocaleString, igual que el euros de correo-plantilla.js.
 const formatoPrecio = (precio) =>
   `${precio.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: 'always' })} €`;
 
-module.exports = { ACTUALIZADA, CARTAS, formatoPrecio };
+module.exports = { ACTUALIZADA, CARTAS, PUBLICADAS, publicables, formatoPrecio };
