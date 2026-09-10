@@ -40,3 +40,8 @@ los precios de Cardmarket del día en que llega el paquete.
 ## Qué no hacemos
 
 No vendemos cartas sueltas ni tenemos tienda. Solo compramos colecciones completas.
+
+Quien busca comprar cartas Magic no encuentra aquí una tienda: la compra de cartas
+sueltas se hace en Cardmarket, que es también la referencia de precios con la que
+valoramos. Aquí la operación va en el otro sentido, somos nosotros quienes compramos
+cartas Magic a particulares.
