@@ -63,7 +63,7 @@ const PLAZO_ETIQUETA = {
 const APROVECHAR_CAJA = {
   // Las 1.000 cartas no son un limite como el peso o las medidas, que los mide Correos: son
   // una estimacion y solo sirven para persuadir, por eso no salen de LIMITES_PAQUETE.
-  intro: 'En una caja de ese tamaño caben unas 1.000 cartas, y sale mejor mandarla llena: cuantas más cartas valoremos de una vez, más alta es la oferta. Merece la pena revisar cajas y carpetas antes de cerrarla, sobre todo si aparecen cartas raras, foils o cartas de ediciones antiguas, que son las que más levantan la valoración.',
+  intro: 'En una caja de ese tamaño caben unas 1.000 cartas, y sale mejor mandarla llena: cuantas más cartas valoremos de una vez, más alta es la oferta. Merece la pena revisar cajas y carpetas antes de cerrarla, sobre todo si aparecen cartas raras, foils o cartas de ediciones antiguas, que son las que más suben la valoración.',
   // El precio de ManaBox sale de una lista cerrada, asi que hay que decir de antemano que lo
   // que llegue de mas no va de regalo.
   extras: 'Si metes cartas que no estaban en la lista, las valoramos aparte y te sumamos lo que salga a la oferta.'
@@ -122,7 +122,7 @@ const MANABOX = {
   // La version de texto plano se corta antes: sin el matiz del estado, que en html cabe.
   confirmacionTexto: 'El precio sale de la lista que nos has enviado y se confirma al recibir las cartas y comprobar su estado.',
   limite: (peso, medidas) =>
-    `Ten en cuenta que el paquete no puede pasar de ${peso} ni de ${medidas}. Si se te queda corto, avísame y te preparo una etiqueta para más peso.`,
+    `Ten en cuenta que el paquete no puede pasar de ${peso} ni de ${medidas}.`,
   asunto: ({ nombre, donde, oferta, bajoMinimo, conDireccion }) =>
     `Presupuesto para ${nombre}${donde}: ${oferta} EUR${bajoMinimo ? ' (bajo mínimo)' : ''}${conDireccion ? ' - con dirección' : ''}`,
   // El que se copia al reenviar. La cifra no va aqui: el cliente la lee en el cuerpo, y en el
