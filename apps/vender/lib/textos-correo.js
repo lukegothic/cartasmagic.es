@@ -93,8 +93,13 @@ const PEDIR_DIRECCION = {
 };
 
 // Correo de quien pide valorar una coleccion entera por correo postal.
+// El formulario pide un nombre y mucha gente escribe el completo. En el saludo solo va la
+// primera palabra: el nombre entero se conserva en las notas internas y en el asunto, que es
+// donde hace falta para identificar al cliente.
+const soloNombre = (nombre) => nombre.trim().split(/\s+/)[0];
+
 const POSTAL = {
-  saludo: (nombre) => `Hola ${nombre},`,
+  saludo: (nombre) => `Hola ${soloNombre(nombre)},`,
   intro: 'Gracias por escribirnos. Te cuento cómo funciona cuando hay que valorar una colección entera.',
   proceso: 'Te generamos un código de envío a nuestra dirección, así que solo tienes que dejar el paquete en cualquier oficina de Correos. El envío lo pagamos nosotros. Cuando llega, lo revisamos y te escribimos con el presupuesto en un día laborable. Si te encaja, te hacemos la transferencia en 24 horas. Si no, te lo devolvemos, y en ese caso los costes de la devolución son a tu cargo (11,90 €, que es lo que suman el envío de ida y el de vuelta).',
   // El asunto es lo unico que se lee antes de decidir si la etiqueta sale ya, asi que lleva
@@ -108,7 +113,7 @@ const POSTAL = {
 
 // Correo de quien manda una lista de ManaBox y recibe ya una cifra.
 const MANABOX = {
-  saludo: (nombre) => `Hola ${nombre},`,
+  saludo: (nombre) => `Hola ${soloNombre(nombre)},`,
   intro: 'Hemos valorado la lista que nos mandaste. Esta es nuestra oferta por el lote completo:',
   ofertaEtiqueta: 'Oferta por tu colección',
   cartas: (total) => `${total} cartas`,
@@ -118,9 +123,19 @@ const MANABOX = {
     'Pago por transferencia dentro de las 24 horas siguientes a que aceptes',
     'Precio definitivo por el lote entero, sin negociación'
   ],
-  confirmacion: 'El precio sale de la lista que nos has enviado y se confirma al recibir las cartas y comprobar su estado. Si el estado no se corresponde con la lista, te lo diríamos antes de pagar nada.',
+  confirmacion: 'El precio sale de la lista que nos has enviado, y es para cartas en inglés y en estado Near Mint, que es lo que la lista da por hecho. Se confirma al recibir las cartas y comprobar el estado y el idioma. Si no se corresponden con la lista, te lo diríamos antes de pagar nada.',
   // La version de texto plano se corta antes: sin el matiz del estado, que en html cabe.
-  confirmacionTexto: 'El precio sale de la lista que nos has enviado y se confirma al recibir las cartas y comprobar su estado.',
+  confirmacionTexto: 'El precio sale de la lista que nos has enviado, y es para cartas en inglés y en estado Near Mint. Se confirma al recibir las cartas y comprobar el estado y el idioma.',
+  // Los dos enlaces cubren los dos ejes por los que una carta baja de la cifra de la lista:
+  // el estado en la guia y el idioma en la seccion 3 de la de valoracion. Cada uno lleva
+  // graficos, que es lo que explica la rebaja sin que parezca que nos la inventamos.
+  porQueBaja: {
+    intro: 'Si tus cartas están jugadas o son de otro idioma, valen menos. En la web lo tenemos explicado con gráficos:',
+    enlaces: [
+      { texto: 'Cuánto pierde una carta según su estado (NM, EX, GD, LP)', url: 'https://cartasmagic.es/blog/estado-de-la-carta-nm-ex-gd-lp' },
+      { texto: 'Qué establece el precio de una carta, incluido el idioma', url: 'https://cartasmagic.es/blog/como-saber-cuanto-vale-una-carta-magic' }
+    ]
+  },
   limite: (peso, medidas) =>
     `Ten en cuenta que el paquete no puede pasar de ${peso} ni de ${medidas}.`,
   asunto: ({ nombre, donde, oferta, bajoMinimo, conDireccion }) =>
