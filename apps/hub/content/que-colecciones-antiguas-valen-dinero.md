@@ -9,6 +9,9 @@ Que una carta sea vieja no la hace valiosa. Lo que hace valiosas a las cartas Ma
 antiguas es que se imprimieran pocas y que alguien las siga queriendo. En los noventa
 pasaron las dos cosas a la vez en unas cuantas ediciones, y la contraria en muchas otras.
 
+Esta guía recorre qué cartas Magic antiguas se pagan hoy, cuáles no valen nada por mucho
+que lo parezcan, y cómo separar unas de otras mirando la carta.
+
 No todas las cartas Magic antiguas valen lo mismo, ni de lejos: de las ediciones que
 salieron hasta 2003 hay unas cuantas que se pagan bien y otras tantas que hoy se venden
 por kilos.
@@ -33,7 +36,7 @@ carta reeditada en 2010.
 Si abres una caja y todas las cartas tienen el marco moderno, la colección puede valer
 dinero, pero será por cartas concretas, no por antigüedad.
 
-## Las ediciones que sí
+## Las cartas Magic antiguas que sí valen dinero
 
 Todo lo publicado hasta Scourge incluida. Eso cubre las ediciones básicas antiguas
 (Alpha, Beta, Unlimited y Revised) y todas las expansiones desde Arabian Nights hasta
@@ -58,7 +61,7 @@ Cuando alguien abre una caja llena de cartas de los noventa y ve cientos de ejem
 aspecto antiguo, casi siempre está viendo Cuarta y Quinta Edición. Son viejas de verdad,
 pero se fabricaron sin parar, y hoy son bulk: cartas de céntimos que se venden por kilos.
 
-## Cómo distinguirlas sin saber de Magic
+## Cómo reconocer una carta Magic antigua sin saber de Magic
 
 Dos señales, por orden de utilidad.
 
