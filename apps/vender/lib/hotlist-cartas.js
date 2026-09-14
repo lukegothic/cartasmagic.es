@@ -22,11 +22,11 @@
 //      cuanta falta hace la carta y lo que cueste revenderla, no una formula.
 //   4. Actualizar ACTUALIZADA con la fecha del dia.
 //
-// El paso 3 se puede dejar para despues. Una entrada sin pagamos es un borrador: se queda
-// anotada aqui con sus datos de Scryfall, pero no se publica. Sirve para apuntar lo que
-// buscan las tiendas de fuera (herramientas/hotlist-fuentes) el dia que se ve, sin tener
-// que cotizarlo en ese momento. En cuanto se le pone la cifra entra en la pagina y en el
-// marcado, y entonces si hay que actualizar ACTUALIZADA.
+// El paso 3 se puede dejar para despues, y la carta sale en la pagina igual: sin pagamos se
+// anuncia como carta que se busca, sin cifra. Sirve para apuntar lo que buscan las tiendas
+// de fuera (herramientas/hotlist-fuentes) el dia que se ve, sin tener que cotizarlo en ese
+// momento y sin que la carta se quede escondida mientras tanto. En cuanto se le pone la
+// cifra entra tambien en el marcado, y entonces si hay que actualizar ACTUALIZADA.
 
 // La pagina publica esta fecha. Una lista que dice ser de anteayer cuando es de hace ocho
 // meses promete una cotizacion al dia que no cumple.
@@ -191,16 +191,19 @@ const CARTAS = [
 ];
 
 // Una carta se anota aqui en cuanto se ve que las tiendas de fuera la buscan, sin esperar a
-// cotizarla. Hasta que el negocio no decide su pagamos es un borrador: se queda en CARTAS,
-// pero no sale ni en la pagina ni en el marcado. Publicarla sin cifra seria pedir que manden
-// la carta sin decir lo que se cobra por ella.
-const publicables = (cartas) => cartas.filter(({ pagamos }) => Number.isFinite(pagamos));
+// cotizarla, y sale en la pagina desde ese momento: la lista dice que se busca, y eso se
+// sabe antes que la cifra. Mientras no tenga pagamos se anuncia con el reclamo de
+// HOTLIST.sinPrecioEtiqueta en vez de un precio.
+//
+// Lo que no puede salir sin cifra es el marcado, que es una lista de precios: un
+// priceSpecification sin price es marcado roto. Por eso cotizadas() lo filtra aparte.
+const cotizadas = (cartas) => cartas.filter(({ pagamos }) => Number.isFinite(pagamos));
 
-const PUBLICADAS = publicables(CARTAS);
+const COTIZADAS = cotizadas(CARTAS);
 
 // Punto para los millares y coma para los decimales, que es como se escribe una cifra en
 // castellano. Se delega en toLocaleString, igual que el euros de correo-plantilla.js.
 const formatoPrecio = (precio) =>
   `${precio.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: 'always' })} €`;
 
-module.exports = { ACTUALIZADA, CARTAS, PUBLICADAS, publicables, formatoPrecio };
+module.exports = { ACTUALIZADA, CARTAS, COTIZADAS, cotizadas, formatoPrecio };

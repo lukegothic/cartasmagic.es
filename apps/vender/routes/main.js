@@ -6,7 +6,7 @@ const { enviarAviso } = require('../lib/mailer');
 const { mensajeDeError } = require('../lib/mensajes-error');
 const textos = require('../lib/textos');
 const meta = require('../lib/metadatos');
-const { ACTUALIZADA, PUBLICADAS, formatoPrecio } = require('../lib/hotlist-cartas');
+const { ACTUALIZADA, CARTAS, formatoPrecio } = require('../lib/hotlist-cartas');
 
 // El mensaje se deriva del codigo ya fusionado, asi que ninguna llamada puede pintar un
 // aviso vacio por olvidarse de pasarlo.
@@ -129,7 +129,7 @@ module.exports = (app) => {
       ld_json: meta.hotlistLdJson(),
       textos,
       faq: null,
-      cartas: PUBLICADAS,
+      cartas: CARTAS,
       actualizada: ACTUALIZADA,
       formatoPrecio,
       enlaceEstados: ENLACE_ESTADOS

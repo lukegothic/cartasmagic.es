@@ -3,7 +3,7 @@
 // otro criterio (longitud, keywords) que la copy de la interfaz.
 
 const { PROCESO_FAQ } = require('./textos');
-const { ACTUALIZADA, PUBLICADAS } = require('./hotlist-cartas');
+const { ACTUALIZADA, COTIZADAS } = require('./hotlist-cartas');
 
 const DOMINIO = 'https://vendercartasmagic.es';
 
@@ -139,8 +139,8 @@ const hotlistLdJson = () => {
     name: 'Cartas Magic que compramos',
     url: `${DOMINIO}/hotlist`,
     dateModified: `${anio}-${mes}-${dia}`,
-    numberOfItems: PUBLICADAS.length,
-    itemListElement: PUBLICADAS.map(({ name, set_name, pagamos }, i) => ({
+    numberOfItems: COTIZADAS.length,
+    itemListElement: COTIZADAS.map(({ name, set_name, pagamos }, i) => ({
       '@type': 'ListItem',
       position: i + 1,
       item: {

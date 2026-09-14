@@ -282,9 +282,9 @@ const COMPARATIVA = {
 // dentro de Cardmarket con listas de deseos privadas. Publicarla es la ventaja: es la unica
 // pagina del sitio que da un numero antes de ver la carta, y por eso lleva fecha y estado.
 //
-// Al tocar la lista, revisar test/hotlist.test.js: comprueba que ninguna entrada se queda
-// sin precio o sin estado, que no se repite una carta en el mismo estado y que la fecha
-// sigue puesta.
+// Al tocar la lista, revisar test/hotlist.test.js: comprueba que la carta sin cifra se
+// anuncia sin prometer precio, que la que la lleva entra en el marcado, que no se repite
+// una carta en el mismo estado y que la fecha sigue puesta.
 const HOTLIST = {
   h1: 'Qué cartas Magic buscamos ahora y a cuánto las pagamos',
   intro: 'Estas son las cartas que más nos hacen falta ahora mismo, con la cifra que pagamos por cada una. No hace falta que tengas la colección entera: si tienes alguna de estas sueltas, también las compramos. El envío lo seguimos pagando nosotros.',
@@ -298,6 +298,10 @@ const HOTLIST = {
     despues: 'para hacerte una idea'
   },
   pagamosEtiqueta: 'Pagamos',
+  // Una carta entra en la lista en cuanto se ve que hace falta, y la cifra se decide
+  // despues. Hasta entonces se anuncia que se busca: prometer un precio a medias, o
+  // callarse la carta, son las dos formas de que quien la tenga no escriba.
+  sinPrecioEtiqueta: 'Buscamos esta carta',
   condiciones: {
     titulo: 'Cómo funciona esta lista',
     puntos: [

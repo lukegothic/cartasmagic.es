@@ -882,6 +882,15 @@ ol.plain-list li::before {
     font-size: 1.15em;
 }
 
+/* Sin cifra el reclamo ocupa el sitio del precio, pero no se pinta como si lo fuera: mismo
+   hueco para que la rejilla no baile, y el cuerpo de la etiqueta en vez del del importe. */
+.hotlist-sin-precio {
+    color: var(--mtg-text-muted);
+    font-weight: 400;
+    font-size: 0.85em;
+    font-style: italic;
+}
+
 .hotlist-precio-etiqueta {
     display: block;
     color: var(--mtg-text-muted);
