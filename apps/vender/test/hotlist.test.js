@@ -154,10 +154,10 @@ test('se llega a la hotlist desde cualquier pagina', () => {
   assert.match(layout, /href="\/hotlist"/);
 });
 
-// La devolucion cuesta 11,90 € y en una carta suelta se lleva media. Es la condicion que
+// La devolucion cuesta 10 € y en una carta suelta se lleva media. Es la condicion que
 // mas pesa justo en el publico que atrae esta pagina, asi que no puede faltar aqui.
 test('la hotlist avisa de lo que cuesta la devolucion', () => {
-  assert.match(vista, /11,90 €/);
+  assert.match(vista, /10 €/);
 });
 
 // Un Offer con price dice "vendo esto a este precio". Indexaria la pagina como una tienda

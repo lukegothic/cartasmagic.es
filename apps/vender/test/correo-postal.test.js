@@ -42,7 +42,7 @@ test('lleva los limites del paquete, para que no se pase de peso', () => {
 
 test('deja claro que la devolucion la paga quien rechaza', () => {
   const { html } = componerCorreo(base);
-  assert.match(html, /11,90|coste/i);
+  assert.match(html, /10 €/);
 });
 
 test('lo que dijo el cliente va en las notas adjuntas, no en el cuerpo', () => {

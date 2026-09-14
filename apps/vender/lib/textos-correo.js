@@ -101,7 +101,7 @@ const soloNombre = (nombre) => nombre.trim().split(/\s+/)[0];
 const POSTAL = {
   saludo: (nombre) => `Hola ${soloNombre(nombre)},`,
   intro: 'Gracias por escribirnos. Te cuento cómo funciona cuando hay que valorar una colección entera.',
-  proceso: 'Te generamos un código de envío a nuestra dirección, así que solo tienes que dejar el paquete en cualquier oficina de Correos. El envío lo pagamos nosotros. Cuando llega, lo revisamos y te escribimos con el presupuesto en un día laborable. Si te encaja, te hacemos la transferencia en 24 horas. Si no, te lo devolvemos, y en ese caso los costes de la devolución son a tu cargo (11,90 €, que es lo que suman el envío de ida y el de vuelta).',
+  proceso: 'Te generamos un código de envío a nuestra dirección, así que solo tienes que dejar el paquete en cualquier oficina de Correos. El envío lo pagamos nosotros. Cuando llega, lo revisamos y te escribimos con el presupuesto en un día laborable. Si te encaja, te hacemos la transferencia en 24 horas. Si no, te lo devolvemos, y en ese caso los costes de la devolución son a tu cargo (10 €, que cubren el envío de ida, el de vuelta y la preparación del paquete).',
   // El asunto es lo unico que se lee antes de decidir si la etiqueta sale ya, asi que lleva
   // el volumen, que marca el tamaño de la etiqueta, y la localidad cuando se puede generar.
   asunto: ({ nombre, volumen, donde, conDireccion }) =>

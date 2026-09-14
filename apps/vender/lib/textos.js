@@ -50,7 +50,7 @@ const PROCESO_FAQ = [
   },
   {
     q: '¿Y si no me gusta el precio?',
-    a: 'Se te devuelve la colección entera. La devolución cuesta 11,90 €, que es lo que suman el envío de ida y el de vuelta, y los paga quien rechaza la oferta. Si la colección no es lo que esperábamos por nuestra parte o decidimos no valorarla, la devolución la pagamos nosotros.'
+    a: 'Se te devuelve la colección entera. La devolución cuesta 10 €, que cubren el envío de ida, el de vuelta y la preparación del paquete, y los paga quien rechaza la oferta. Si la colección no es lo que esperábamos por nuestra parte o decidimos no valorarla, la devolución la pagamos nosotros.'
   },
   {
     q: '¿Qué colecciones compráis?',
@@ -103,7 +103,7 @@ const PORTADA = {
     puntos: [
       { destacado: 'El precio se da después de ver las cartas.', resto: 'No damos cifras por teléfono ni por foto, porque el estado real y los sets solo se ven con la carta en la mano. Valoramos con los precios de Cardmarket del día que llega el paquete.' },
       { destacado: 'Es un precio, no una negociación.', resto: 'Se manda un número por el lote entero y se acepta o se rechaza. No hay contraoferta ni regateo: esa es justo la parte que te queremos ahorrar.' },
-      { destacado: 'Si rechazas, la devolución cuesta 11,90 €.', resto: 'Es lo que suman el envío de ida y el de vuelta, y lo paga quien rechaza. Se abona por transferencia antes de devolver el paquete.' },
+      { destacado: 'Si rechazas, la devolución cuesta 10 €.', resto: 'Cubre el envío de ida, el de vuelta y la preparación del paquete, y lo paga quien rechaza. Se abona por transferencia antes de devolver el paquete.' },
       { destacado: 'Salvo que el fallo sea nuestro.', resto: 'Si decidimos no valorar tu colección, o si no es lo que esperábamos por nuestra parte, la devolución la pagamos nosotros y no te cuesta nada.' }
     ]
   },
@@ -175,7 +175,7 @@ const VALORACION = {
     puntos: [
       'El envío de ida lo pagamos nosotros.',
       'El precio es una cifra definitiva por el lote entero. No hay negociación ni contraoferta.',
-      'Si rechazas el precio, la devolución cuesta 11,90 € y la paga quien rechaza, por transferencia, antes de devolver el paquete.',
+      'Si rechazas el precio, la devolución cuesta 10 € y la paga quien rechaza, por transferencia, antes de devolver el paquete.',
       'Si decidimos no valorar tu colección, la devolución la pagamos nosotros.',
       'Compramos mazos, álbumes y colecciones en cualquier idioma y estado. No compramos cajas que sean solo comunes, otros juegos ni falsificaciones.',
       'Hasta 2 kg por paquete. Si tienes más, avísanos antes de enviar.',
@@ -261,7 +261,7 @@ const COMPARATIVA = {
       { destacado: 'Te mandamos una etiqueta de Correos, ya pagada.', resto: 'El envío de ida lo pagamos nosotros. No adelantas dinero.' },
       { destacado: 'Envías el paquete.', resto: 'Hasta 2 kg y 30x20x20 cm, que son unas 1.000 cartas. Si tienes más, avisa antes y lo organizamos.' },
       { destacado: 'Un día laborable después de que llegue, recibes el precio.', resto: 'Una cifra definitiva por el lote, por correo, sin condiciones añadidas.' },
-      { destacado: 'Aceptas y cobras por transferencia en 24 horas.', resto: 'O rechazas y se te devuelve todo: la devolución cuesta 11,90 €, el envío de ida más el de vuelta, y la paga quien rechaza.' }
+      { destacado: 'Aceptas y cobras por transferencia en 24 horas.', resto: 'O rechazas y se te devuelve todo: la devolución cuesta 10 €, que cubren el envío de ida, el de vuelta y la preparación del paquete, y la paga quien rechaza.' }
     ]
   },
   antesDeVender: {
@@ -310,7 +310,7 @@ const HOTLIST = {
       { destacado: 'Los precios valen mientras la lista esté publicada.', resto: 'Se revisan cada pocas semanas siguiendo los precios de Cardmarket. La fecha de arriba dice de cuándo es la versión que estás leyendo.' },
       { destacado: 'Se compran cartas sueltas.', resto: 'No hace falta mínimo ni vender la colección entera. Si tienes una sola de estas, escríbenos y te mandamos la etiqueta igual.' },
       { destacado: 'Se cobra por transferencia.', resto: 'No damos vales ni crédito de tienda. Se paga en dinero, dentro de las 24 horas siguientes a que aceptes.' },
-      { destacado: 'Si al final no aceptas, la devolución cuesta 11,90 €.', resto: 'Es lo que suman el envío de ida y el de vuelta, y la paga quien rechaza. En una carta de 20 € se lleva media carta, así que para cantidades pequeñas conviene preguntar antes por correo que enviar sin más.' }
+      { destacado: 'Si al final no aceptas, la devolución cuesta 10 €.', resto: 'Cubre el envío de ida, el de vuelta y la preparación del paquete, y la paga quien rechaza. En una carta de 20 € se lleva media carta, así que para cantidades pequeñas conviene preguntar antes por correo que enviar sin más.' }
     ]
   },
   faltaTuCarta: {
