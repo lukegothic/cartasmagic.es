@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="360" viewBox="0 0 720 360" role="img" aria-labelledby="titulo" font-family="Inter, system-ui, sans-serif">
+<title id="titulo">Lo que vale una caja de sobres, edición por edición</title>
+
+<text x="0" y="18" fill="#e8e8f0" font-size="16" font-weight="600">Lo que vale una caja de sobres, edición por edición</text>
+
+<line x1="54" y1="306" x2="700" y2="306" stroke="#2a2a3a" stroke-width="1"/>
+<text x="46" y="310" fill="#9393a8" font-size="11" text-anchor="end">10</text>
+<line x1="54" y1="215.33333333333334" x2="700" y2="215.33333333333334" stroke="#2a2a3a" stroke-width="1"/>
+<text x="46" y="219.33333333333334" fill="#9393a8" font-size="11" text-anchor="end">100</text>
+<line x1="54" y1="124.66666666666669" x2="700" y2="124.66666666666669" stroke="#2a2a3a" stroke-width="1"/>
+<text x="46" y="128.66666666666669" fill="#9393a8" font-size="11" text-anchor="end">1.000</text>
+<line x1="54" y1="34" x2="700" y2="34" stroke="#2a2a3a" stroke-width="1"/>
+<text x="46" y="38" fill="#9393a8" font-size="11" text-anchor="end">10.000</text>
+
+<line class="corte" x1="253.7" y1="34" x2="253.7" y2="306" stroke="#e8e8f0" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="245.7" y="46" fill="#e8e8f0" font-size="11" text-anchor="end">Octava Edición</text>
+
+<circle class="hito-serie" cx="54.0" cy="50.8" r="4" fill="#7c5cbf"/>
+<circle class="hito-serie" cx="59.2" cy="52.7" r="4" fill="#7c5cbf"/>
+<circle class="hito-serie" cx="64.4" cy="124.8" r="4" fill="#7c5cbf"/>
+<circle class="hito-serie" cx="67.9" cy="231.7" r="4" fill="#7c5cbf"/>
+<circle class="hito-serie" cx="73.1" cy="211.6" r="4" fill="#7c5cbf"/>
+<circle class="hito-serie" cx="85.3" cy="135.1" r="4" fill="#7c5cbf"/>
+<circle class="hito-serie" cx="106.1" cy="163.0" r="4" fill="#7c5cbf"/>
+<circle class="hito-serie" cx="113.0" cy="138.0" r="4" fill="#7c5cbf"/>
+<circle class="hito-serie" cx="120.0" cy="151.8" r="4" fill="#7c5cbf"/>
+<circle class="hito-serie" cx="133.9" cy="101.2" r="4" fill="#7c5cbf"/>
+<circle class="hito-serie" cx="142.6" cy="109.6" r="4" fill="#7c5cbf"/>
+<circle class="hito-serie" cx="154.7" cy="126.6" r="4" fill="#7c5cbf"/>
+<circle class="hito-serie" cx="161.7" cy="123.1" r="4" fill="#7c5cbf"/>
+<circle class="hito-serie" cx="175.6" cy="181.9" r="4" fill="#7c5cbf"/>
+<circle class="hito-serie" cx="182.5" cy="145.7" r="4" fill="#7c5cbf"/>
+<circle class="hito-serie" cx="196.4" cy="193.3" r="4" fill="#7c5cbf"/>
+<circle class="hito-serie" cx="203.3" cy="190.5" r="4" fill="#7c5cbf"/>
+<circle class="hito-serie" cx="217.2" cy="159.3" r="4" fill="#7c5cbf"/>
+<circle class="hito-serie" cx="224.2" cy="155.0" r="4" fill="#7c5cbf"/>
+<circle class="hito-serie" cx="238.1" cy="186.9" r="4" fill="#7c5cbf"/>
+<circle class="hito-serie" cx="245.0" cy="160.6" r="4" fill="#7c5cbf"/>
+<circle class="hito-serie" cx="258.9" cy="167.0" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="265.9" cy="157.4" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="279.8" cy="182.7" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="286.7" cy="174.4" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="300.6" cy="222.2" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="307.5" cy="191.3" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="321.4" cy="194.9" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="328.4" cy="172.3" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="342.3" cy="169.4" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="354.4" cy="174.4" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="363.1" cy="212.3" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="370.1" cy="217.4" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="383.9" cy="177.3" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="390.9" cy="188.6" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="404.8" cy="195.4" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="411.7" cy="166.7" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="423.9" cy="261.4" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="432.6" cy="197.8" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="446.5" cy="224.1" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="453.4" cy="278.7" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="465.6" cy="245.1" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="474.2" cy="216.5" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="486.4" cy="256.7" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="496.8" cy="246.8" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="509.0" cy="237.5" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="519.4" cy="237.5" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="528.1" cy="219.9" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="540.2" cy="216.9" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="548.9" cy="221.7" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="561.1" cy="218.6" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="571.5" cy="214.6" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="576.7" cy="213.8" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="592.3" cy="219.0" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="597.5" cy="195.9" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="602.8" cy="201.8" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="611.4" cy="208.5" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="620.1" cy="204.7" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="623.6" cy="218.2" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="632.3" cy="230.5" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="641.0" cy="198.6" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="644.4" cy="221.7" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="653.1" cy="223.6" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="656.6" cy="204.7" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="661.8" cy="211.9" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="665.3" cy="198.3" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="674.0" cy="196.1" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="677.4" cy="202.7" r="4" fill="#5a5a70"/>
+<circle class="hito-serie" cx="693.1" cy="192.0" r="4" fill="#5a5a70"/>
+
+<text x="55.7" y="332" fill="#9393a8" font-size="11" text-anchor="middle">1994</text>
+<text x="159.9" y="332" fill="#9393a8" font-size="11" text-anchor="middle">1999</text>
+<text x="264.1" y="332" fill="#9393a8" font-size="11" text-anchor="middle">2004</text>
+<text x="368.3" y="332" fill="#9393a8" font-size="11" text-anchor="middle">2009</text>
+<text x="472.5" y="332" fill="#9393a8" font-size="11" text-anchor="middle">2014</text>
+<text x="576.7" y="332" fill="#9393a8" font-size="11" text-anchor="middle">2019</text>
+<text x="680.9" y="332" fill="#9393a8" font-size="11" text-anchor="middle">2024</text>
+<text x="54" y="352" fill="#9393a8" font-size="11">Cada punto es una edición. Escala logarítmica, en dólares por caja</text>
+</svg>

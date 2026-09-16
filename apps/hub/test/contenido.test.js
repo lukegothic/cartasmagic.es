@@ -203,3 +203,52 @@ test('difiere la carga de las imagenes', () => {
   assert.match(entrada.html, /loading="lazy"/);
   assert.match(entrada.html, /decoding="async"/);
 });
+
+// El pie de foto se distingue del cuerpo por una clase, no por ir detras de la imagen:
+// markdown-it envuelve cada imagen en su propio parrafo, asi que un selector img + p no
+// llega a casar nunca y el pie se lee como texto normal.
+test('marca como pie de foto el parrafo que sigue a una imagen', () => {
+  const dir = conDirectorio({
+    'con-foto.md':
+      '---\ntitulo: T\ndescripcion: d\nfecha: 2026-09-05\n---\n\n' +
+      '![Un reverso](/blog/con-foto/reverso.jpg)\n\n' +
+      '**Auténtica.** Pesa 1,76 gramos.\n\n' +
+      'Este parrafo ya no es un pie de foto.\n'
+  });
+
+  const [entrada] = leerEntradas(dir);
+
+  assert.match(entrada.html, /<p class="pie-de-foto"><strong>Auténtica\.<\/strong>/);
+  assert.match(entrada.html, /<p>Este parrafo ya no es un pie de foto\.<\/p>/);
+});
+
+// Un parrafo de texto corriente que caiga justo antes de una imagen no es su pie.
+test('no marca como pie el parrafo que precede a una imagen', () => {
+  const dir = conDirectorio({
+    'con-foto.md':
+      '---\ntitulo: T\ndescripcion: d\nfecha: 2026-09-05\n---\n\n' +
+      'Texto que introduce la foto.\n\n' +
+      '![Un reverso](/blog/con-foto/reverso.jpg)\n'
+  });
+
+  const [entrada] = leerEntradas(dir);
+
+  assert.match(entrada.html, /<p>Texto que introduce la foto\.<\/p>/);
+});
+
+// Dos fotos seguidas, sin pie entre ellas: la segunda es una foto, no el pie de la
+// primera. Sin esta comprobacion la imagen se lleva la clase del pie.
+test('no marca como pie una imagen que sigue a otra imagen', () => {
+  const dir = conDirectorio({
+    'dos-fotos.md':
+      '---\ntitulo: T\ndescripcion: d\nfecha: 2026-09-05\n---\n\n' +
+      '![Primera](/blog/dos-fotos/1.jpg)\n\n' +
+      '![Segunda](/blog/dos-fotos/2.jpg)\n\n' +
+      'Pie de la segunda.\n'
+  });
+
+  const [entrada] = leerEntradas(dir);
+
+  assert.ok(!/<p class="pie-de-foto"><img[^>]+2\.jpg/.test(entrada.html));
+  assert.match(entrada.html, /<p class="pie-de-foto">Pie de la segunda\.<\/p>/);
+});

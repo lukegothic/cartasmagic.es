@@ -1,6 +1,6 @@
 ---
-titulo: Qué colecciones antiguas de Magic valen dinero
-descripcion: Qué ediciones antiguas se pagan hoy y cuáles se imprimieron tanto que no valen nada, y cómo distinguirlas sin saber de Magic
+titulo: Qué cartas Magic antiguas valen dinero y cuáles no
+descripcion: Qué cartas Magic antiguas se pagan hoy y cuáles se imprimieron tanto que no valen nada, y cómo distinguirlas sin saber de Magic
 fecha: 2026-09-05
 keywords: cartas magic antiguas, cartas magic antiguas valor, coleccion magic años 90, ediciones magic caras, revised magic valor
 ---
@@ -19,6 +19,10 @@ por kilos.
 La buena noticia es que separar unas de otras no exige saber de Magic. Basta con mirar el
 borde.
 
+![Dos cartas Magic de los noventa juntas, una con el borde blanco y otra con el borde negro](/blog/que-colecciones-antiguas-valen-dinero/portada-borde-blanco-y-negro.jpg)
+
+La diferencia que más dinero mueve en una colección antigua se ve sin leer nada.
+
 ## La regla del borde
 
 Magic cambió el diseño de sus cartas en julio de 2003, con la Octava Edición. Todo lo
@@ -28,6 +32,11 @@ Ese cambio de diseño coincide casi exactamente con la frontera del valor:
 
 - **Marco antiguo, hasta Scourge (mayo de 2003):** ahí es donde está el dinero.
 - **Marco moderno, de Octava Edición en adelante:** salvo excepciones concretas, no.
+
+![Nube de puntos con el valor de una caja de sobres de cada edición desde 1993: las anteriores a la Octava Edición quedan muy por encima de las posteriores](/blog/que-colecciones-antiguas-valen-dinero/valor-por-edicion.svg)
+
+Cada punto es una edición y la línea marca la Octava. La mediana de lo que vale una caja
+pasa de unos 500 dólares antes a poco más de 100 después.
 
 No es magia ni casualidad: es que las tiradas crecieron muchísimo a partir de esos años.
 Una carta de 1995 se imprimió en una fracción de la cantidad en que se imprimió la misma
@@ -99,6 +108,11 @@ sin clasificar, da la sensación de que tiene que valer una fortuna. Casi nunca 
 volumen sin clasificar suele ser precisamente el material que nadie separó porque no
 valía la pena separarlo. Una colección de 978 cartas puede pagarse a 700 euros, y una de
 26 cartas a 1.900. El montón no es el valor.
+
+![Nube de puntos con una colección por punto: el número de cartas en el eje horizontal y lo pagado en el vertical, sin relación entre los dos](/blog/que-colecciones-antiguas-valen-dinero/cartas-frente-a-pagado.svg)
+
+Cada punto es una de las colecciones de las que tenemos anotado el tamaño. El montón de
+la derecha se pagó menos que el puñado de la izquierda.
 
 **Infravalorar lo antiguo.** El contrario, y el más caro de los dos. Cartas viejas
 guardadas en una caja de zapatos, con aspecto gastado, que su dueño da por perdidas

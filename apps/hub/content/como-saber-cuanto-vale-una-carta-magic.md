@@ -10,6 +10,10 @@ quince años en un armario, ve un dragón con el borde negro y quiere saber si t
 La respuesta corta es que la ilustración no dice nada del precio. Lo dicen otras siete
 cosas.
 
+![Varias cartas Magic extendidas sobre una mesa, de ediciones y acabados diferentes](/blog/como-saber-cuanto-vale-una-carta-magic/portada-cartas-sobre-mesa.jpg)
+
+La ilustración es lo primero que se mira y lo que menos dice del precio.
+
 Los precios de esta guía son de Cardmarket a fecha de septiembre de 2026 y sirven como
 orden de magnitud, no como tarifa: se mueven cada semana.
 
@@ -88,6 +92,11 @@ porcentajes que aplicamos sobre el precio de una carta en estado NM:
 | Alpha, Beta y Unlimited | 80 % | 60 % | 40 % |
 | Foils | 75 % | 50 % | 30 % |
 
+![Mapa de la tabla de descuentos: cuanto más oscura la celda, más valor pierde la carta, y la fila de los foils es la más oscura](/blog/como-saber-cuanto-vale-una-carta-magic/descuento-por-estado.svg)
+
+El mapa enseña la otra cara de la tabla: lo que la carta pierde. Cuanto más oscura la
+celda, más se descuenta. La fila de los foils es la que más se oscurece.
+
 Dos cosas llaman la atención de esta tabla. La primera es que **una carta cara aguanta
 mejor el desgaste**: un ejemplar de más de 100 euros en estado GD conserva el 80 % de su
 valor, mientras que uno de menos de 15 euros en el mismo estado se queda en el 70 %. La
@@ -117,16 +126,25 @@ de toda la vida. The One Ring es el ejemplo que mejor lo enseña:
 |---|---|
 | Normal | 89,28 euros |
 | Foil | 109,43 euros |
-| Foil del marco invertido del bundle | 86,11 euros |
-| Surge foil de arte extendido | 238,33 euros |
-| Foil de prerelease | 205,46 euros |
-| Silver foil del pergamino | 714,00 euros |
+| Foil especial bundle | 86,11 euros |
+| Foil arte extendido | 238,33 euros |
+| Foil de presentación | 205,46 euros |
+| Foil "Silver Scroll" | 714,00 euros |
+
+![Barras con el precio de los seis acabados de The One Ring, del más barato al más caro](/blog/como-saber-cuanto-vale-una-carta-magic/acabados-precio.svg)
+
+El foil del bundle es el único que cotiza por debajo de la versión normal.
 
 La misma carta, seis de sus acabados, del entorno de los 86 euros a los 714. Y esa lista se
 queda corta: la versión numerada del póster, con la tirada limitada a unos pocos
 ejemplares, se mueve por encima de los 4.000 euros.
 
-La tercera fila es la que rompe la regla. El foil del marco invertido del bundle cotiza
+![Varios acabados de la misma carta Magic juntos, cada uno con un brillo diferente](/blog/como-saber-cuanto-vale-una-carta-magic/acabados-la-misma-carta.jpg)
+
+Los acabados de una misma carta, en orden de precio. La diferencia entre el más barato y
+el más caro son casi setecientos euros.
+
+Hay un acabado que rompe la regla. El foil especial del bundle cotiza
 **por debajo** de la carta normal: 86,11 frente a 89,28 euros. Ese acabado venía en un
 producto que se fabricó en cantidad, así que hay más ejemplares que demanda para
 absorberlos. Que una carta lleve brillo no la encarece por sí solo. Lo que sube el precio
@@ -135,6 +153,10 @@ es que se imprimieran pocas.
 Y hay un caso en el que el foil juega en contra: en las cartas antiguas es frecuente que
 estén curvadas, y una carta curvada baja de estado. Un foil de los primeros años en mal
 estado puede valer menos que la versión normal en buen estado.
+
+![Un foil antiguo de Magic visiblemente curvado junto a una carta normal plana](/blog/como-saber-cuanto-vale-una-carta-magic/foil-antiguo-curvado.jpg)
+
+Un foil de los primeros años, curvado. Al lado, la versión normal sin curvar.
 
 La consecuencia práctica es que **el acabado hay que mirarlo carta a carta**. Buscar el
 nombre y quedarse con el primer precio que sale es la forma más rápida de equivocarse en

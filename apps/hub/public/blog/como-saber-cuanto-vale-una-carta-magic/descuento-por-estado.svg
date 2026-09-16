@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="288" viewBox="0 0 720 288" role="img" aria-labelledby="titulo" font-family="Inter, system-ui, sans-serif">
+<title id="titulo">Cuánto pierde una carta según su estado</title>
+
+<text x="0" y="18" fill="#e8e8f0" font-size="16" font-weight="600">Cuánto pierde una carta según su estado</text>
+
+<text x="277" y="40" fill="#9393a8" font-size="13" text-anchor="middle">EX</text>
+<text x="453" y="40" fill="#9393a8" font-size="13" text-anchor="middle">GD</text>
+<text x="629" y="40" fill="#9393a8" font-size="13" text-anchor="middle">LP o peor</text>
+
+<text x="178" y="74" fill="#9393a8" font-size="13" text-anchor="end">Menos de 15 euros</text>
+<rect class="celda" x="190" y="52" width="174" height="36" rx="4" fill="#a68ee2"/>
+<text x="277" y="74" fill="#0a0a0f" font-size="13" text-anchor="middle">20 %</text>
+<rect class="celda" x="366" y="52" width="174" height="36" rx="4" fill="#8f76d4"/>
+<text x="453" y="74" fill="#ffffff" font-size="13" text-anchor="middle">30 %</text>
+<rect class="celda" x="542" y="52" width="174" height="36" rx="4" fill="#63509c"/>
+<text x="629" y="74" fill="#ffffff" font-size="13" text-anchor="middle">50 %</text>
+<text x="178" y="112" fill="#9393a8" font-size="13" text-anchor="end">De 15 a 25 euros</text>
+<rect class="celda" x="190" y="90" width="174" height="36" rx="4" fill="#c0aeee"/>
+<text x="277" y="112" fill="#0a0a0f" font-size="13" text-anchor="middle">15 %</text>
+<rect class="celda" x="366" y="90" width="174" height="36" rx="4" fill="#8f76d4"/>
+<text x="453" y="112" fill="#ffffff" font-size="13" text-anchor="middle">30 %</text>
+<rect class="celda" x="542" y="90" width="174" height="36" rx="4" fill="#63509c"/>
+<text x="629" y="112" fill="#ffffff" font-size="13" text-anchor="middle">50 %</text>
+<text x="178" y="150" fill="#9393a8" font-size="13" text-anchor="end">De 25 a 100 euros</text>
+<rect class="celda" x="190" y="128" width="174" height="36" rx="4" fill="#c0aeee"/>
+<text x="277" y="150" fill="#0a0a0f" font-size="13" text-anchor="middle">15 %</text>
+<rect class="celda" x="366" y="128" width="174" height="36" rx="4" fill="#a68ee2"/>
+<text x="453" y="150" fill="#0a0a0f" font-size="13" text-anchor="middle">25 %</text>
+<rect class="celda" x="542" y="128" width="174" height="36" rx="4" fill="#8f76d4"/>
+<text x="629" y="150" fill="#ffffff" font-size="13" text-anchor="middle">35 %</text>
+<text x="178" y="188" fill="#9393a8" font-size="13" text-anchor="end">Más de 100 euros</text>
+<rect class="celda" x="190" y="166" width="174" height="36" rx="4" fill="#c0aeee"/>
+<text x="277" y="188" fill="#0a0a0f" font-size="13" text-anchor="middle">10 %</text>
+<rect class="celda" x="366" y="166" width="174" height="36" rx="4" fill="#a68ee2"/>
+<text x="453" y="188" fill="#0a0a0f" font-size="13" text-anchor="middle">20 %</text>
+<rect class="celda" x="542" y="166" width="174" height="36" rx="4" fill="#8f76d4"/>
+<text x="629" y="188" fill="#ffffff" font-size="13" text-anchor="middle">30 %</text>
+<text x="178" y="226" fill="#9393a8" font-size="13" text-anchor="end">Alpha, Beta y Unlimited</text>
+<rect class="celda" x="190" y="204" width="174" height="36" rx="4" fill="#a68ee2"/>
+<text x="277" y="226" fill="#0a0a0f" font-size="13" text-anchor="middle">20 %</text>
+<rect class="celda" x="366" y="204" width="174" height="36" rx="4" fill="#7861c0"/>
+<text x="453" y="226" fill="#ffffff" font-size="13" text-anchor="middle">40 %</text>
+<rect class="celda" x="542" y="204" width="174" height="36" rx="4" fill="#4e4276"/>
+<text x="629" y="226" fill="#ffffff" font-size="13" text-anchor="middle">60 %</text>
+<text x="178" y="264" fill="#9393a8" font-size="13" text-anchor="end">Foils</text>
+<rect class="celda" x="190" y="242" width="174" height="36" rx="4" fill="#a68ee2"/>
+<text x="277" y="264" fill="#0a0a0f" font-size="13" text-anchor="middle">25 %</text>
+<rect class="celda" x="366" y="242" width="174" height="36" rx="4" fill="#63509c"/>
+<text x="453" y="264" fill="#ffffff" font-size="13" text-anchor="middle">50 %</text>
+<rect class="celda" x="542" y="242" width="174" height="36" rx="4" fill="#4e4276"/>
+<text x="629" y="264" fill="#ffffff" font-size="13" text-anchor="middle">70 %</text>
+</svg>

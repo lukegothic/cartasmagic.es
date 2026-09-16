@@ -41,6 +41,36 @@ md.renderer.rules.image = (tokens, i, opciones, env, self) => {
   return imagenOriginal(tokens, i, opciones, env, self);
 };
 
+// markdown-it envuelve cada imagen en su propio parrafo, asi que en el HTML el pie no
+// va detras de la <img> sino detras del <p> que la contiene. Un selector img + p no casa
+// nunca, y sin clase el pie se lee con el mismo cuerpo que el texto del articulo.
+const esParrafoDeSoloImagen = (tokens, i) => {
+  const contenido = tokens[i + 1];
+  return (
+    tokens[i].type === 'paragraph_open' &&
+    contenido?.type === 'inline' &&
+    contenido.children?.length > 0 &&
+    contenido.children.every(
+      (hijo) => hijo.type === 'image' || (hijo.type === 'text' && hijo.content.trim() === '')
+    )
+  );
+};
+
+const parrafoOriginal =
+  md.renderer.rules.paragraph_open ||
+  ((tokens, i, opciones, env, self) => self.renderToken(tokens, i, opciones));
+
+md.renderer.rules.paragraph_open = (tokens, i, opciones, env, self) => {
+  // Un parrafo ocupa tres tokens, asi que i - 3 cae en la apertura del bloque anterior.
+  // Que ademas se exija que sea un paragraph_open es lo que descarta las listas, las
+  // tablas y los titulares, donde esa posicion la ocupa otro tipo de token.
+  // Dos fotos seguidas no se comentan entre si: la segunda no es el pie de la primera.
+  if (i >= 3 && esParrafoDeSoloImagen(tokens, i - 3) && !esParrafoDeSoloImagen(tokens, i)) {
+    tokens[i].attrSet('class', 'pie-de-foto');
+  }
+  return parrafoOriginal(tokens, i, opciones, env, self);
+};
+
 // El slug sale del nombre del fichero y acaba tal cual en la URL y en el canonical.
 const SLUG_VALIDO = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 

@@ -525,7 +525,12 @@ footer p {
 }
 
 /* Las guias comparativas alternan foto y pie: la imagen se pega al parrafo que la
-   explica para que se lean como una unidad. */
+   explica para que se lean como una unidad. El pie lo marca el renderizador con una
+   clase, porque markdown envuelve cada imagen en su propio parrafo. */
+.articulo-cuerpo p:has(> img:only-child) {
+    margin: 0;
+}
+
 .articulo-cuerpo img {
     display: block;
     width: 100%;
@@ -535,7 +540,7 @@ footer p {
     margin: 1.5rem 0 0.75rem;
 }
 
-.articulo-cuerpo img + p {
+.articulo-cuerpo .pie-de-foto {
     font-size: 0.88rem;
     color: var(--text-secondary);
     margin-bottom: 1.5rem;

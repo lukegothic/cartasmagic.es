@@ -9,6 +9,10 @@ Casi nadie publica lo que paga de verdad por una colección de Magic. Se habla d
 porcentajes, de precios de referencia y de tasaciones, pero las cifras concretas no
 aparecen en ninguna parte. Estos son nuestros datos.
 
+![Una colección de Magic recién llegada, dentro de la caja en la que la envió su dueño](/blog/informe-mercado-magic-espana/portada-coleccion-recibida.jpg)
+
+Una de las diecinueve colecciones, tal y como llegó.
+
 ## El resumen
 
 Diecinueve colecciones compradas y pagadas, entre enero y septiembre de 2026:
@@ -22,10 +26,9 @@ Diecinueve colecciones compradas y pagadas, entre enero y septiembre de 2026:
 
 De las cartas que hemos valorado una a una:
 
-| | Proporción |
-|---|---|
-| Cartas de 5 euros o más | 14 % |
-| Bulk, cartas por debajo de 5 euros | 86 % |
+![Barra que muestra que el 14 % de las cartas valen 5 euros o más y el 86 % restante es bulk](/blog/informe-mercado-magic-espana/proporcion-valor.svg)
+
+La franja morada es todo lo que sostiene el precio de una colección.
 
 Es la cifra que más sorprende a quien vende. **Casi nueve de cada diez cartas de una
 colección no valen prácticamente nada por separado**, y el valor se concentra en el
@@ -60,6 +63,11 @@ La colección de 26 cartas se pagó a 1.900 euros. Una de casi mil cartas se pag
 Eso resume mejor que nada cómo funciona esto: **el número de cartas no predice el
 valor**. Una caja llena de cartas de los noventa puede valer menos que un sobre con
 quince cartas concretas.
+
+![Nube de puntos con una colección por punto: el número de cartas en el eje horizontal y lo pagado en el vertical, sin relación entre los dos](/blog/informe-mercado-magic-espana/cartas-frente-a-pagado.svg)
+
+Cada punto es una de las diez colecciones de las que tenemos anotado el tamaño. Si el
+número de cartas mandara, los puntos subirían de izquierda a derecha. No lo hacen.
 
 Por eso no pedimos que cuentes ni ordenes nada antes de enviar la colección. Contarlas no
 nos dice lo que necesitamos saber.

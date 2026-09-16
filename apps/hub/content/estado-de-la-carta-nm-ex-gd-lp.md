@@ -10,6 +10,10 @@ Magic](/blog/como-saber-cuanto-vale-una-carta-magic) que depende de ti: la edici
 idioma vienen dados, pero cómo se guardó la colección durante quince años
 no. En una colección cara puede mover el precio final más que cualquier otro factor.
 
+![Cuatro ejemplares de la misma carta Magic alineados, del mejor al peor estado](/blog/estado-de-la-carta-nm-ex-gd-lp/portada-cuatro-estados.jpg)
+
+Las cuatro categorías, una al lado de otra.
+
 ## Las cuatro categorías
 
 En Europa se usan cuatro niveles. Cardmarket, que es la referencia de precios en España,
@@ -21,6 +25,22 @@ trabaja con esta escala:
 | **EX** (Excellent) | Alguna marca mínima en los bordes, visible solo si se busca a contraluz |
 | **GD** (Good) | Desgaste evidente en bordes o esquinas, arañazos leves en la superficie |
 | **LP o peor** (Light Played en adelante) | Desgaste claro, esquinas romas, marcas, curvatura o rayaduras |
+
+![Esquina y borde de una carta en estado Near Mint, sin marcas](/blog/estado-de-la-carta-nm-ex-gd-lp/escala-nm.jpg)
+
+**NM.** El borde negro llega limpio hasta la esquina y no hay ninguna línea blanca.
+
+![Esquina y borde de una carta en estado Excellent, con marcas mínimas](/blog/estado-de-la-carta-nm-ex-gd-lp/escala-ex.jpg)
+
+**EX.** Alguna marca suelta en el borde. Hay que buscarla a contraluz para verla.
+
+![Esquina y borde de una carta en estado Good, con desgaste visible](/blog/estado-de-la-carta-nm-ex-gd-lp/escala-gd.jpg)
+
+**GD.** El desgaste del borde ya se ve de frente y la esquina empieza a redondearse.
+
+![Esquina y borde de una carta en estado Light Played, con la esquina roma](/blog/estado-de-la-carta-nm-ex-gd-lp/escala-lp.jpg)
+
+**LP.** Línea blanca continua en el borde y esquina claramente roma.
 
 Si vienes de listados americanos o japoneses, la equivalencia es esta:
 
@@ -46,6 +66,11 @@ Estos son los porcentajes que aplicamos sobre el precio de la carta en NM:
 | Más de 100 euros | 90 % | 80 % | 70 % |
 | Alpha, Beta y Unlimited | 80 % | 60 % | 40 % |
 | Foils | 75 % | 50 % | 30 % |
+
+![Mapa de la tabla de descuentos: cuanto más oscura la celda, más valor pierde la carta, y la fila de los foils es la más oscura](/blog/estado-de-la-carta-nm-ex-gd-lp/descuento-por-estado.svg)
+
+El mapa enseña la otra cara de la tabla: lo que la carta pierde. Cuanto más oscura la
+celda, más se descuenta. La fila de los foils es la que más se oscurece.
 
 Debajo de la tabla hay tres reglas que merece la pena entender, porque explican bastante
 del mercado.
@@ -78,6 +103,10 @@ Al valorar una carta el orden es siempre el mismo, del defecto más caro al más
    las huellas que de frente no se ven.
 5. **El reverso.** Se revisa igual que la cara. Un reverso con una marca de bolígrafo o
    una mancha convierte la carta en injugable en torneo.
+
+![Una carta Magic curvada apoyada sobre una superficie plana, vista de perfil](/blog/estado-de-la-carta-nm-ex-gd-lp/curvatura-de-perfil.jpg)
+
+De perfil se mide sola: cuánto se levanta del plano es cuánto baja de estado.
 
 ## Dónde se estropean las cartas
 

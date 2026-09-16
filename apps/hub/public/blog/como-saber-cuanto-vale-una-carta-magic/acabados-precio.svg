@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="282" viewBox="0 0 720 282" role="img" aria-labelledby="titulo" font-family="Inter, system-ui, sans-serif">
+<title id="titulo">The One Ring: precio de cada acabado</title>
+
+<text x="0" y="18" fill="#e8e8f0" font-size="16" font-weight="600">The One Ring: precio de cada acabado</text>
+
+<text x="220" y="50" fill="#9393a8" font-size="13" text-anchor="end">Foil especial bundle</text>
+<rect class="barra" x="232" y="34" width="47" height="22" rx="4" fill="#5a5a70"/>
+<text x="289" y="50" fill="#e8e8f0" font-size="13">86 euros</text>
+<text x="220" y="90" fill="#9393a8" font-size="13" text-anchor="end">Normal</text>
+<rect class="barra" x="232" y="74" width="49" height="22" rx="4" fill="#7c5cbf"/>
+<text x="291" y="90" fill="#e8e8f0" font-size="13">89 euros</text>
+<text x="220" y="130" fill="#9393a8" font-size="13" text-anchor="end">Foil</text>
+<rect class="barra" x="232" y="114" width="60" height="22" rx="4" fill="#5a5a70"/>
+<text x="302" y="130" fill="#e8e8f0" font-size="13">109 euros</text>
+<text x="220" y="170" fill="#9393a8" font-size="13" text-anchor="end">Foil de presentación</text>
+<rect class="barra" x="232" y="154" width="113" height="22" rx="4" fill="#5a5a70"/>
+<text x="355" y="170" fill="#e8e8f0" font-size="13">205 euros</text>
+<text x="220" y="210" fill="#9393a8" font-size="13" text-anchor="end">Foil arte extendido</text>
+<rect class="barra" x="232" y="194" width="131" height="22" rx="4" fill="#5a5a70"/>
+<text x="373" y="210" fill="#e8e8f0" font-size="13">238 euros</text>
+<text x="220" y="250" fill="#9393a8" font-size="13" text-anchor="end">Foil &quot;Silver Scroll&quot;</text>
+<rect class="barra" x="232" y="234" width="392" height="22" rx="4" fill="#5a5a70"/>
+<text x="634" y="250" fill="#e8e8f0" font-size="13">714 euros</text>
+</svg>
