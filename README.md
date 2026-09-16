@@ -73,6 +73,7 @@ Lo que hay en `docs/` y conviene leer antes de tocar keywords o dominios:
 | [plan-medicion-embudo.md](docs/plan-medicion-embudo.md) | Qué se mide del embudo y por qué no se lee antes de ocho semanas |
 | [medicion-canales.md](docs/medicion-canales.md) | Cómo se atribuye cada colección al canal que la trajo |
 | [donde-se-cambian-los-textos.md](docs/donde-se-cambian-los-textos.md) | En qué fichero vive cada texto de las aplicaciones y cómo añadir, cambiar o quitar uno |
+| [casos-de-uso-vender.md](docs/casos-de-uso-vender.md) | Los cuatro casos que llegan a la bandeja, qué hacer con cada uno y qué lleva el correo |
 
 ## Despliegue
 
