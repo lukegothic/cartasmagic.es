@@ -6,3 +6,7 @@ npm-debug.log
 test
 .dockerignore
 Dockerfile
+
+# Los marcadores de las fotos que faltan (scripts/marcadores-de-foto.js). Ocupan el hueco
+# en local para revisar la maqueta, pero no pueden publicarse: fuera de la imagen.
+**/*.pendiente.svg

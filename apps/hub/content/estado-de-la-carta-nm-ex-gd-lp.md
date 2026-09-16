@@ -10,7 +10,7 @@ Magic](/blog/como-saber-cuanto-vale-una-carta-magic) que depende de ti: la edici
 idioma vienen dados, pero cómo se guardó la colección durante quince años
 no. En una colección cara puede mover el precio final más que cualquier otro factor.
 
-![Cuatro ejemplares de la misma carta Magic alineados, del mejor al peor estado](/blog/estado-de-la-carta-nm-ex-gd-lp/portada-cuatro-estados.jpg)
+![Cuatro ejemplares de la misma carta Magic alineados, del mejor al peor estado](/blog/estado-de-la-carta-nm-ex-gd-lp/portada-cuatro-estados.pendiente.svg)
 
 Las cuatro categorías, una al lado de otra.
 
@@ -26,19 +26,19 @@ trabaja con esta escala:
 | **GD** (Good) | Desgaste evidente en bordes o esquinas, arañazos leves en la superficie |
 | **LP o peor** (Light Played en adelante) | Desgaste claro, esquinas romas, marcas, curvatura o rayaduras |
 
-![Esquina y borde de una carta en estado Near Mint, sin marcas](/blog/estado-de-la-carta-nm-ex-gd-lp/escala-nm.jpg)
+![Esquina y borde de una carta en estado Near Mint, sin marcas](/blog/estado-de-la-carta-nm-ex-gd-lp/escala-nm.pendiente.svg)
 
 **NM.** El borde negro llega limpio hasta la esquina y no hay ninguna línea blanca.
 
-![Esquina y borde de una carta en estado Excellent, con marcas mínimas](/blog/estado-de-la-carta-nm-ex-gd-lp/escala-ex.jpg)
+![Esquina y borde de una carta en estado Excellent, con marcas mínimas](/blog/estado-de-la-carta-nm-ex-gd-lp/escala-ex.pendiente.svg)
 
 **EX.** Alguna marca suelta en el borde. Hay que buscarla a contraluz para verla.
 
-![Esquina y borde de una carta en estado Good, con desgaste visible](/blog/estado-de-la-carta-nm-ex-gd-lp/escala-gd.jpg)
+![Esquina y borde de una carta en estado Good, con desgaste visible](/blog/estado-de-la-carta-nm-ex-gd-lp/escala-gd.pendiente.svg)
 
 **GD.** El desgaste del borde ya se ve de frente y la esquina empieza a redondearse.
 
-![Esquina y borde de una carta en estado Light Played, con la esquina roma](/blog/estado-de-la-carta-nm-ex-gd-lp/escala-lp.jpg)
+![Esquina y borde de una carta en estado Light Played, con la esquina roma](/blog/estado-de-la-carta-nm-ex-gd-lp/escala-lp.pendiente.svg)
 
 **LP.** Línea blanca continua en el borde y esquina claramente roma.
 
@@ -104,7 +104,7 @@ Al valorar una carta el orden es siempre el mismo, del defecto más caro al más
 5. **El reverso.** Se revisa igual que la cara. Un reverso con una marca de bolígrafo o
    una mancha convierte la carta en injugable en torneo.
 
-![Una carta Magic curvada apoyada sobre una superficie plana, vista de perfil](/blog/estado-de-la-carta-nm-ex-gd-lp/curvatura-de-perfil.jpg)
+![Una carta Magic curvada apoyada sobre una superficie plana, vista de perfil](/blog/estado-de-la-carta-nm-ex-gd-lp/curvatura-de-perfil.pendiente.svg)
 
 De perfil se mide sola: cuánto se levanta del plano es cuánto baja de estado.
 

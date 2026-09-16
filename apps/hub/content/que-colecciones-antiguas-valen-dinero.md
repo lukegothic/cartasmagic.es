@@ -19,7 +19,7 @@ por kilos.
 La buena noticia es que separar unas de otras no exige saber de Magic. Basta con mirar el
 borde.
 
-![Dos cartas Magic de los noventa juntas, una con el borde blanco y otra con el borde negro](/blog/que-colecciones-antiguas-valen-dinero/portada-borde-blanco-y-negro.jpg)
+![Dos cartas Magic de los noventa juntas, una con el borde blanco y otra con el borde negro](/blog/que-colecciones-antiguas-valen-dinero/portada-borde-blanco-y-negro.pendiente.svg)
 
 La diferencia que más dinero mueve en una colección antigua se ve sin leer nada.
 

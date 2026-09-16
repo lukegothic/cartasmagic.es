@@ -67,10 +67,18 @@ test('ninguna foto se queda sin texto alternativo', () => {
 
 // Las fotos pendientes solo pueden estar en la lista mientras sigan referenciadas por
 // un articulo. Una entrada que sobra es una foto que alguien va a hacer para nada.
+//
+// Mientras la foto no existe, el articulo no enlaza el JPEG que la lista anota sino el
+// marcador que ocupa su sitio, que es el mismo nombre acabado en .pendiente.svg. Cuentan
+// los dos:
+// lo que se comprueba es que alguien sigue pidiendo esa foto, no con que extension.
 test('la lista de pendientes no arrastra fotos que ya no pide ningun articulo', () => {
   const referenciadas = new Set(imagenesDeLosArticulos().map(({ ruta }) => ruta));
 
-  const sobran = [...rutasPendientes()].filter((ruta) => !referenciadas.has(ruta));
+  const sobran = [...rutasPendientes()].filter(
+    (ruta) =>
+      !referenciadas.has(ruta) && !referenciadas.has(ruta.replace(/\.jpg$/, '.pendiente.svg'))
+  );
 
   assert.deepEqual(sobran, []);
 });

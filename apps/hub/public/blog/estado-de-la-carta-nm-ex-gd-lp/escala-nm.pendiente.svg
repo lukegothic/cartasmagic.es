@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="540" viewBox="0 0 720 540" role="img" aria-labelledby="titulo" font-family="Inter, system-ui, sans-serif">
+<title id="titulo">Foto pendiente: esquina superior izquierda de una carta impecable. El borde negro llega entero hasta el vértice, sin una sola línea blanca, y la esquina acaba en punta.</title>
+<rect width="720" height="540" fill="#15151f"/>
+<rect x="1" y="1" width="718" height="538" fill="none" stroke="#2a2a3a" stroke-width="2" stroke-dasharray="10 8"/>
+<path d="M1 1 L719 539 M719 1 L1 539" stroke="#2a2a3a" stroke-width="2"/>
+
+<rect x="40" y="189" width="640" height="162" fill="#15151f"/>
+<text x="360" y="223" fill="#5a5a70" font-size="13" letter-spacing="1.5" text-anchor="middle">FOTO PENDIENTE</text>
+<text x="360" y="255" fill="#9393a8" font-size="17" text-anchor="middle">esquina superior izquierda de una carta impecable.</text>
+<text x="360" y="281" fill="#9393a8" font-size="17" text-anchor="middle">El borde negro llega entero hasta el vértice, sin</text>
+<text x="360" y="307" fill="#9393a8" font-size="17" text-anchor="middle">una sola línea blanca, y la esquina acaba en punta.</text>
+<text x="360" y="333" fill="#5a5a70" font-size="13" font-family="ui-monospace, monospace" text-anchor="middle">/blog/estado-de-la-carta-nm-ex-gd-lp/escala-nm.jpg</text>
+</svg>

@@ -9,7 +9,7 @@ Casi nadie publica lo que paga de verdad por una colección de Magic. Se habla d
 porcentajes, de precios de referencia y de tasaciones, pero las cifras concretas no
 aparecen en ninguna parte. Estos son nuestros datos.
 
-![Una colección de Magic recién llegada, dentro de la caja en la que la envió su dueño](/blog/informe-mercado-magic-espana/portada-coleccion-recibida.jpg)
+![Una colección de Magic recién llegada, dentro de la caja en la que la envió su dueño](/blog/informe-mercado-magic-espana/portada-coleccion-recibida.pendiente.svg)
 
 Una de las diecinueve colecciones, tal y como llegó.
 

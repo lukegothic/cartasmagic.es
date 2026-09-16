@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="540" viewBox="0 0 720 540" role="img" aria-labelledby="titulo" font-family="Inter, system-ui, sans-serif">
+<title id="titulo">Foto pendiente: las cuatro cartas en fila, de mejor a peor de izquierda a derecha, vistas desde arriba. Enteras, no en detalle: aquí se enseña que existe una escala, no cada defecto.</title>
+<rect width="720" height="540" fill="#15151f"/>
+<rect x="1" y="1" width="718" height="538" fill="none" stroke="#2a2a3a" stroke-width="2" stroke-dasharray="10 8"/>
+<path d="M1 1 L719 539 M719 1 L1 539" stroke="#2a2a3a" stroke-width="2"/>
+
+<rect x="40" y="176" width="640" height="188" fill="#15151f"/>
+<text x="360" y="210" fill="#5a5a70" font-size="13" letter-spacing="1.5" text-anchor="middle">FOTO PENDIENTE</text>
+<text x="360" y="242" fill="#9393a8" font-size="17" text-anchor="middle">las cuatro cartas en fila, de mejor a peor de</text>
+<text x="360" y="268" fill="#9393a8" font-size="17" text-anchor="middle">izquierda a derecha, vistas desde arriba. Enteras,</text>
+<text x="360" y="294" fill="#9393a8" font-size="17" text-anchor="middle">no en detalle: aquí se enseña que existe una escala,</text>
+<text x="360" y="320" fill="#9393a8" font-size="17" text-anchor="middle">no cada defecto.</text>
+<text x="360" y="346" fill="#5a5a70" font-size="13" font-family="ui-monospace, monospace" text-anchor="middle">/blog/estado-de-la-carta-nm-ex-gd-lp/portada-cuatro-estados.jpg</text>
+</svg>

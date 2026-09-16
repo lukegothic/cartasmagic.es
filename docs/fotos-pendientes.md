@@ -15,6 +15,28 @@ Mientras una ruta siga en este documento, `npm test` la admite como hueco conoci
 copiar la foto hay que borrar su línea de aquí. Si se borra la línea sin hacer la foto, la
 prueba se pone en rojo, que es justo lo que tiene que pasar.
 
+## Los marcadores que ocupan el hueco
+
+Mientras la foto no existe, el artículo enseña un marcador: un rectángulo con el aspa, la
+descripción del encuadre y la ruta rotulada encima. Sirve para revisar la maqueta con las
+medidas definitivas sin tener la cámara delante, y no se parece a una foto a propósito.
+
+Los escribe `node scripts/marcadores-de-foto.js` leyendo este documento, así que la lista
+manda y el script no lleva rutas propias. El marcador se guarda junto a la foto que espera,
+con su mismo nombre acabado en `.pendiente.svg`, y es lo que enlaza el markdown mientras
+dura el hueco.
+
+Ese sufijo es lo que los mantiene fuera de producción: `.dockerignore` deja fuera de la
+imagen todo lo que acabe en `.pendiente.svg`, así que el marcador se ve en la máquina de
+trabajo y no llega al servidor. Al cambiar el sufijo hay que cambiar también la regla de ahí.
+
+La contrapartida hay que saberla: mientras la foto no esté, en el sitio publicado ese hueco
+sale como una imagen rota. El marcador solo arregla la revisión antes de publicar.
+
+Al hacer la foto de verdad hay que copiar el JPEG a su ruta, borrar la línea de la lista,
+borrar el marcador y cambiar la extensión en la etiqueta del artículo. Las cuatro cosas: si
+falta alguna, `npm test` lo dice.
+
 ## Especificación común
 
 Vale para todas salvo que su bloque diga otra cosa.

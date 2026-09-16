@@ -10,7 +10,7 @@ quince años en un armario, ve un dragón con el borde negro y quiere saber si t
 La respuesta corta es que la ilustración no dice nada del precio. Lo dicen otras siete
 cosas.
 
-![Varias cartas Magic extendidas sobre una mesa, de ediciones y acabados diferentes](/blog/como-saber-cuanto-vale-una-carta-magic/portada-cartas-sobre-mesa.jpg)
+![Varias cartas Magic extendidas sobre una mesa, de ediciones y acabados diferentes](/blog/como-saber-cuanto-vale-una-carta-magic/portada-cartas-sobre-mesa.pendiente.svg)
 
 La ilustración es lo primero que se mira y lo que menos dice del precio.
 
@@ -139,7 +139,7 @@ La misma carta, seis de sus acabados, del entorno de los 86 euros a los 714. Y e
 queda corta: la versión numerada del póster, con la tirada limitada a unos pocos
 ejemplares, se mueve por encima de los 4.000 euros.
 
-![Varios acabados de la misma carta Magic juntos, cada uno con un brillo diferente](/blog/como-saber-cuanto-vale-una-carta-magic/acabados-la-misma-carta.jpg)
+![Varios acabados de la misma carta Magic juntos, cada uno con un brillo diferente](/blog/como-saber-cuanto-vale-una-carta-magic/acabados-la-misma-carta.pendiente.svg)
 
 Los acabados de una misma carta, en orden de precio. La diferencia entre el más barato y
 el más caro son casi setecientos euros.
@@ -154,7 +154,7 @@ Y hay un caso en el que el foil juega en contra: en las cartas antiguas es frecu
 estén curvadas, y una carta curvada baja de estado. Un foil de los primeros años en mal
 estado puede valer menos que la versión normal en buen estado.
 
-![Un foil antiguo de Magic visiblemente curvado junto a una carta normal plana](/blog/como-saber-cuanto-vale-una-carta-magic/foil-antiguo-curvado.jpg)
+![Un foil antiguo de Magic visiblemente curvado junto a una carta normal plana](/blog/como-saber-cuanto-vale-una-carta-magic/foil-antiguo-curvado.pendiente.svg)
 
 Un foil de los primeros años, curvado. Al lado, la versión normal sin curvar.
 

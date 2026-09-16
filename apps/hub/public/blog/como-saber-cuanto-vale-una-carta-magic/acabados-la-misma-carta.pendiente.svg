@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="540" viewBox="0 0 720 540" role="img" aria-labelledby="titulo" font-family="Inter, system-ui, sans-serif">
+<title id="titulo">Foto pendiente: los acabados que haya de una misma carta, en fila y en el mismo orden que el gráfico, de menos a más caro. Cada uno con un brillo distinto y todos reconocibles como la misma ilustración.</title>
+<rect width="720" height="540" fill="#15151f"/>
+<rect x="1" y="1" width="718" height="538" fill="none" stroke="#2a2a3a" stroke-width="2" stroke-dasharray="10 8"/>
+<path d="M1 1 L719 539 M719 1 L1 539" stroke="#2a2a3a" stroke-width="2"/>
+
+<rect x="40" y="176" width="640" height="188" fill="#15151f"/>
+<text x="360" y="210" fill="#5a5a70" font-size="13" letter-spacing="1.5" text-anchor="middle">FOTO PENDIENTE</text>
+<text x="360" y="242" fill="#9393a8" font-size="17" text-anchor="middle">los acabados que haya de una misma carta, en fila y</text>
+<text x="360" y="268" fill="#9393a8" font-size="17" text-anchor="middle">en el mismo orden que el gráfico, de menos a más</text>
+<text x="360" y="294" fill="#9393a8" font-size="17" text-anchor="middle">caro. Cada uno con un brillo distinto y todos</text>
+<text x="360" y="320" fill="#9393a8" font-size="17" text-anchor="middle">reconocibles como la misma ilustración.</text>
+<text x="360" y="346" fill="#5a5a70" font-size="13" font-family="ui-monospace, monospace" text-anchor="middle">/blog/como-saber-cuanto-vale-una-carta-magic/acabados-la-misma-carta.jpg</text>
+</svg>
