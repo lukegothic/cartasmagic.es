@@ -5,11 +5,16 @@
 // Aqui solo va el texto. El HTML que lo envuelve vive en correo-plantilla.js y las etiquetas
 // de los datos del formulario se montan en notas.js, que son maquetacion y no prosa.
 
+const { enlaceCorreo } = require('./enlaces-correo');
+
 const FIRMA = {
   despedida: 'Un saludo,',
   nombre: 'Iván',
   sitio: 'vendercartasmagic.es',
-  url: 'https://vendercartasmagic.es'
+  // Sin medir, quien vuelve al sitio desde la firma llega como trafico directo y no se
+  // distingue de quien teclea el dominio. La campaña la pone cada correo, que es el dato
+  // que interesa: de cual de los dos sale la visita.
+  url: (campana) => enlaceCorreo('https://vendercartasmagic.es', campana)
 };
 
 // Los pasos van dentro del adjunto y no en el correo porque el adjunto es lo unico que se
@@ -63,7 +68,7 @@ const PLAZO_ETIQUETA = {
 const APROVECHAR_CAJA = {
   // Las 1.000 cartas no son un limite como el peso o las medidas, que los mide Correos: son
   // una estimacion y solo sirven para persuadir, por eso no salen de LIMITES_PAQUETE.
-  intro: 'En una caja de ese tamaño caben unas 1.000 cartas, y sale mejor mandarla llena: cuantas más cartas valoremos de una vez, más alta es la oferta. Merece la pena revisar cajas y carpetas antes de cerrarla, sobre todo si aparecen cartas raras, foils o cartas de ediciones antiguas, que son las que más suben la valoración.',
+  intro: 'En una caja de ese tamaño caben unas 1.000 cartas, y sale mejor mandarla llena: cuantas más cartas valoremos de una vez, más alta es la oferta. Merece la pena revisar cajas y carpetas antes de cerrarla, sobre todo si aparecen cartas raras, foils o cartas de ediciones antiguas, que son las que más aumentan la valoración.',
   // El precio de ManaBox sale de una lista cerrada, asi que hay que decir de antemano que lo
   // que llegue de mas no va de regalo.
   extras: 'Si metes cartas que no estaban en la lista, las valoramos aparte y te sumamos lo que salga a la oferta.'
@@ -132,8 +137,8 @@ const MANABOX = {
   porQueBaja: {
     intro: 'Si tus cartas están jugadas o son de otro idioma, valen menos. En la web lo tenemos explicado con gráficos:',
     enlaces: [
-      { texto: 'Cuánto pierde una carta según su estado (NM, EX, GD, LP)', url: 'https://cartasmagic.es/blog/estado-de-la-carta-nm-ex-gd-lp' },
-      { texto: 'Qué establece el precio de una carta, incluido el idioma', url: 'https://cartasmagic.es/blog/como-saber-cuanto-vale-una-carta-magic' }
+      { texto: 'Cuánto pierde una carta según su estado (NM, EX, GD, LP)', url: enlaceCorreo('https://cartasmagic.es/blog/estado-de-la-carta-nm-ex-gd-lp', 'correo-manabox-estados') },
+      { texto: 'Qué establece el precio de una carta, incluido el idioma', url: enlaceCorreo('https://cartasmagic.es/blog/como-saber-cuanto-vale-una-carta-magic', 'correo-manabox-valor') }
     ]
   },
   limite: (peso, medidas) =>

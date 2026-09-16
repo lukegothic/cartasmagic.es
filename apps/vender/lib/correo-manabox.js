@@ -91,7 +91,7 @@ const componerCorreoMazo = ({ lead, mazo, cartas, entorno = process.env }) => {
     }),
     replyTo: lead.email,
     text: cuerpoTexto(partes),
-    html: envolver(cuerpoHtml(partes)),
+    html: envolver(cuerpoHtml(partes), 'correo-manabox-firma'),
     attachments: [
       notas({ ...partes, csv }),
       {

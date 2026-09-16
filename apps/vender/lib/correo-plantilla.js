@@ -10,17 +10,20 @@ const escaparHtml = (texto) =>
 const euros = (valor) =>
   valor.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: 'always' });
 
-const FIRMA_HTML = `  <p style="font-size:16px;margin:0;">${FIRMA.despedida}<br>${FIRMA.nombre}<br><a href="${FIRMA.url}" style="color:#f5901e;">${FIRMA.sitio}</a></p>`;
+// La campaña la pone quien envuelve el correo: el enlace es el mismo en los dos, y sin
+// ella no se sabria de cual sale la visita.
+const firmaHtml = (campana) =>
+  `  <p style="font-size:16px;margin:0;">${FIRMA.despedida}<br>${FIRMA.nombre}<br><a href="${FIRMA.url(campana)}" style="color:#f5901e;">${FIRMA.sitio}</a></p>`;
 
 const firmaTexto = () => [FIRMA.despedida, FIRMA.nombre, FIRMA.sitio];
 
-const envolver = (cuerpo) => `<!doctype html>
+const envolver = (cuerpo, campana) => `<!doctype html>
 <html lang="es">
 <body style="margin:0;padding:24px;background:#f5f5f5;font-family:Arial,Helvetica,sans-serif;color:#333;">
 <div style="max-width:600px;margin:0 auto;background:#fff;border-radius:8px;padding:32px;">
 ${cuerpo}
 
-${FIRMA_HTML}
+${firmaHtml(campana)}
 </div>
 </body>
 </html>`;

@@ -60,7 +60,7 @@ const componerCorreoPostal = (datos) => ({
   subject: asunto(datos),
   replyTo: datos.email,
   text: cuerpoTexto(datos),
-  html: envolver(cuerpoHtml(datos)),
+  html: envolver(cuerpoHtml(datos), 'correo-postal-firma'),
   attachments: [notas(datos)]
 });
 

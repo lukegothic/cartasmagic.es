@@ -84,6 +84,25 @@ Un enlace en el pie hacia las guias, con `utm_source=vendercartasmagic`,
 `utm_medium=footer` y `utm_campaign=guias`. Sin el, el enlazado solo iba en una
 direccion y el blog no recibia nada del trafico que vender ya tiene.
 
+### De los correos al cliente
+
+Los dos correos que se reenvian al cliente llevan enlaces, y los construye
+`apps/vender/lib/enlaces-correo.js`. Comparten `utm_source=correo` y `utm_medium=email`.
+
+| Correo | Enlace | utm_campaign |
+|---|---|---|
+| Postal | Firma | `correo-postal-firma` |
+| ManaBox | Firma | `correo-manabox-firma` |
+| ManaBox | Guia de estados | `correo-manabox-estados` |
+| ManaBox | Guia de valoracion | `correo-manabox-valor` |
+
+La firma tambien va medida aunque apunte al propio dominio: quien vuelve al sitio desde la
+bandeja de entrada llega si no como trafico directo, sin forma de separarlo de quien teclea
+la direccion.
+
+La campaña nombra el correo y el enlace, no solo el destino, porque la firma sale en los dos
+y con el destino solo no se sabria de cual viene la visita.
+
 ### Que se responde con esto
 
 En GA4, filtrando por `session_campaign`, se puede saber que articulo trae visitas que
