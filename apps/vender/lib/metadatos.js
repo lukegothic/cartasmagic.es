@@ -199,6 +199,19 @@ const contactoLdJson = () =>
     }
   });
 
+// Pagina interna: no se indexa, no esta en el sitemap y nadie llega a ella desde fuera, asi
+// que no lleva ni description trabajada ni og ni schema.org. Solo lo que el layout exige
+// para pintarse sin romperse.
+const PRIVADA = {
+  title: 'Valoración instantánea',
+  description: '',
+  keywords: '',
+  canonical: `${DOMINIO}/interno/valoracion`,
+  og_title: 'Valoración instantánea',
+  og_description: '',
+  og_url: `${DOMINIO}/interno/valoracion`
+};
+
 module.exports = {
   INDEX, indexLdJson,
   COMPARATIVA, comparativaLdJson,
@@ -206,5 +219,6 @@ module.exports = {
   MANABOX, manaboxLdJson,
   HOTLIST, hotlistLdJson,
   AVISO_LEGAL, avisoLegalLdJson,
-  CONTACTO, contactoLdJson
+  CONTACTO, contactoLdJson,
+  PRIVADA
 };

@@ -906,3 +906,61 @@ ol.plain-list li::before {
     color: var(--mtg-text-muted);
     font-size: 0.95em;
 }
+
+/* Pagina interna de valoracion. No la ve ningun cliente, asi que solo busca que las cifras
+   se lean de un vistazo y que las tablas quepan en el movil. */
+.privada-titulo-mazo {
+    font-family: var(--font-heading);
+    font-size: 1.2em;
+    margin: 0 0 1rem;
+}
+
+.privada-oferta-etiqueta {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.8em;
+    color: var(--mtg-text-muted);
+    margin: 0;
+}
+
+.privada-oferta {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: var(--mtg-primary);
+    margin: 0.2rem 0 1rem;
+}
+
+.privada-cifras {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.5rem;
+}
+
+.privada-aviso {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--mtg-primary);
+    background: rgba(245, 144, 30, 0.08);
+}
+
+.privada-tabla {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.privada-tabla th,
+.privada-tabla td {
+    border: 1px solid var(--mtg-border);
+    padding: 6px 8px;
+    text-align: left;
+    font-size: 0.9em;
+    white-space: nowrap;
+}
+
+.privada-tabla th {
+    background-color: var(--mtg-bg-dark);
+}

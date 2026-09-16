@@ -16,6 +16,10 @@ app.use(express.static('public'));
 // Rutas principales
 require('./routes/main')(app);
 
+// Herramienta interna, detras de la clave de VALORACION_PRIVADA_PASSWORD. Fuera del
+// sitemap y bloqueada en robots.txt, pero lo que la cierra de verdad es la clave.
+require('./routes/valoracion-privada').montarValoracionPrivada(app);
+
 // Health check (útil para monitorizar)
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });

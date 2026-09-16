@@ -1,0 +1,92 @@
+<div class="main-container main-container-narrow">
+    <h1><%= textos.PRIVADA.h1 %></h1>
+    <p class="text-muted"><%= textos.PRIVADA.intro %></p>
+
+    <div class="mtg-card mtg-card-margin">
+        <% if (errorCode) { %>
+        <div class="form-feedback" role="alert">
+            <p><%= mensajeError %></p>
+        </div>
+        <% } %>
+
+        <form class="lead-form" method="get" action="/interno/valoracion">
+            <label for="url"><%= textos.PRIVADA.urlLabel %></label>
+            <input type="url" id="url" name="url" required autofocus placeholder="<%= textos.FORMULARIO.url.placeholder %>" value="<%= url %>">
+            <button type="submit" class="btn-mythic"><%= textos.PRIVADA.boton %></button>
+        </form>
+    </div>
+
+    <% if (presupuesto) { %>
+    <div class="mtg-card mtg-card-margin">
+        <p class="privada-titulo-mazo"><%= [mazo.nombre, mazo.formato].filter(Boolean).join(' - ') %></p>
+
+        <p class="privada-oferta-etiqueta"><%= textos.PRIVADA.resultado.ofertaEtiqueta %></p>
+        <p class="privada-oferta"><%= euros(presupuesto.oferta) %> €</p>
+
+        <ul class="privada-cifras">
+            <li><%= textos.PRIVADA.resultado.mercado %>: <strong><%= euros(presupuesto.valorMercado) %> €</strong></li>
+            <li><%= textos.PRIVADA.resultado.porcentaje %>: <strong><%= porcentaje %> %</strong></li>
+            <li><%= textos.PRIVADA.resultado.cartas %>: <strong><%= presupuesto.totalCartas %></strong></li>
+            <li><%= textos.PRIVADA.resultado.foils %>: <strong><%= presupuesto.totalFoils %></strong></li>
+        </ul>
+
+        <% if (presupuesto.bajoMinimo) { %>
+        <p class="privada-aviso" role="status"><%= textos.PRIVADA.resultado.bajoMinimo %></p>
+        <% } %>
+
+        <p><a class="btn-mythic" href="/interno/valoracion.csv?url=<%= encodeURIComponent(url) %>"><%= textos.PRIVADA.botonCsv %></a></p>
+    </div>
+
+    <div class="mtg-card mtg-card-margin">
+        <h2><%= textos.PRIVADA.resultado.tramosTitulo %></h2>
+        <div class="table-container">
+            <table class="privada-tabla">
+                <thead>
+                    <tr>
+                        <th><%= textos.PRIVADA.resultado.columnas.tramo %></th>
+                        <th><%= textos.PRIVADA.resultado.columnas.cartas %></th>
+                        <th><%= textos.PRIVADA.resultado.columnas.mercado %></th>
+                        <th><%= textos.PRIVADA.resultado.columnas.oferta %></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% presupuesto.tramos.filter(({ cartas }) => cartas > 0).forEach((tramo) => { %>
+                    <tr>
+                        <td><%= tramo.etiqueta %></td>
+                        <td><%= tramo.cartas %></td>
+                        <td><%= euros(tramo.valorMercado) %> €</td>
+                        <td><%= euros(tramo.oferta) %> €</td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="mtg-card mtg-card-margin">
+        <h2><%= textos.PRIVADA.resultado.masCarasTitulo %></h2>
+        <div class="table-container">
+            <table class="privada-tabla">
+                <thead>
+                    <tr>
+                        <th><%= textos.PRIVADA.resultado.columnas.carta %></th>
+                        <th><%= textos.PRIVADA.resultado.columnas.edicion %></th>
+                        <th><%= textos.PRIVADA.resultado.columnas.cartas %></th>
+                        <th><%= textos.PRIVADA.resultado.columnas.precio %></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% masCaras.forEach((carta) => { %>
+                    <tr>
+                        <td><%= carta.nombre %><%= carta.esFoil ? ' (foil)' : '' %></td>
+                        <td><%= carta.set %></td>
+                        <td><%= carta.cantidad %></td>
+                        <td><%= euros(carta.precio) %> €</td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <% } %>
+</div>

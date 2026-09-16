@@ -345,6 +345,36 @@ const CONTACTO = {
 // El texto de cada error de validacion. La vista solo pide el mensaje por su codigo, asi
 // que anadir una validacion nueva no obliga a tocar cada formulario. La funcion que los
 // resuelve vive en mensajes-error.js.
+// Pagina interna, detras de la clave. No lleva la copy de venta de las otras: aqui solo se
+// mira un mazo y se leen las cifras, asi que el texto es el de una herramienta y no el de
+// una pagina que tiene que convencer a nadie.
+const PRIVADA = {
+  h1: 'Valoración instantánea',
+  intro: 'Pega el enlace de un mazo de ManaBox y se calcula la oferta con los tramos que haya configurados ahora mismo',
+  boton: 'Calcular',
+  botonCsv: 'Descargar el desglose en csv',
+  urlLabel: 'Enlace del mazo en ManaBox',
+  resultado: {
+    ofertaEtiqueta: 'Se paga',
+    mercado: 'Valor de mercado',
+    porcentaje: 'Porcentaje sobre mercado',
+    cartas: 'Cartas',
+    foils: 'Foils',
+    bajoMinimo: 'Por debajo de la oferta mínima',
+    tramosTitulo: 'Desglose por tramo',
+    masCarasTitulo: 'Cartas más caras',
+    columnas: {
+      tramo: 'Tramo',
+      cartas: 'Cartas',
+      mercado: 'Mercado',
+      oferta: 'Se paga',
+      carta: 'Carta',
+      edicion: 'Edición',
+      precio: 'Precio'
+    }
+  }
+};
+
 const ERRORES = {
   CAMPOS_OBLIGATORIOS: 'Faltan campos por rellenar',
   EMAIL_NO_VALIDO: 'El correo no es válido',
@@ -363,5 +393,5 @@ const ERROR_GENERICO = 'No se ha podido completar la operación. Prueba otra vez
 
 module.exports = {
   MARCA, PIE, PROCESO_FAQ, PORTADA, FORMULARIO, ENVIANDO, VALORACION, MANABOX,
-  ATAJO_MANABOX, COMPARATIVA, HOTLIST, AVISO_LEGAL, CONTACTO, ERRORES, ERROR_GENERICO
+  ATAJO_MANABOX, COMPARATIVA, HOTLIST, AVISO_LEGAL, CONTACTO, PRIVADA, ERRORES, ERROR_GENERICO
 };
