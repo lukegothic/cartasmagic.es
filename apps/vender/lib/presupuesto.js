@@ -6,13 +6,23 @@
 // La etiqueta llega al cliente, en el csv del presupuesto, pero no se lleva a
 // textos-correo.js: describe el corte de su propia fila y se lee al lado de el. Separarlas
 // deja cambiar un corte sin tocar su etiqueta, y el csv pasaria a mentir sin que falle nada.
+// El bulk se parte en dos porque una rara de bulk se revende y una comun no. Es lo que
+// hacen las tiendas europeas que publican sus tarifas, con un factor de diez entre una y
+// otra. La rareza la trae ManaBox en cada carta, asi que el corte no cuesta nada.
 const TRAMOS = [
-  { id: 'premium', desde: 20, variable: 'TRAMO_PREMIUM_PCT', porDefecto: 60, etiqueta: 'Cartas de 20 € o más' },
-  { id: 'alta', desde: 5, variable: 'TRAMO_ALTA_PCT', porDefecto: 50, etiqueta: 'Cartas de 5 a 20 €' },
+  { id: 'premium', desde: 20, variable: 'TRAMO_PREMIUM_PCT', porDefecto: 70, etiqueta: 'Cartas de 20 € o más' },
+  { id: 'alta', desde: 5, variable: 'TRAMO_ALTA_PCT', porDefecto: 60, etiqueta: 'Cartas de 5 a 20 €' },
   { id: 'media', desde: 1, variable: 'TRAMO_MEDIA_PCT', porDefecto: 35, etiqueta: 'Cartas de 1 a 5 €' },
-  { id: 'baja', desde: 0.3, variable: 'TRAMO_BAJA_PCT', porDefecto: 20, etiqueta: 'Cartas de 0,30 a 1 €' },
-  { id: 'bulk', desde: 0, variable: 'TRAMO_BULK_EUR', porDefecto: 0.02, porUnidad: true, etiqueta: 'Bulk (menos de 0,30 €)' }
+  { id: 'baja', desde: 0.5, variable: 'TRAMO_BAJA_PCT', porDefecto: 20, etiqueta: 'Cartas de 0,50 a 1 €' },
+  { id: 'bulkRara', desde: 0, soloRaras: true, variable: 'TRAMO_BULK_RARA_EUR', porDefecto: 0.05, porUnidad: true, etiqueta: 'Bulk de rara o mítica (menos de 0,50 €)' },
+  { id: 'bulk', desde: 0, variable: 'TRAMO_BULK_EUR', porDefecto: 0.005, porUnidad: true, etiqueta: 'Bulk de común o infrecuente (menos de 0,50 €)' }
 ];
+
+// Las que ManaBox marca como rara o mitica. Una carta sin rareza cae en la tarifa de
+// comun: el dato que falta nunca debe cobrar de mas.
+const RAREZAS_ALTAS = ['rare', 'mythic'];
+
+const esRara = (rareza) => RAREZAS_ALTAS.includes(String(rareza ?? '').trim().toLowerCase());
 
 const OFERTA_MINIMA_POR_DEFECTO = 50;
 const PORCENTAJE_MAXIMO = 100;
@@ -31,11 +41,11 @@ const numeroValido = (bruto, porDefecto, maximo) => {
 };
 
 const leerTramos = (entorno = process.env) =>
-  TRAMOS.map(({ id, desde, variable, porDefecto, porUnidad, etiqueta }) => {
+  TRAMOS.map(({ id, desde, soloRaras, variable, porDefecto, porUnidad, etiqueta }) => {
     const valor = numeroValido(entorno[variable], porDefecto, porUnidad ? Infinity : PORCENTAJE_MAXIMO);
     return porUnidad
-      ? { id, desde, etiqueta, porUnidad: valor }
-      : { id, desde, etiqueta, porcentaje: valor / 100 };
+      ? { id, desde, soloRaras, etiqueta, porUnidad: valor }
+      : { id, desde, soloRaras, etiqueta, porcentaje: valor / 100 };
   });
 
 const leerOfertaMinima = (entorno = process.env) =>
@@ -50,8 +60,8 @@ const calcularPresupuesto = (cartas, entorno = process.env) => {
   const tramos = leerTramos(entorno);
   const acumulado = new Map(tramos.map(({ id }) => [id, { cartas: 0, valorMercado: 0, oferta: 0 }]));
 
-  cartas.forEach(({ precio, cantidad }) => {
-    const tramo = tramos.find(({ desde }) => precio >= desde);
+  cartas.forEach(({ precio, cantidad, rareza }) => {
+    const tramo = tramos.find(({ desde, soloRaras }) => precio >= desde && (!soloRaras || esRara(rareza)));
     const fila = acumulado.get(tramo.id);
     fila.cartas += cantidad;
     fila.valorMercado += precio * cantidad;

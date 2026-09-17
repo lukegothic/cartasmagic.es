@@ -11,7 +11,7 @@ test('la primera fila son las cabeceras', () => {
 
 test('cada carta sale con su tramo y lo que se paga', () => {
   const filas = componerDesgloseCsv([carta({ precio: 100, cantidad: 2 })]).split('\r\n');
-  assert.equal(filas[1], '2;Sol Ring;C21;Uncommon;No;100,00;200,00;Cartas de 20 EUR o mas;120,00');
+  assert.equal(filas[1], '2;Sol Ring;C21;Uncommon;No;100,00;200,00;Cartas de 20 EUR o mas;140,00');
 });
 
 test('las foil se marcan', () => {
@@ -43,7 +43,7 @@ test('una comilla en el nombre se escapa doblandola', () => {
 
 test('el pie totaliza mercado y oferta', () => {
   const csv = componerDesgloseCsv([carta({ precio: 100 }), carta({ precio: 10 })]);
-  assert.match(csv, /TOTAL;;;;;;110,00;;65,00/);
+  assert.match(csv, /TOTAL;;;;;;110,00;;76,00/);
 });
 
 test('una formula en el nombre no se ejecuta al abrir la hoja', () => {

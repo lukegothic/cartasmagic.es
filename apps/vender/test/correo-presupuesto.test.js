@@ -14,7 +14,7 @@ const base = {
 test('el asunto lleva la oferta y a quien va dirigido', () => {
   const c = componerCorreoMazo(base);
   assert.match(c.subject, /Pepe/);
-  assert.match(c.subject, /219,69/);
+  assert.match(c.subject, /256,22/);
 });
 
 test('el correo va listo para reenviar: destinatario en replyTo y cuerpo html', () => {
@@ -26,7 +26,7 @@ test('el correo va listo para reenviar: destinatario en replyTo y cuerpo html', 
 
 test('el cuerpo html lleva la oferta bien visible y el nombre del mazo', () => {
   const { html } = componerCorreoMazo(base);
-  assert.match(html, /219,69/);
+  assert.match(html, /256,22/);
   assert.match(html, /Venta/);
   assert.match(html, /2 cartas/);
 });
@@ -65,6 +65,6 @@ test('avisa en el asunto cuando la oferta baja del minimo', () => {
 
 test('sigue habiendo una version en texto plano', () => {
   const c = componerCorreoMazo(base);
-  assert.match(c.text, /219,69/);
+  assert.match(c.text, /256,22/);
   assert.match(c.text, /Pepe/);
 });
