@@ -241,3 +241,85 @@ test('lo que el reparto deja sin dominio no se propone reclamar', () => {
 
   assert.deepEqual(derivarAcciones(hallazgos, indice), []);
 });
+
+// El informe del 15 de septiembre de 2026 mando reforzar un articulo publicado el dia 5
+// con datos de una ventana que arrancaba el 17 de junio: 80 de los 90 dias medidos son
+// anteriores a que la pagina existiera. Quien rankeaba lo hacia por ser el unico que
+// habia, no por estar mejor optimizado, y la accion pedia tocar un copy que ya llevaba
+// la keyword en el H1.
+test('no propone ganar posicion si la pagina se publico despues de empezar la ventana', () => {
+  const articulo = {
+    dominio: HUB,
+    ruta: '/blog/que-colecciones-antiguas-valen-dinero',
+    fichero: 'apps/hub/content/que-colecciones-antiguas-valen-dinero.md',
+    numeroLinea: 5,
+    fecha: '2026-09-05'
+  };
+  const hallazgos = {
+    ...vacio,
+    malDominio: [
+      {
+        consulta: 'cartas magic antiguas',
+        impresiones: 25,
+        actual: { dominio: VENDER, posicion: 16.6 },
+        deberia: HUB
+      }
+    ]
+  };
+  const porKeyword = new Map([['cartas magic antiguas', [articulo]]]);
+  const ventana = { desde: '2026-06-17', hasta: '2026-09-15' };
+
+  const acciones = derivarAcciones(hallazgos, { porKeyword, paginas: [articulo] }, [], ventana);
+
+  assert.deepEqual(acciones, []);
+});
+
+// La misma pagina, ya con la ventana entera por detras, si se juzga.
+test('una vez la ventana cubre toda la vida de la pagina, la accion vuelve', () => {
+  const articulo = {
+    dominio: HUB,
+    ruta: '/blog/que-colecciones-antiguas-valen-dinero',
+    fichero: 'apps/hub/content/que-colecciones-antiguas-valen-dinero.md',
+    numeroLinea: 5,
+    fecha: '2026-09-05'
+  };
+  const hallazgos = {
+    ...vacio,
+    malDominio: [
+      {
+        consulta: 'cartas magic antiguas',
+        impresiones: 25,
+        actual: { dominio: VENDER, posicion: 16.6 },
+        deberia: HUB
+      }
+    ]
+  };
+  const porKeyword = new Map([['cartas magic antiguas', [articulo]]]);
+  const ventana = { desde: '2026-09-06', hasta: '2026-12-05' };
+
+  const [accion] = derivarAcciones(hallazgos, { porKeyword, paginas: [articulo] }, [], ventana);
+
+  assert.match(accion.titulo, /Ganar posicion para "cartas magic antiguas"/);
+});
+
+// Sin ventana, o con paginas que no declaran fecha (los metadatos de las apps), nada
+// cambia: el filtro solo se aplica donde hay una fecha que comparar.
+test('las paginas sin fecha declarada se siguen proponiendo', () => {
+  const hallazgos = {
+    ...vacio,
+    malDominio: [
+      {
+        consulta: 'tasar cartas magic',
+        impresiones: 10,
+        actual: { dominio: VENDER, posicion: 15.3 },
+        deberia: HUB
+      }
+    ]
+  };
+  const porKeyword = new Map([['tasar cartas magic', [paginaVender]]]);
+  const ventana = { desde: '2026-06-17', hasta: '2026-09-15' };
+
+  const acciones = derivarAcciones(hallazgos, { porKeyword, paginas: indice.paginas }, [], ventana);
+
+  assert.equal(acciones.length, 1);
+});

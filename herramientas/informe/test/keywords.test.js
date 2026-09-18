@@ -46,3 +46,16 @@ test('las keywords de venta que ya estan declaradas no salen como huerfanas', ()
     assert.ok(porKeyword.has(keyword), `${keyword} deberia tener pagina`);
   }
 });
+
+// Sin la fecha de publicacion no hay forma de saber si una pagina existia durante la
+// ventana que se esta midiendo, y el informe acaba proponiendo cambios sobre un articulo
+// que Google todavia no habia rastreado.
+test('los articulos del hub traen su fecha de publicacion', () => {
+  const { paginas } = construirIndice();
+  const articulo = paginas.find(
+    ({ ruta }) => ruta === '/blog/que-colecciones-antiguas-valen-dinero'
+  );
+
+  assert.ok(articulo, 'no se ha encontrado el articulo en el indice');
+  assert.equal(articulo.fecha, '2026-09-05');
+});

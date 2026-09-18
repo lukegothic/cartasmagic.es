@@ -177,7 +177,7 @@ const seccionDatos = (porDominio) => {
 };
 
 const componerMarkdown = ({ ventana, indice, hallazgos, consultas, porDominio, llms, embudo, previas }) => {
-  const acciones = derivarAcciones(hallazgos, indice, previas);
+  const acciones = derivarAcciones(hallazgos, indice, previas, ventana);
 
   const partes = [
     `# Informe cartasmagic ${ventana.hasta}`,

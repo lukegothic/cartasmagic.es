@@ -72,11 +72,15 @@ const leerArticulos = (dominio) => {
       const contenido = fs.readFileSync(fichero, 'utf8');
       const frontMatter = contenido.match(/^---\r?\n([\s\S]*?)\r?\n---/);
       const linea = frontMatter?.[1].match(/^keywords:\s*(.+)$/m);
+      const fecha = frontMatter?.[1].match(/^fecha:\s*(\d{4}-\d{2}-\d{2})\s*$/m);
       const indice = linea ? contenido.indexOf(linea[0]) : -1;
       return {
         dominio,
         ruta: `/blog/${nombre.replace(/\.md$/, '')}`,
         keywords: linea ? separar(linea[1]) : [],
+        // Solo la traen los articulos. Los metadatos de las apps no declaran fecha porque
+        // esas paginas existen desde el principio.
+        fecha: fecha?.[1],
         fichero: path.relative(RAIZ, fichero).replace(/\\/g, '/'),
         numeroLinea: indice === -1 ? 1 : contenido.slice(0, indice).split('\n').length
       };

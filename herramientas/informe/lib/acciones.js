@@ -12,6 +12,13 @@ const IMPRESIONES_FIABLES = 40;
 
 const ubicacion = ({ fichero, numeroLinea }) => ({ fichero, numeroLinea });
 
+// Una pagina publicada despues de arrancar la ventana no ha tenido la ventana entera para
+// posicionarse, asi que compararla con quien lleva ahi desde el principio no mide como
+// esta optimizada: mide cuanto lleva existiendo. El informe del 15 de septiembre de 2026
+// mando reforzar un articulo de 10 dias por no rankear en 90, con la keyword ya en el H1.
+const naceDentroDeLaVentana = (paginas, ventana) =>
+  Boolean(ventana?.desde) && paginas.some(({ fecha }) => fecha && fecha > ventana.desde);
+
 const moverDeDominio = ({ consulta, impresiones, actual, deberia }, porKeyword) => {
   const duenno = porKeyword.get(consulta) || [];
   // Que la declare ya el dominio correcto y rankee el otro no es un error de reparto: la
@@ -70,11 +77,24 @@ const reescribirTitle = ({ consulta, impresiones, clics, mejor, reclaman }) => (
 //
 // El adjunto llega cada dia con las mismas acciones hasta que se aplican, asi que cada
 // una dice si ya estaba ayer. Sin eso no hay forma de separar lo hecho de lo pendiente.
-const derivarAcciones = ({ malDominio, sinDuenno, ctrBajo }, { porKeyword, paginas }, previas = []) => {
+const derivarAcciones = (
+  { malDominio, sinDuenno, ctrBajo },
+  { porKeyword, paginas },
+  previas = [],
+  ventana = null
+) => {
   const vistas = new Set(previas);
 
   return [
-    ...malDominio.map((h) => moverDeDominio(h, porKeyword)),
+    ...malDominio
+      // Solo se descarta cuando la declaracion ya esta donde toca y lo unico que falta es
+      // tiempo. Un reparto mal hecho se corrige igual, sea la pagina nueva o vieja.
+      .filter(({ consulta, deberia }) => {
+        const duenno = porKeyword.get(consulta) || [];
+        const yaEstaBien = duenno.length && duenno.every(({ dominio }) => dominio === deberia);
+        return !(yaEstaBien && naceDentroDeLaVentana(duenno, ventana));
+      })
+      .map((h) => moverDeDominio(h, porKeyword)),
     // Las que el reparto deja sin dominio a proposito no se proponen: no hay pagina que
     // pueda responderlas. Ver docs/reparto-keywords.md.
     ...sinDuenno
