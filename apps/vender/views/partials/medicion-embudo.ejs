@@ -14,7 +14,12 @@
         gtag('event', nombre, Object.assign({ event_category: 'formulario', event_label: formulario }, extra || {}));
     };
 
+    <% if (!enviado && !errorCode) { %>
+    // Solo cuando la pagina se abre por su cuenta. El POST responde pintando esta misma
+    // vista, asi que apuntar aqui la respuesta a un envio sumaba una visita por cada lead
+    // y hundia todas las proporciones que cuelgan de este paso.
     evento('ver_formulario');
+    <% } %>
 
     // Delegado en el formulario: asi vale para cualquier campo sin enumerarlos, y sigue
     // valiendo si manana se anade uno.
