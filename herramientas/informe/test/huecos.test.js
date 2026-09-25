@@ -133,6 +133,16 @@ test('una consulta con palabras que no estan sale como hueco', () => {
   );
 });
 
+// "Swap Magic" es un disco de PlayStation 2, no Magic: The Gathering. Escribirlo en el
+// llm.txt atraeria a quien no busca esto.
+test('una consulta de otro producto no es un hueco', () => {
+  const { cubiertas, huecos } = coberturaLlm(LLM_REALISTA, [
+    { consulta: 'venta swap magic', impresiones: 23 }
+  ]);
+  assert.equal(huecos.length, 0);
+  assert.equal(cubiertas.length, 0);
+});
+
 // La escala tiene que usarse entera: si nada llega nunca al umbral, la seccion lista
 // todo y no dice nada.
 test('la cobertura llega al maximo cuando todo esta presente', () => {

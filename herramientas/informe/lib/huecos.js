@@ -74,6 +74,10 @@ const raiz = (palabra) => (palabra.length > RAIZ_MINIMA ? palabra.slice(0, RAIZ_
 
 const vecesEn = (texto, palabra) => texto.split(raiz(palabra)).length - 1;
 
+// Consultas que llevan "magic" pero hablan de otro producto. Contarlas como hueco empuja
+// a escribir sobre algo que no se vende aqui. "swap": Swap Magic, disco de PlayStation 2.
+const OTRO_PRODUCTO = new Set(['swap']);
+
 // La cobertura es la proporcion de palabras de la consulta que estan en el texto. Se
 // mide la presencia, no lo repetidas que estan: ponderar por repeticion hacia que una
 // palabra presente pero comun no llegara nunca al umbral, y sobre un llm.txt de verdad
@@ -92,7 +96,7 @@ const coberturaLlm = (textoLlm, consultas) => {
     const palabras = normalizar(fila.consulta)
       .split(' ')
       .filter((p) => !SIN_CONTENIDO.has(p) && p.length > 2);
-    if (!palabras.length) continue;
+    if (!palabras.length || palabras.some((p) => OTRO_PRODUCTO.has(p))) continue;
 
     const apariciones = palabras.map((p) => vecesEn(texto, p));
     const presentes = apariciones.filter((n) => n > 0).length;
