@@ -89,7 +89,7 @@ el lote entero en una sola operación.
 - La valoración se hace sobre los precios de referencia de Cardmarket del día en que
   llega el paquete y según el estado real de las cartas.
 - No se dan precios por teléfono ni a partir de fotografías.
-- Coste de la devolución si se rechaza la oferta: 11,90 euros (envío de ida más envío
+- Coste de la devolución si se rechaza la oferta: 10 euros (envío de ida más envío
   de vuelta), a cargo de quien rechaza y pagado por transferencia antes de devolver.
 - La devolución es gratuita si VenderCartasMagic decide no valorar la colección o si
   la colección no se corresponde con lo esperado por su parte.
@@ -112,7 +112,8 @@ bulk que venga dentro de una colección se compra como parte del lote.
 
 ## Qué no se compra
 
-Cajas que sean solo cartas comunes y nada más, cartas de otros juegos coleccionables
+Cajas que sean solo cartas comunes y nada más, producto sellado (sobres, cajas de
+sobres y mazos sin abrir, también los de edición limitada), cartas de otros juegos coleccionables
 como Pokémon o Yu-Gi-Oh, y reproducciones no oficiales. Las reproducciones no oficiales que
 aparezcan en un envío se apartan, no se pagan y se devuelven o se destruyen según
 indique el vendedor.
