@@ -11,9 +11,9 @@
 // otra. La rareza la trae ManaBox en cada carta, asi que el corte no cuesta nada.
 const TRAMOS = [
   { id: 'premium', desde: 20, variable: 'TRAMO_PREMIUM_PCT', porDefecto: 70, etiqueta: 'Cartas de 20 € o más' },
-  { id: 'alta', desde: 5, variable: 'TRAMO_ALTA_PCT', porDefecto: 60, etiqueta: 'Cartas de 5 a 20 €' },
-  { id: 'media', desde: 1, variable: 'TRAMO_MEDIA_PCT', porDefecto: 35, etiqueta: 'Cartas de 1 a 5 €' },
-  { id: 'baja', desde: 0.5, variable: 'TRAMO_BAJA_PCT', porDefecto: 20, etiqueta: 'Cartas de 0,50 a 1 €' },
+  { id: 'alta', desde: 5, variable: 'TRAMO_ALTA_PCT', porDefecto: 50, etiqueta: 'Cartas de 5 a 20 €' },
+  { id: 'media', desde: 1, variable: 'TRAMO_MEDIA_PCT', porDefecto: 20, etiqueta: 'Cartas de 1 a 5 €' },
+  { id: 'baja', desde: 0.5, variable: 'TRAMO_BAJA_PCT', porDefecto: 10, etiqueta: 'Cartas de 0,50 a 1 €' },
   { id: 'bulkRara', desde: 0, soloRaras: true, variable: 'TRAMO_BULK_RARA_EUR', porDefecto: 0.05, porUnidad: true, etiqueta: 'Bulk de rara o mítica (menos de 0,50 €)' },
   { id: 'bulk', desde: 0, variable: 'TRAMO_BULK_EUR', porDefecto: 0.005, porUnidad: true, etiqueta: 'Bulk de común o infrecuente (menos de 0,50 €)' }
 ];
@@ -24,7 +24,16 @@ const RAREZAS_ALTAS = ['rare', 'mythic'];
 
 const esRara = (rareza) => RAREZAS_ALTAS.includes(String(rareza ?? '').trim().toLowerCase());
 
+// ManaBox no trae el estado de ninguna carta, y mtginvestor valora como EX la coleccion que
+// no lo dice. La web tiene que dar la cifra que luego se ofrece, asi que parte del mismo
+// estado. El bulk no se toca: se paga por carta, no por su precio.
+const FACTOR_ESTADO_EX = 0.85;
+
+// Una carta sin precio no es bulk: pagarla como bulk seria dar por hecho que no vale nada.
+const SIN_PRECIO = { id: 'sinPrecio', etiqueta: 'Sin precio en Cardmarket' };
+
 const OFERTA_MINIMA_POR_DEFECTO = 50;
+const COSTE_ENVIO_POR_DEFECTO = 5;
 const PORCENTAJE_MAXIMO = 100;
 
 // Una variable mal escrita no debe cambiar la oferta sin avisar: se ignora y se avisa por el log.
@@ -51,28 +60,44 @@ const leerTramos = (entorno = process.env) =>
 const leerOfertaMinima = (entorno = process.env) =>
   numeroValido(entorno.OFERTA_MINIMA, OFERTA_MINIMA_POR_DEFECTO, Infinity);
 
+const leerCosteEnvio = (entorno = process.env) =>
+  numeroValido(entorno.COSTE_ENVIO, COSTE_ENVIO_POR_DEFECTO, Infinity);
+
 const redondear = (valor) => Math.round(valor * 100) / 100;
 
+// El tramo sale del precio de Cardmarket y la rebaja por estado se aplica despues, como en
+// mtginvestor: si el estado decidiera el tramo, las dos cifras no cuadrarian.
 const ofertaPorCarta = (tramo, precio) =>
-  tramo.porUnidad !== undefined ? tramo.porUnidad : precio * tramo.porcentaje;
+  tramo.porUnidad !== undefined ? tramo.porUnidad : precio * FACTOR_ESTADO_EX * tramo.porcentaje;
+
+const valorarCarta = (tramos, { precio, cantidad, rareza }) => {
+  if (!(precio > 0)) return { tramo: SIN_PRECIO, valorMercado: 0, oferta: 0 };
+
+  const tramo = tramos.find(({ desde, soloRaras }) => precio >= desde && (!soloRaras || esRara(rareza)));
+  return { tramo, valorMercado: precio * cantidad, oferta: ofertaPorCarta(tramo, precio) * cantidad };
+};
 
 const calcularPresupuesto = (cartas, entorno = process.env) => {
-  const tramos = leerTramos(entorno);
+  const tramos = [...leerTramos(entorno), SIN_PRECIO];
   const acumulado = new Map(tramos.map(({ id }) => [id, { cartas: 0, valorMercado: 0, oferta: 0 }]));
 
-  cartas.forEach(({ precio, cantidad, rareza }) => {
-    const tramo = tramos.find(({ desde, soloRaras }) => precio >= desde && (!soloRaras || esRara(rareza)));
+  cartas.forEach((carta) => {
+    const { tramo, valorMercado, oferta } = valorarCarta(tramos, carta);
     const fila = acumulado.get(tramo.id);
-    fila.cartas += cantidad;
-    fila.valorMercado += precio * cantidad;
-    fila.oferta += ofertaPorCarta(tramo, precio) * cantidad;
+    fila.cartas += carta.cantidad;
+    fila.valorMercado += valorMercado;
+    fila.oferta += oferta;
   });
 
   const valorMercado = redondear([...acumulado.values()].reduce((s, f) => s + f.valorMercado, 0));
-  const oferta = redondear([...acumulado.values()].reduce((s, f) => s + f.oferta, 0));
+  const ofertaCartas = redondear([...acumulado.values()].reduce((s, f) => s + f.oferta, 0));
+  const costeEnvio = leerCosteEnvio(entorno);
+  const oferta = Math.max(0, redondear(ofertaCartas - costeEnvio));
 
   return {
     valorMercado,
+    ofertaCartas,
+    costeEnvio,
     oferta,
     bajoMinimo: oferta < leerOfertaMinima(entorno),
     totalCartas: cartas.reduce((s, c) => s + c.cantidad, 0),
@@ -91,4 +116,4 @@ const calcularPresupuesto = (cartas, entorno = process.env) => {
   };
 };
 
-module.exports = { calcularPresupuesto, leerTramos, leerOfertaMinima };
+module.exports = { calcularPresupuesto, valorarCarta, leerTramos, leerOfertaMinima, leerCosteEnvio, SIN_PRECIO };

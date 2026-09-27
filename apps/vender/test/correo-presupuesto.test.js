@@ -14,7 +14,7 @@ const base = {
 test('el asunto lleva la oferta y a quien va dirigido', () => {
   const c = componerCorreoMazo(base);
   assert.match(c.subject, /Pepe/);
-  assert.match(c.subject, /256,22/);
+  assert.match(c.subject, /212,60/);
 });
 
 test('el correo va listo para reenviar: destinatario en replyTo y cuerpo html', () => {
@@ -26,7 +26,7 @@ test('el correo va listo para reenviar: destinatario en replyTo y cuerpo html', 
 
 test('el cuerpo html lleva la oferta bien visible y el nombre del mazo', () => {
   const { html } = componerCorreoMazo(base);
-  assert.match(html, /256,22/);
+  assert.match(html, /212,60/);
   assert.match(html, /Venta/);
   assert.match(html, /2 cartas/);
 });
@@ -65,6 +65,22 @@ test('avisa en el asunto cuando la oferta baja del minimo', () => {
 
 test('sigue habiendo una version en texto plano', () => {
   const c = componerCorreoMazo(base);
-  assert.match(c.text, /256,22/);
+  assert.match(c.text, /212,60/);
   assert.match(c.text, /Pepe/);
+});
+
+// La cifra ya sale en EX. Si el correo dijera Near Mint, el cliente con cartas en NM
+// entenderia que se le paga como tal y la subida al revisarlas pareceria un error.
+test('el correo dice que la cifra es para cartas en EX y que en mejor estado se paga mas', () => {
+  const { html, text } = componerCorreoMazo(base);
+  for (const cuerpo of [html, text]) {
+    assert.match(cuerpo, /estado EX/);
+    assert.match(cuerpo, /Near Mint se pagan más/);
+  }
+});
+
+test('las notas dicen cuanto envio se ha descontado', () => {
+  const { attachments } = componerCorreoMazo(base);
+  const notas = attachments.find(({ filename }) => filename.startsWith('notas-'));
+  assert.match(notas.content, /Envío descontado: 5,00 EUR/);
 });

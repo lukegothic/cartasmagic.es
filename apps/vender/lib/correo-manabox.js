@@ -71,6 +71,7 @@ const notas = ({ lead, mazo, presupuesto, csv }) =>
       `${MANABOX.notas.mazo} ${[mazo.nombre, mazo.formato].filter(Boolean).join(SEPARADOR)}`,
       `${MANABOX.notas.mercado} ${euros(presupuesto.valorMercado)} EUR${SEPARADOR}${MANABOX.notas.sePaga(Math.round((presupuesto.oferta / presupuesto.valorMercado) * 100))}`,
       `${MANABOX.notas.foils} ${presupuesto.totalFoils}`,
+      `${MANABOX.notas.envio} ${euros(presupuesto.costeEnvio)} EUR`,
       ...(presupuesto.bajoMinimo ? [MANABOX.notas.bajoMinimo] : []),
       `${MANABOX.notas.desglose} ${presupuesto.tramos.filter(({ cartas }) => cartas > 0).map(({ etiqueta, cartas, oferta }) => `${etiqueta}: ${cartas} a ${euros(oferta)} EUR`).join(SEPARADOR)}`
     ]

@@ -361,6 +361,7 @@ const PRIVADA = {
     porcentaje: 'Porcentaje sobre mercado',
     cartas: 'Cartas',
     foils: 'Foils',
+    envio: 'Envío descontado',
     bajoMinimo: 'Por debajo de la oferta mínima',
     tramosTitulo: 'Desglose por tramo',
     masCarasTitulo: 'Cartas más caras',

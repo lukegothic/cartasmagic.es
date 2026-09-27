@@ -128,14 +128,17 @@ const MANABOX = {
     'Pago por transferencia dentro de las 24 horas siguientes a que aceptes',
     'Precio definitivo por el lote entero, sin negociación'
   ],
-  confirmacion: 'El precio sale de la lista que nos has enviado, y es para cartas en inglés y en estado Near Mint, que es lo que la lista da por hecho. Se confirma al recibir las cartas y comprobar el estado y el idioma. Si no se corresponden con la lista, te lo diríamos antes de pagar nada.',
-  // La version de texto plano se corta antes: sin el matiz del estado, que en html cabe.
-  confirmacionTexto: 'El precio sale de la lista que nos has enviado, y es para cartas en inglés y en estado Near Mint. Se confirma al recibir las cartas y comprobar el estado y el idioma.',
+  // La lista no dice el estado, y la cifra sale en EX, que es como se valora luego una
+  // coleccion sin revisar. Lo de Near Mint va en las dos versiones: sin ello, quien tiene
+  // las cartas impecables leeria una cifra por debajo de lo que se le va a pagar.
+  confirmacion: 'El precio sale de la lista que nos has enviado, y es para cartas en inglés y en estado EX. Se confirma al recibir las cartas y comprobar el estado y el idioma. Las que estén en Near Mint se pagan más, y si alguna está peor te lo diríamos antes de pagar nada.',
+  // La version de texto plano se corta antes: sin el aviso de las que esten peor, que en html cabe.
+  confirmacionTexto: 'El precio sale de la lista que nos has enviado, y es para cartas en inglés y en estado EX. Se confirma al recibir las cartas y comprobar el estado y el idioma. Las que estén en Near Mint se pagan más.',
   // Los dos enlaces cubren los dos ejes por los que una carta baja de la cifra de la lista:
   // el estado en la guia y el idioma en la seccion 3 de la de valoracion. Cada uno lleva
   // graficos, que es lo que explica la rebaja sin que parezca que nos la inventamos.
   porQueBaja: {
-    intro: 'Si tus cartas están jugadas o son de otro idioma, valen menos. En la web lo tenemos explicado con gráficos:',
+    intro: 'Si tus cartas están jugadas o están en otro idioma, valen menos. En la web lo tenemos explicado con gráficos:',
     enlaces: [
       { texto: 'Cuánto pierde una carta según su estado (NM, EX, GD, LP)', url: enlaceCorreo('https://cartasmagic.es/blog/estado-de-la-carta-nm-ex-gd-lp', 'correo-manabox-estados') },
       { texto: 'Qué establece el precio de una carta, incluido el idioma', url: enlaceCorreo('https://cartasmagic.es/blog/como-saber-cuanto-vale-una-carta-magic', 'correo-manabox-valor') }
@@ -154,6 +157,7 @@ const MANABOX = {
     mercado: 'Mercado:',
     sePaga: (porcentaje) => `se paga el ${porcentaje} %`,
     foils: 'Foils:',
+    envio: 'Envío descontado:',
     bajoMinimo: 'Por debajo del mínimo configurado',
     desglose: 'Desglose por tramo:'
   }

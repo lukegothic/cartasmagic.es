@@ -1,13 +1,15 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { leerTramos, leerOfertaMinima } = require('../lib/presupuesto');
+const { leerTramos, leerOfertaMinima, calcularPresupuesto } = require('../lib/presupuesto');
 
 const carta = (precio, cantidad = 1) => ({ nombre: 'x', cantidad, esFoil: false, set: 's', rareza: 'r', precio });
 
 test('sin variables de entorno se usan los porcentajes por defecto', () => {
   const tramos = leerTramos({});
   assert.equal(tramos.find((t) => t.id === 'premium').porcentaje, 0.7);
-  assert.equal(tramos.find((t) => t.id === 'alta').porcentaje, 0.6);
+  assert.equal(tramos.find((t) => t.id === 'alta').porcentaje, 0.5);
+  assert.equal(tramos.find((t) => t.id === 'media').porcentaje, 0.2);
+  assert.equal(tramos.find((t) => t.id === 'baja').porcentaje, 0.1);
   assert.equal(tramos.find((t) => t.id === 'bulkRara').porUnidad, 0.05);
   assert.equal(tramos.find((t) => t.id === 'bulk').porUnidad, 0.005);
 });
@@ -21,8 +23,7 @@ test('cada variable de entorno cambia su tramo', () => {
 });
 
 test('el porcentaje se escribe como entero y se aplica como fracción', () => {
-  const { calcularPresupuesto } = require('../lib/presupuesto');
-  assert.equal(calcularPresupuesto([carta(100)], { TRAMO_PREMIUM_PCT: '75' }).oferta, 75);
+  assert.equal(calcularPresupuesto([carta(100)], { TRAMO_PREMIUM_PCT: '100' }).ofertaCartas, 85);
 });
 
 test('un valor no numérico o fuera de rango cae al valor por defecto', () => {
@@ -49,7 +50,13 @@ test('la oferta minima tambien sale del entorno', () => {
 });
 
 test('la oferta minima configurada decide el aviso', () => {
-  const { calcularPresupuesto } = require('../lib/presupuesto');
   assert.equal(calcularPresupuesto([carta(100)], { OFERTA_MINIMA: '1000' }).bajoMinimo, true);
   assert.equal(calcularPresupuesto([carta(100)], { OFERTA_MINIMA: '10' }).bajoMinimo, false);
+});
+
+test('el coste del envio sale del entorno', () => {
+  assert.equal(calcularPresupuesto([carta(100)], {}).costeEnvio, 5);
+  assert.equal(calcularPresupuesto([carta(100)], { COSTE_ENVIO: '8' }).oferta, 51.5);
+  assert.equal(calcularPresupuesto([carta(100)], { COSTE_ENVIO: '0' }).oferta, 59.5);
+  assert.equal(calcularPresupuesto([carta(100)], { COSTE_ENVIO: 'gratis' }).costeEnvio, 5);
 });
