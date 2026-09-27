@@ -13,7 +13,7 @@ const paginaVender = {
   numeroLinea: 75
 };
 
-const vacio = { malDominio: [], sinDuenno: [], ctrBajo: [] };
+const vacio = { canibalizacion: [], malDominio: [], sinDuenno: [], ctrBajo: [] };
 const indice = { porKeyword: new Map(), paginas: [paginaHub, paginaVender] };
 
 test('sin hallazgos no propone nada', () => {
@@ -83,6 +83,7 @@ test('la accion de reclamar apunta a una pagina del dominio que toca', () => {
 
 test('el orden es primero lo que cuesta mas trafico', () => {
   const hallazgos = {
+    ...vacio,
     malDominio: [
       {
         consulta: 'tasar cartas magic',
@@ -203,6 +204,7 @@ test('avisa cuando la accion se apoya en pocas impresiones', () => {
 // borrar una declaracion que estaba bien.
 test('si ya la declara el dominio que toca, no manda moverla', () => {
   const hallazgos = {
+    ...vacio,
     malDominio: [
       {
         consulta: 'tasar cartas magic',
@@ -210,9 +212,7 @@ test('si ya la declara el dominio que toca, no manda moverla', () => {
         actual: { dominio: VENDER, posicion: 15.3 },
         deberia: HUB
       }
-    ],
-    sinDuenno: [],
-    ctrBajo: []
+    ]
   };
   const porKeyword = new Map([['tasar cartas magic', [paginaHub]]]);
   const [accion] = derivarAcciones(hallazgos, { porKeyword, paginas: [paginaHub, paginaVender] });
@@ -322,4 +322,73 @@ test('las paginas sin fecha declarada se siguen proponiendo', () => {
   const acciones = derivarAcciones(hallazgos, { porKeyword, paginas: indice.paginas }, [], ventana);
 
   assert.equal(acciones.length, 1);
+});
+
+// Hasta el 26 de septiembre de 2026 la canibalizacion entre dominios se calculaba y se
+// firmaba, pero no llegaba ni a las acciones ni al markdown: el correo avisaba de un
+// cambio y el adjunto decia que no habia nada que hacer.
+test('los dos dominios compitiendo se convierte en accion sobre el que no toca', () => {
+  const hallazgos = {
+    ...vacio,
+    canibalizacion: [
+      {
+        consulta: 'vender magic',
+        impresiones: 19,
+        apariciones: [
+          { dominio: VENDER, impresiones: 8, clics: 1, posicion: 17 },
+          { dominio: HUB, impresiones: 11, clics: 0, posicion: 12 }
+        ],
+        deberia: VENDER
+      }
+    ]
+  };
+  const porKeyword = new Map([['vender magic', [paginaVender]]]);
+  const [accion] = derivarAcciones(hallazgos, { porKeyword, paginas: indice.paginas }, ['canibal:vender magic']);
+
+  assert.equal(accion.firma, 'canibal:vender magic');
+  assert.equal(accion.esNueva, false);
+  assert.match(accion.porque, /quien rankea es cartasmagic\.es/);
+});
+
+// La intencion de compra no es de nadie, asi que tampoco hay dominio al que darle la razon.
+test('la canibalizacion sin dominio que toque no se propone', () => {
+  const hallazgos = {
+    ...vacio,
+    canibalizacion: [
+      {
+        consulta: 'compra cartas magic',
+        impresiones: 12,
+        apariciones: [
+          { dominio: VENDER, impresiones: 9, clics: 0, posicion: 16 },
+          { dominio: HUB, impresiones: 3, clics: 0, posicion: 19 }
+        ],
+        deberia: null
+      }
+    ]
+  };
+
+  assert.deepEqual(derivarAcciones(hallazgos, indice), []);
+});
+
+// "vender magic" en septiembre de 2026: vender la declara y va delante, y el hub asoma con
+// una impresion. No hay nada que ganar ni que quitar, y la accion decia que quien
+// rankeaba era el hub.
+test('si el dominio que toca la declara y ya va delante, no propone nada', () => {
+  const hallazgos = {
+    ...vacio,
+    canibalizacion: [
+      {
+        consulta: 'vender magic',
+        impresiones: 19,
+        apariciones: [
+          { dominio: VENDER, impresiones: 18, clics: 3, posicion: 13.5 },
+          { dominio: HUB, impresiones: 1, clics: 0, posicion: 18 }
+        ],
+        deberia: VENDER
+      }
+    ]
+  };
+  const porKeyword = new Map([['vender magic', [paginaVender]]]);
+
+  assert.deepEqual(derivarAcciones(hallazgos, { porKeyword, paginas: indice.paginas }), []);
 });

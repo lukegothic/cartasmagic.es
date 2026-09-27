@@ -19,12 +19,15 @@ const ubicacion = ({ fichero, numeroLinea }) => ({ fichero, numeroLinea });
 const naceDentroDeLaVentana = (paginas, ventana) =>
   Boolean(ventana?.desde) && paginas.some(({ fecha }) => fecha && fecha > ventana.desde);
 
+// Que la declare ya el dominio correcto y rankee el otro no es un error de reparto: la
+// declaracion esta bien y lo que falta es que la pagina se gane la posicion. Mandar a
+// quitarla de donde debe estar era borrar lo unico correcto que habia.
+const declaradaDondeToca = (duenno, deberia) =>
+  duenno.length > 0 && duenno.every(({ dominio }) => dominio === deberia);
+
 const moverDeDominio = ({ consulta, impresiones, actual, deberia }, porKeyword) => {
   const duenno = porKeyword.get(consulta) || [];
-  // Que la declare ya el dominio correcto y rankee el otro no es un error de reparto: la
-  // declaracion esta bien y lo que falta es que la pagina se gane la posicion. Mandar a
-  // quitarla de donde debe estar era borrar lo unico correcto que habia.
-  const yaEstaBien = duenno.length && duenno.every(({ dominio }) => dominio === deberia);
+  const yaEstaBien = declaradaDondeToca(duenno, deberia);
 
   return {
     firma: `dominio:${consulta}:${deberia}`,
@@ -45,6 +48,24 @@ const moverDeDominio = ({ consulta, impresiones, actual, deberia }, porKeyword) 
         : `Anadirla al meta keywords de la pagina de ${deberia} que cubra ese tema.`
   };
 };
+
+// Cuando compiten los dos, lo que hay que corregir es la aparicion del dominio al que no
+// le toca, asi que es esa la que se usa como "actual". La firma es la de estado.js, para
+// que la marca de nueva se compare con lo mismo que se guardo ayer.
+const resolverCompetencia = ({ consulta, impresiones, apariciones, deberia }, porKeyword) => ({
+  ...moverDeDominio(
+    {
+      consulta,
+      impresiones,
+      actual: apariciones
+        .filter(({ dominio }) => dominio !== deberia)
+        .reduce((a, b) => (a.posicion <= b.posicion ? a : b)),
+      deberia
+    },
+    porKeyword
+  ),
+  firma: `canibal:${consulta}`
+});
 
 const reclamar = ({ consulta, impresiones, clics, mejor, deberia }, paginas) => {
   const destino = paginas.filter(({ dominio }) => dominio === deberia);
@@ -78,23 +99,33 @@ const reescribirTitle = ({ consulta, impresiones, clics, mejor, reclaman }) => (
 // El adjunto llega cada dia con las mismas acciones hasta que se aplican, asi que cada
 // una dice si ya estaba ayer. Sin eso no hay forma de separar lo hecho de lo pendiente.
 const derivarAcciones = (
-  { malDominio, sinDuenno, ctrBajo },
+  { canibalizacion, malDominio, sinDuenno, ctrBajo },
   { porKeyword, paginas },
   previas = [],
   ventana = null
 ) => {
   const vistas = new Set(previas);
 
+  // Solo se descarta cuando la declaracion ya esta donde toca y lo unico que falta es
+  // tiempo. Un reparto mal hecho se corrige igual, sea la pagina nueva o vieja.
+  const faltaSoloTiempo = ({ consulta, deberia }) => {
+    const duenno = porKeyword.get(consulta) || [];
+    return declaradaDondeToca(duenno, deberia) && naceDentroDeLaVentana(duenno, ventana);
+  };
+
+  // Si el dominio que toca la declara y ya va delante, el otro solo asoma detras y no hay
+  // nada que quitar ni que ganar.
+  const vaDelanteQuienToca = ({ consulta, apariciones, deberia }) => {
+    const mejor = apariciones.reduce((a, b) => (a.posicion <= b.posicion ? a : b));
+    return declaradaDondeToca(porKeyword.get(consulta) || [], deberia) && mejor.dominio === deberia;
+  };
+
   return [
-    ...malDominio
-      // Solo se descarta cuando la declaracion ya esta donde toca y lo unico que falta es
-      // tiempo. Un reparto mal hecho se corrige igual, sea la pagina nueva o vieja.
-      .filter(({ consulta, deberia }) => {
-        const duenno = porKeyword.get(consulta) || [];
-        const yaEstaBien = duenno.length && duenno.every(({ dominio }) => dominio === deberia);
-        return !(yaEstaBien && naceDentroDeLaVentana(duenno, ventana));
-      })
-      .map((h) => moverDeDominio(h, porKeyword)),
+    // Las de compra no tienen dominio que las responda, asi que no hay a quien darle la razon.
+    ...canibalizacion
+      .filter((h) => h.deberia && !faltaSoloTiempo(h) && !vaDelanteQuienToca(h))
+      .map((h) => resolverCompetencia(h, porKeyword)),
+    ...malDominio.filter((h) => !faltaSoloTiempo(h)).map((h) => moverDeDominio(h, porKeyword)),
     // Las que el reparto deja sin dominio a proposito no se proponen: no hay pagina que
     // pueda responderlas. Ver docs/reparto-keywords.md.
     ...sinDuenno

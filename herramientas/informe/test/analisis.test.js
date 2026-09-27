@@ -66,6 +66,22 @@ test('avisa cuando los dos dominios rankean la misma consulta', () => {
   assert.equal(canibalizacion[0].impresiones, 53);
 });
 
+// El informe del 23 de septiembre de 2026 salio sin acciones: el hub aparecia con una
+// impresion en posicion 56 para "venta cartas magic", y eso bastaba para contarlo como
+// canibalizacion y tapar que vender, en posicion 8,5, no se llevaba ni un clic.
+test('un dominio fuera de alcance no cuenta como competencia', () => {
+  const porKeyword = new Map([
+    ['venta cartas magic', [{ dominio: VENDER, ruta: '/', fichero: 'apps/vender/lib/metadatos.js' }]]
+  ]);
+  const filas = [
+    { dominio: VENDER, claves: ['venta cartas magic'], clics: 0, impresiones: 34, posicion: 8.5 },
+    { dominio: HUB, claves: ['venta cartas magic'], clics: 0, impresiones: 1, posicion: 56 }
+  ];
+  const { canibalizacion, ctrBajo } = avisos(agrupar(filas), porKeyword);
+  assert.equal(canibalizacion.length, 0);
+  assert.equal(ctrBajo.length, 1);
+});
+
 test('avisa cuando rankea el dominio que no toca', () => {
   const filas = [{ dominio: HUB, claves: ['vender cartas magic'], clics: 1, impresiones: 30, posicion: 14 }];
   const { malDominio } = avisos(agrupar(filas), new Map());

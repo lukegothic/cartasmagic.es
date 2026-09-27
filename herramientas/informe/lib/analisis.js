@@ -86,8 +86,11 @@ const avisos = (porConsulta, porKeyword) => {
     const reclaman = paginasQueLaReclaman(consulta, porKeyword);
 
     // Los dos dominios apareciendo a la vez es lo que la regla de reparto existe para
-    // evitar, asi que se mira antes que nada.
-    if (apariciones.length > 1) {
+    // evitar, asi que se mira antes que nada. Pero solo compite quien esta al alcance: una
+    // impresion suelta en posicion 56 no le quita clics a nadie, y contarla tapaba lo que
+    // de verdad pasaba con la consulta.
+    const enJuego = apariciones.filter(({ posicion }) => posicion <= POSICION_ALCANZABLE);
+    if (enJuego.length > 1) {
       canibalizacion.push({ consulta, impresiones, apariciones, deberia });
       continue;
     }
