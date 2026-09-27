@@ -2,6 +2,7 @@ const { extraerIdMazo } = require('../lib/manabox');
 const { descargarMazo: descargarMazoReal } = require('../lib/manabox-fetch');
 const { calcularPresupuesto } = require('../lib/presupuesto');
 const { componerDesgloseCsv } = require('../lib/desglose');
+const { componerManaboxCsv } = require('../lib/exportar-manabox');
 const { comprobarAcceso } = require('../lib/acceso-privado');
 const { mensajeDeError } = require('../lib/mensajes-error');
 const { euros } = require('../lib/correo-plantilla');
@@ -72,7 +73,7 @@ const montarValoracionPrivada = (app, { descargarMazo = descargarMazoReal, entor
     });
   });
 
-  app.get('/interno/valoracion.csv', async (req, res) => {
+  const servirCsv = (fichero, componer) => async (req, res) => {
     if (!autorizado(req)) return pedirClave(res);
 
     let mazo;
@@ -85,9 +86,12 @@ const montarValoracionPrivada = (app, { descargarMazo = descargarMazoReal, entor
     res
       .status(200)
       .set('Content-Type', 'text/csv; charset=utf-8')
-      .set('Content-Disposition', 'attachment; filename="desglose-valoracion.csv"')
-      .send(componerDesgloseCsv(mazo.cartas, entorno));
-  });
+      .set('Content-Disposition', `attachment; filename="${fichero}"`)
+      .send(componer(mazo.cartas));
+  };
+
+  app.get('/interno/valoracion.csv', servirCsv('desglose-valoracion.csv', (cartas) => componerDesgloseCsv(cartas, entorno)));
+  app.get('/interno/manabox.csv', servirCsv('coleccion-manabox.csv', (cartas) => componerManaboxCsv(cartas, new Date())));
 };
 
 module.exports = { montarValoracionPrivada };

@@ -53,8 +53,20 @@ test('parsearMazo devuelve el nombre y las cartas con su precio de cardmarket', 
   assert.equal(resultado.nombre, 'Venta');
   assert.equal(resultado.formato, 'Commander');
   assert.deepEqual(resultado.cartas, [
-    { nombre: 'Rhystic Study', cantidad: 1, esFoil: false, set: 'Prophecy', rareza: 'Common', precio: 34.38 }
+    { nombre: 'Rhystic Study', cantidad: 1, esFoil: false, set: 'Prophecy', rareza: 'Common', precio: 34.38, codigoSet: '', numero: '', scryfallId: '' }
   ]);
+});
+
+test('parsearMazo saca el codigo de set, el numero y el id de scryfall de la imagen', () => {
+  const { cartas } = parsearMazo(htmlConProps(mazo([carta({
+    setId: [0, 'pcy'],
+    collectorNumber: [0, '47'],
+    images: [1, [[0, { imageUrlSmall: [0, 'https://cards.scryfall.io/small/front/e/6/e6b3bcfe-be82-458b-ba59-ecb84436d747.jpg?1783944877'] }]]]
+  })])));
+
+  assert.equal(cartas[0].codigoSet, 'pcy');
+  assert.equal(cartas[0].numero, '47');
+  assert.equal(cartas[0].scryfallId, 'e6b3bcfe-be82-458b-ba59-ecb84436d747');
 });
 
 test('parsearMazo marca las foil y respeta la cantidad', () => {

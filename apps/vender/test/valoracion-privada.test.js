@@ -10,9 +10,9 @@ const MAZO = {
   nombre: 'Colección de Juan',
   formato: 'Commander',
   cartas: [
-    { nombre: 'Mox Diamond', cantidad: 1, esFoil: false, set: 'Stronghold', rareza: 'Rare', precio: 40 },
-    { nombre: 'Sol Ring', cantidad: 4, esFoil: true, set: 'C21', rareza: 'Uncommon', precio: 1.5 },
-    { nombre: 'Isla', cantidad: 10, esFoil: false, set: 'C21', rareza: 'Common', precio: 0.05 }
+    { nombre: 'Mox Diamond', cantidad: 1, esFoil: false, set: 'Stronghold', rareza: 'Rare', precio: 40, codigoSet: 'sth', numero: '138', scryfallId: '' },
+    { nombre: 'Sol Ring', cantidad: 4, esFoil: true, set: 'C21', rareza: 'Uncommon', precio: 1.5, codigoSet: 'c21', numero: '263', scryfallId: '' },
+    { nombre: 'Isla', cantidad: 10, esFoil: false, set: 'C21', rareza: 'Common', precio: 0.05, codigoSet: 'c21', numero: '295', scryfallId: '' }
   ]
 };
 
@@ -134,6 +134,28 @@ test('el csv sale con la cabecera de descarga y una fila por carta', async () =>
 test('el csv tambien esta detras de la clave', async () => {
   const llamar = montar();
   const res = await llamar('/interno/valoracion.csv', {
+    query: { url: 'https://manabox.app/decks/AZ7lfIfhflqh2vgQaCEtkg' }
+  });
+  assert.equal(res.codigo, 401);
+});
+
+test('el csv de manabox sale con la cabecera de descarga y una fila por carta', async () => {
+  const llamar = montar();
+  const res = await llamar('/interno/manabox.csv', {
+    headers: { authorization: cabecera(CLAVE) },
+    query: { url: 'https://manabox.app/decks/AZ7lfIfhflqh2vgQaCEtkg' }
+  });
+
+  assert.equal(res.codigo, 200);
+  assert.match(res.cabeceras['Content-Disposition'], /attachment/);
+  assert.match(res.cabeceras['Content-Type'], /text\/csv/);
+  assert.match(res.cuerpo, /^Name,Set code,/);
+  assert.equal(res.cuerpo.split('\r\n').length, 1 + MAZO.cartas.length);
+});
+
+test('el csv de manabox tambien esta detras de la clave', async () => {
+  const llamar = montar();
+  const res = await llamar('/interno/manabox.csv', {
     query: { url: 'https://manabox.app/decks/AZ7lfIfhflqh2vgQaCEtkg' }
   });
   assert.equal(res.codigo, 401);

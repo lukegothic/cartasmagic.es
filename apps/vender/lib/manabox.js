@@ -31,6 +31,12 @@ const propsMasLargo = (html) => {
   return candidatos.reduce((a, b) => (b.length > a.length ? b : a));
 };
 
+// El mazo publico no trae el id de Scryfall como campo, pero las imagenes salen de
+// cards.scryfall.io y el nombre del fichero es ese id.
+const ID_SCRYFALL = /\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\.jpg/;
+
+const scryfallIdDeImagen = (url) => ID_SCRYFALL.exec(url ?? '')?.[1] ?? '';
+
 const parsearMazo = (html) => {
   const props = propsMasLargo(html);
   if (!props) throw fallo('MAZO_NO_LEIBLE');
@@ -54,7 +60,10 @@ const parsearMazo = (html) => {
       esFoil: c.variant === 'Foil',
       set: c.setName ?? '',
       rareza: c.rarity ?? '',
-      precio: c.pricing?.cardmarket?.value ?? 0
+      precio: c.pricing?.cardmarket?.value ?? 0,
+      codigoSet: c.setId ?? '',
+      numero: c.collectorNumber ?? '',
+      scryfallId: scryfallIdDeImagen(c.images?.[0]?.imageUrlSmall)
     }))
   };
 };

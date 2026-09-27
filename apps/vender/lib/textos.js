@@ -353,6 +353,7 @@ const PRIVADA = {
   intro: 'Pega el enlace de un mazo de ManaBox y se calcula la oferta con los tramos que haya configurados ahora mismo',
   boton: 'Calcular',
   botonCsv: 'Descargar el desglose en csv',
+  botonManabox: 'Descargar',
   urlLabel: 'Enlace del mazo en ManaBox',
   resultado: {
     ofertaEtiqueta: 'Se paga',
