@@ -10,9 +10,9 @@ const MAZO = {
   nombre: 'Colección de Juan',
   formato: 'Commander',
   cartas: [
-    { nombre: 'Mox Diamond', cantidad: 1, esFoil: false, set: 'Stronghold', rareza: 'Rare', precio: 40, codigoSet: 'sth', numero: '138', scryfallId: '' },
-    { nombre: 'Sol Ring', cantidad: 4, esFoil: true, set: 'C21', rareza: 'Uncommon', precio: 1.5, codigoSet: 'c21', numero: '263', scryfallId: '' },
-    { nombre: 'Isla', cantidad: 10, esFoil: false, set: 'C21', rareza: 'Common', precio: 0.05, codigoSet: 'c21', numero: '295', scryfallId: '' }
+    { nombre: 'Mox Diamond', cantidad: 1, esFoil: false, set: 'Stronghold', rareza: 'Rare', precio: 40, codigoSet: 'sth', numero: '138', scryfallId: '', manaboxId: '' },
+    { nombre: 'Sol Ring', cantidad: 4, esFoil: true, set: 'C21', rareza: 'Uncommon', precio: 1.5, codigoSet: 'c21', numero: '263', scryfallId: '', manaboxId: '' },
+    { nombre: 'Isla', cantidad: 10, esFoil: false, set: 'C21', rareza: 'Common', precio: 0.05, codigoSet: 'c21', numero: '295', scryfallId: '', manaboxId: '' }
   ]
 };
 

@@ -16,6 +16,7 @@ const carta = (extra = {}) => ({
   codigoSet: 'scg',
   numero: '78',
   scryfallId: 'e6b3bcfe-be82-458b-ba59-ecb84436d747',
+  manaboxId: 30610,
   ...extra
 });
 
@@ -26,7 +27,7 @@ test('la cabecera es la que exporta manabox, para poder importarlo tal cual', ()
 
 test('cada carta sale como la escribiria manabox, en near_mint e ingles', () => {
   const [, fila] = csv([carta({ cantidad: 3 })]).split('\r\n');
-  assert.equal(fila, 'Undead Warchief,SCG,Scourge,78,normal,uncommon,3,,e6b3bcfe-be82-458b-ba59-ecb84436d747,5.59,false,false,false,near_mint,en,false,EUR,2026-09-27T08:41:24.382Z');
+  assert.equal(fila, 'Undead Warchief,SCG,Scourge,78,normal,uncommon,3,30610,e6b3bcfe-be82-458b-ba59-ecb84436d747,5.59,false,false,false,near_mint,en,false,EUR,2026-09-27T08:41:24.382Z');
 });
 
 test('las foil se marcan como foil', () => {

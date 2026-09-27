@@ -26,7 +26,7 @@ const componerManaboxCsv = (cartas, ahora) =>
       carta.esFoil ? 'foil' : 'normal',
       carta.rareza.toLowerCase(),
       carta.cantidad,
-      '',
+      carta.manaboxId,
       carta.scryfallId,
       carta.precio.toFixed(2),
       'false',

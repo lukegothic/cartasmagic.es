@@ -63,6 +63,9 @@ const parsearMazo = (html) => {
       precio: c.pricing?.cardmarket?.value ?? 0,
       codigoSet: c.setId ?? '',
       numero: c.collectorNumber ?? '',
+      // No viene con ese nombre, pero sigue la misma numeracion que la columna "ManaBox ID"
+      // de su csv y la foil comparte el de la normal, como alli.
+      manaboxId: c.cvId ?? '',
       scryfallId: scryfallIdDeImagen(c.images?.[0]?.imageUrlSmall)
     }))
   };
