@@ -20,6 +20,10 @@ const EMBUDO = [
   { evento: 'envio_rechazado', etiqueta: 'Envio rechazado', suelto: true }
 ];
 
+// Primer dia con los cinco pasos medidos. generate_lead salta desde el dia antes, y
+// contarlo sin su intento de envio sacaba mas leads que intentos.
+const EMBUDO_DESDE = '2026-09-05';
+
 const iso = (d) => d.toISOString().slice(0, 10);
 
 // GSC no tiene consolidados los ultimos tres dias y contarlos hunde las medias. GA4 si
@@ -97,7 +101,7 @@ const bloqueGSC = async (auth, dominio, ventana, pedirGSC = consultaGSC) => {
   };
 };
 
-const bloqueGA4 = async (auth, { dominio, ga4 }, ventana) => {
+const bloqueGA4 = async (auth, { dominio, ga4 }, ventana, pedirGA4 = consultaGA4) => {
   if (!ga4) {
     return (
       `${seccion(`GA4 ${dominio}`)}\n` +
@@ -109,9 +113,17 @@ const bloqueGA4 = async (auth, { dominio, ga4 }, ventana) => {
   const rango = ventana.ga4 || ventana;
 
   const [resumen, eventos, campanas] = await Promise.all([
-    consultaGA4(auth, ga4, { ...rango, dominio, metricas: ['sessions', 'activeUsers'] }),
-    consultaGA4(auth, ga4, { ...rango, dominio, dimensiones: ['eventName'], metricas: ['eventCount'] }),
-    consultaGA4(auth, ga4, {
+    pedirGA4(auth, ga4, { ...rango, dominio, metricas: ['sessions', 'activeUsers'] }),
+    // Por pagina, porque la portada se mide con lo que pasa en ella y no en todo el sitio.
+    pedirGA4(auth, ga4, {
+      ...rango,
+      desde: rango.desde > EMBUDO_DESDE ? rango.desde : EMBUDO_DESDE,
+      dominio,
+      dimensiones: ['eventName', 'pagePath'],
+      metricas: ['eventCount'],
+      limite: 1000
+    }),
+    pedirGA4(auth, ga4, {
       ...rango,
       dominio,
       dimensiones: ['sessionCampaignName'],
@@ -119,13 +131,17 @@ const bloqueGA4 = async (auth, { dominio, ga4 }, ventana) => {
     })
   ]);
 
-  const cuenta = new Map(eventos.map(({ claves, valores }) => [claves[0], valores[0]]));
+  const cuenta = new Map();
+  const enPortada = new Map();
+  for (const { claves: [evento, ruta], valores: [veces] } of eventos) {
+    cuenta.set(evento, (cuenta.get(evento) || 0) + veces);
+    if (ruta === '/') enPortada.set(evento, veces);
+  }
   const [sesiones = 0, usuarios = 0] = resumen[0]?.valores || [];
 
   const lineas = [seccion(`GA4 ${dominio}`)];
   lineas.push(`  ${numero(sesiones)} sesiones, ${numero(usuarios)} usuarios`);
 
-  const puerta = cuenta.get('ver_formulario') || 0;
   lineas.push('\n  Embudo');
   lineas.push(
     tabla(
@@ -145,9 +161,13 @@ const bloqueGA4 = async (auth, { dominio, ga4 }, ventana) => {
     )
   );
 
-  const clics = cuenta.get('clic_cta') || 0;
-  if (clics && puerta) {
-    lineas.push(`\n  Portada a formulario: ${porcentaje(puerta / clics)} (${numero(clics)} clics en CTA)`);
+  const visitasPortada = enPortada.get('page_view') || 0;
+  const clicsPortada = enPortada.get('clic_cta') || 0;
+  if (visitasPortada && cuenta.has('clic_cta')) {
+    lineas.push(
+      `\n  Portada a formulario: ${porcentaje(clicsPortada / visitasPortada)} ` +
+        `(${numero(clicsPortada)} clics en CTA de ${numero(visitasPortada)} visitas a la portada)`
+    );
   }
 
   lineas.push('\n  Campanas');

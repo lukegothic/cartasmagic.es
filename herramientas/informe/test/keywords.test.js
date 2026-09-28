@@ -38,12 +38,22 @@ test('las keywords de venta que ya estan declaradas no salen como huerfanas', ()
   for (const keyword of [
     'vender cartas',
     'donde vender cartas magic',
-    'venta cartas magic',
+    'compra venta cartas magic',
     'vender cartas magic online',
     'tasar cartas magic',
     'valorar cartas magic'
   ]) {
     assert.ok(porKeyword.has(keyword), `${keyword} deberia tener pagina`);
+  }
+});
+
+// Son de compra: declararlas en vender hacia que el informe pidiera reescribir la portada
+// para gente que no quiere vender. Ver docs/reparto-keywords.md.
+test('ninguna pagina declara las consultas de anuncio', () => {
+  const { porKeyword } = construirIndice();
+
+  for (const keyword of ['venta cartas magic', 'venta de cartas magic', 'venta magic', 'vendo cartas magic']) {
+    assert.ok(!porKeyword.has(keyword), `${keyword} no deberia tener pagina`);
   }
 });
 

@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert');
-const { bloqueGSC } = require('../lib/informe');
+const { bloqueGSC, bloqueGA4 } = require('../lib/informe');
 
 // GSC oculta las consultas de pocas busquedas para no identificar a quien busca, asi que
 // sumar la dimension query siempre se queda corto: en vender daba 822 impresiones cuando
@@ -46,4 +46,83 @@ test('un dominio sin datos da cero y no rompe', async () => {
   const { total } = await bloqueGSC(null, 'nuevo.es', { desde: 'a', hasta: 'b' }, sinDatos);
 
   assert.deepEqual(total, { clics: 0, impresiones: 0 });
+});
+
+// La cifra se llamaba "Portada a formulario" pero dividia todas las vistas del
+// formulario, entrasen por donde entrasen, entre los clics en los botones de la portada.
+// Quien llega a /valoracion-cartas-magic desde Google no ha pasado por la portada, y el
+// informe del 2026-09-25 sacaba un 162,7 %. La pregunta de plan-medicion-embudo.md es
+// otra: de cada cien que entran por la portada, cuantos pulsan un boton hacia el
+// formulario.
+const eventosGA4 = [
+  { claves: ['page_view', '/'], valores: [300] },
+  { claves: ['page_view', '/valoracion-cartas-magic'], valores: [150] },
+  { claves: ['clic_cta', '/'], valores: [60] },
+  { claves: ['clic_cta', '/como-vender-cartas-magic'], valores: [15] },
+  { claves: ['ver_formulario', '/valoracion-cartas-magic'], valores: [122] }
+];
+
+const consultaGA4Falsa = async (_auth, _propiedad, { dimensiones = [] }) =>
+  dimensiones[0] === 'eventName' ? eventosGA4 : [];
+
+test('la portada se mide con sus propias visitas, no con las vistas del formulario', async () => {
+  const texto = await bloqueGA4(
+    null,
+    { dominio: 'vendercartasmagic.es', ga4: '1' },
+    { desde: 'a', hasta: 'b' },
+    consultaGA4Falsa
+  );
+
+  assert.match(texto, /Portada a formulario: 20,0 % \(60 clics en CTA de 300 visitas a la portada\)/);
+});
+
+test('las vistas del formulario se siguen contando en todas las paginas', async () => {
+  const texto = await bloqueGA4(
+    null,
+    { dominio: 'vendercartasmagic.es', ga4: '1' },
+    { desde: 'a', hasta: 'b' },
+    consultaGA4Falsa
+  );
+
+  assert.match(texto, /Formulario visto\s+122/);
+});
+
+// El hub no lanza clic_cta: sus botones cruzan a vender con utm y se miden alli. Sin el
+// evento no hay nada medido, y un 0 % diria que nadie pulsa.
+test('sin clic_cta en el sitio no se pinta la cifra de la portada', async () => {
+  const soloVisitas = async (_auth, _propiedad, { dimensiones = [] }) =>
+    dimensiones[0] === 'eventName' ? [{ claves: ['page_view', '/'], valores: [184] }] : [];
+
+  const texto = await bloqueGA4(null, { dominio: 'cartasmagic.es', ga4: '1' }, { desde: 'a', hasta: 'b' }, soloVisitas);
+
+  assert.doesNotMatch(texto, /Portada a formulario/);
+});
+
+// generate_lead existe desde el 2026-09-04 y el resto del embudo desde el 09-05. Con la
+// ventana empezando antes, los leads de prueba del 09-04 salian sin su intento de envio
+// y el informe del 2026-09-25 daba un 120 % de intento a lead.
+test('los eventos del embudo se leen desde que existen todos sus pasos', async () => {
+  const pedidos = [];
+  const registrar = async (_auth, _propiedad, consulta) => {
+    pedidos.push(consulta);
+    return [];
+  };
+
+  await bloqueGA4(null, { dominio: 'vendercartasmagic.es', ga4: '1' }, { desde: '2026-06-30', hasta: '2026-09-28' }, registrar);
+
+  const eventos = pedidos.find(({ dimensiones = [] }) => dimensiones[0] === 'eventName');
+  assert.equal(eventos.desde, '2026-09-05');
+});
+
+test('una ventana que ya empieza despues no se toca', async () => {
+  const pedidos = [];
+  const registrar = async (_auth, _propiedad, consulta) => {
+    pedidos.push(consulta);
+    return [];
+  };
+
+  await bloqueGA4(null, { dominio: 'vendercartasmagic.es', ga4: '1' }, { desde: '2026-12-10', hasta: '2027-03-10' }, registrar);
+
+  const eventos = pedidos.find(({ dimensiones = [] }) => dimensiones[0] === 'eventName');
+  assert.equal(eventos.desde, '2026-12-10');
 });

@@ -155,3 +155,19 @@ test('preguntar quien compra es intencion de venta', () => {
   assert.equal(dominioQueTocaria('quien compra cartas magic', new Map()), VENDER);
   assert.equal(intencion('quien compra colecciones magic'), 'transaccional');
 });
+
+// "venta cartas magic" es como se busca lo que esta a la venta, y "vendo cartas magic" es
+// como se titulan los anuncios de Wallapop y Milanuncios: quien lo busca quiere comprar.
+// En el trimestre hasta el 2026-09-25 sumaban unas 80 impresiones en posiciones 6 a 10 y
+// un solo clic, mientras "vender cartas magic" en la misma pagina pasaba del 9 % de CTR.
+test('venta y vendo sin el verbo vender son intencion de compra', () => {
+  for (const consulta of ['venta cartas magic', 'venta de cartas magic', 'venta magic', 'vendo cartas magic']) {
+    assert.equal(intencion(consulta), 'compra', consulta);
+    assert.equal(dominioQueTocaria(consulta, new Map()), null, consulta);
+  }
+});
+
+test('compra venta y el verbo vender siguen siendo de vender aunque lleven venta', () => {
+  assert.equal(intencion('compra venta cartas magic'), 'transaccional');
+  assert.equal(intencion('venta cartas magic donde vender'), 'transaccional');
+});

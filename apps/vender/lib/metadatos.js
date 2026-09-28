@@ -38,7 +38,7 @@ const grafo = (...nodos) =>
 const INDEX = {
   title: 'Vendo cartas Magic: te las compramos sin que listes nada',
   description: 'Compramos tu colección de cartas Magic en cualquier idioma y estado. Envío pagado, precio definitivo en un día laborable y pago por transferencia.',
-  keywords: 'vender cartas magic, vender cartas, cartas magic vender, vender magic, venta cartas magic, venta de cartas magic, vendo cartas magic, compra venta cartas magic, vender coleccion cartas magic, vender cartas magic españa, comprar colecciones magic',
+  keywords: 'vender cartas magic, vender cartas, cartas magic vender, vender magic, compra venta cartas magic, vender coleccion cartas magic, vender cartas magic españa, comprar colecciones magic',
   canonical: DOMINIO,
   og_title: 'Vendo cartas Magic: te las compramos sin que listes nada',
   og_description: 'Compramos tu colección de cartas Magic en cualquier idioma y estado. Envío pagado, valoración en 24 horas y pago por transferencia.',

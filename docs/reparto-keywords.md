@@ -87,7 +87,23 @@ En el trimestre hasta septiembre de 2026 aparecen consultas de gente que quiere
 | comprar cartas magic online | 2 | 18,0 |
 | comprar cartas magic sueltas | 2 | 19,0 |
 
-Suman unas 43 impresiones, y en el hub salen otras seis consultas del mismo tipo
+Hay un segundo grupo que no lleva el verbo comprar y también es de compra, añadido el 28
+de septiembre de 2026:
+
+| Consulta | Impresiones | Posición | Clics |
+|---|---|---|---|
+| venta cartas magic | 35 | 8,7 | 0 |
+| venta de cartas magic | 23 | 10,3 | 1 |
+| vendo cartas magic | 14 | 6,3 | 0 |
+| venta magic | 11 | 19,1 | 0 |
+
+"Venta cartas magic" busca lo que está a la venta, y "vendo cartas magic" es como se
+titulan los anuncios de Wallapop y Milanuncios. En la misma portada, "vender cartas
+magic" pasa del 9 % de CTR y estas se quedan en un clic de 83 impresiones. Se quitaron
+de las keywords de vender y el informe las cuenta en el tema "compra". "Compra venta
+cartas magic" sigue siendo de vender, y cualquier consulta con el verbo vender también.
+
+Las del primer grupo suman unas 43 impresiones, y en el hub salen otras seis consultas del mismo tipo
 ("cartas magic comprar", "comprar magic the gathering") que aterrizan en una portada que
 no vende nada. Son visitas que llegan, no encuentran lo que buscan y se van.
 

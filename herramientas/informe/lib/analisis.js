@@ -11,12 +11,20 @@ const POSESIVO = /\bmis?\b/;
 // dos cuenta como intencion de compra aunque lleven la misma palabra.
 const COMPRA_PERO_VENDE = /\b(compra\s*-?\s*venta|quien\s+compra)\b/;
 const COMPRA = /\b(comprar|compra|compro|compramos)\b/;
+// La otra cara: "venta cartas magic" busca lo que esta a la venta, y "vendo cartas magic"
+// es el titulo de un anuncio de Wallapop. Las dos las escribe quien quiere comprar, salvo
+// que el verbo vender diga lo contrario.
+const ANUNCIO = /\b(venta|vendo)\b/;
+const VERBO_VENDER = /\bvender\b/;
 const TRANSACCIONAL = /\b(vender|vendo|venta|pagan|precio que|quien compra|donde vender)\b/;
 const INFORMACIONAL = /\b(valor|vale|valen|valorar|tasar|tasacion|valoracion|estado|near mint|nm|edicion|ediciones|antiguas?|cuanto)\b/;
 
 const intencion = (consulta) => {
   if (POSESIVO.test(consulta) && INFORMACIONAL.test(consulta)) return 'transaccional';
   if (COMPRA.test(consulta) && !COMPRA_PERO_VENDE.test(consulta)) return 'compra';
+  if (ANUNCIO.test(consulta) && !COMPRA_PERO_VENDE.test(consulta) && !VERBO_VENDER.test(consulta)) {
+    return 'compra';
+  }
   if (TRANSACCIONAL.test(consulta)) return 'transaccional';
   if (INFORMACIONAL.test(consulta)) return 'informacional';
   return 'otra';

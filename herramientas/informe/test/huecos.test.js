@@ -4,8 +4,8 @@ const { agruparTemas, canibalizacionInterna, coberturaLlm } = require('../lib/hu
 
 test('agrupa consultas sin duenno por el tema que comparten', () => {
   const sinDuenno = [
-    { consulta: 'venta cartas magic', impresiones: 39, clics: 1, mejor: { posicion: 8.4 } },
-    { consulta: 'venta de cartas magic', impresiones: 10, clics: 0, mejor: { posicion: 12.3 } },
+    { consulta: 'vender cartas', impresiones: 39, clics: 1, mejor: { posicion: 8.4 } },
+    { consulta: 'donde vender cartas magic', impresiones: 10, clics: 0, mejor: { posicion: 12.3 } },
     { consulta: 'compra venta cartas magic', impresiones: 19, clics: 1, mejor: { posicion: 6 } },
     { consulta: 'cartas magic sueltas', impresiones: 7, clics: 0, mejor: { posicion: 20.1 } }
   ];
@@ -20,8 +20,8 @@ test('agrupa consultas sin duenno por el tema que comparten', () => {
 test('ordena los temas por impresiones', () => {
   const temas = agruparTemas([
     { consulta: 'cartas magic sueltas', impresiones: 7, clics: 0, mejor: { posicion: 20 } },
-    { consulta: 'venta cartas magic', impresiones: 39, clics: 1, mejor: { posicion: 8 } },
-    { consulta: 'venta de cartas magic', impresiones: 10, clics: 0, mejor: { posicion: 12 } }
+    { consulta: 'vender cartas', impresiones: 39, clics: 1, mejor: { posicion: 8 } },
+    { consulta: 'donde vender cartas magic', impresiones: 10, clics: 0, mejor: { posicion: 12 } }
   ]);
   assert.equal(temas[0].tema, 'venta');
 });
@@ -150,4 +150,20 @@ test('la cobertura llega al maximo cuando todo esta presente', () => {
     { consulta: 'colecciones completas', impresiones: 10 }
   ]);
   assert.equal(cubiertas[0].cobertura, 1);
+});
+
+// El tema compra es el contador que docs/reparto-keywords.md manda vigilar para decidir
+// comprarcartasmagic.es. Lo que el clasificador da por compra tiene que sumar ahi, lleve
+// o no el verbo comprar.
+test('las consultas de anuncio suman en el tema compra', () => {
+  const temas = agruparTemas([
+    { consulta: 'venta cartas magic', impresiones: 34, clics: 0, mejor: { posicion: 8.7 } },
+    { consulta: 'vendo cartas magic', impresiones: 13, clics: 0, mejor: { posicion: 6.3 } },
+    { consulta: 'comprar cartas magic', impresiones: 2, clics: 0, mejor: { posicion: 53 } },
+    { consulta: 'compra venta cartas magic', impresiones: 24, clics: 3, mejor: { posicion: 7.4 } }
+  ]);
+
+  const compra = temas.find(({ tema }) => tema === 'compra');
+  assert.equal(compra.impresiones, 49);
+  assert.equal(temas.find(({ tema }) => tema === 'venta').impresiones, 24);
 });

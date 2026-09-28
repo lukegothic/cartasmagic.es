@@ -1,4 +1,5 @@
 const { normalizar } = require('./keywords');
+const { intencion } = require('./analisis');
 
 // Palabras que no distinguen un tema de otro: salen en casi todas las consultas del
 // dominio y agruparian todo junto.
@@ -22,6 +23,9 @@ const RAICES = [
 
 const temaDe = (consulta) => {
   const texto = normalizar(consulta);
+  // El tema compra es el contador de docs/reparto-keywords.md, asi que sigue al
+  // clasificador y no a la raiz: "venta cartas magic" es compra aunque diga venta.
+  if (intencion(texto) === 'compra') return 'compra';
   const encontrada = RAICES.find(([, patron]) => patron.test(texto));
   if (encontrada) return encontrada[0];
 
