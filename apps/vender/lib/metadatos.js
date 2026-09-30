@@ -36,12 +36,12 @@ const grafo = (...nodos) =>
   JSON.stringify({ '@context': 'https://schema.org', '@graph': [NEGOCIO, ...nodos] });
 
 const INDEX = {
-  title: 'Vendo cartas Magic: te las compramos sin que listes nada',
-  description: 'Compramos tu colección de cartas Magic en cualquier idioma y estado. Envío pagado, precio definitivo en un día laborable y pago por transferencia.',
+  title: 'Vender cartas Magic: precio en 1 día laborable | VenderCartasMagic',
+  description: 'Vende tu colección de cartas Magic sin listarla ni fotografiarla. Envío pagado, precio definitivo en un día laborable y pago por transferencia en 24 horas.',
   keywords: 'vender cartas magic, vender cartas, cartas magic vender, vender magic, compra venta cartas magic, vender coleccion cartas magic, vender cartas magic españa, comprar colecciones magic',
   canonical: DOMINIO,
-  og_title: 'Vendo cartas Magic: te las compramos sin que listes nada',
-  og_description: 'Compramos tu colección de cartas Magic en cualquier idioma y estado. Envío pagado, valoración en 24 horas y pago por transferencia.',
+  og_title: 'Vender cartas Magic: precio en 1 día laborable | VenderCartasMagic',
+  og_description: 'Vende tu colección de cartas Magic sin listarla ni fotografiarla. Envío pagado, precio definitivo en un día laborable y pago por transferencia en 24 horas.',
   og_url: DOMINIO
 };
 
