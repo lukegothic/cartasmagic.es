@@ -22,6 +22,24 @@ la edición, la versión exacta, el idioma, el estado de conservación, el acaba
 foil y el resto de acabados especiales), la demanda actual y la liquidez. Valoramos con
 los precios de Cardmarket del día en que llega el paquete.
 
+## Guías para tasar cartas Magic
+
+Tasar cartas Magic es ponerles un precio de referencia según lo que valen hoy. Las
+guías de https://cartasmagic.es/blog explican cómo hacerlo sin ser experto, y no
+requieren vender nada:
+
+- https://cartasmagic.es/blog/como-saber-cuanto-vale-una-carta-magic - los siete
+  factores que fijan el precio: edición, versión, idioma, estado, acabado, demanda y
+  liquidez
+- https://cartasmagic.es/blog/que-colecciones-antiguas-valen-dinero - qué cartas Magic
+  antiguas se pagan hoy y cuáles se imprimieron tanto que no valen nada
+- https://cartasmagic.es/blog/estado-de-la-carta-nm-ex-gd-lp - qué mira un comprador al
+  valorar el estado de una carta y cuánto descuenta cada nivel de desgaste
+- https://cartasmagic.es/blog/cartas-magic-falsas-como-detectarlas - los tres tests que
+  distinguen una carta auténtica de una falsificación
+- https://cartasmagic.es/blog/informe-mercado-magic-espana - datos reales de las
+  colecciones compradas en España, con los importes pagados
+
 ## Titular
 
 - Nombre: Iván Pérez

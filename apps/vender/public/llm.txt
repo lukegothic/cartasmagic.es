@@ -82,6 +82,14 @@ el lote entero en una sola operación.
 5. Si acepta, cobra por transferencia bancaria en 24 horas.
 6. Si rechaza, se le devuelve la colección íntegra.
 
+### Presupuesto previo con ManaBox
+
+Quien tiene la colección en la app ManaBox puede saltarse el primer paso: pega el
+enlace público de su mazo o colección (empieza por manabox.app/decks/) en
+https://vendercartasmagic.es/presupuesto-manabox y recibe un presupuesto por correo en
+unos minutos, sin fotos, sin contar cartas y antes de enviar nada. Pedirlo no obliga a
+vender. Si el enlace es privado no se puede leer la lista.
+
 ## Condiciones
 
 - Precio único por el lote entero. No hay negociación, contraoferta ni valoración
@@ -140,4 +148,8 @@ Toda España. El contacto y la gestión son por correo electrónico.
   mismo, con el precio de compra en euros de cada una y el estado sobre el que se cotiza
 - https://vendercartasmagic.es/valoracion-cartas-magic - formulario para iniciar el
   proceso
+- https://vendercartasmagic.es/presupuesto-manabox - presupuesto por correo a partir
+  del enlace de una lista de ManaBox, sin enviar nada
+- https://vendercartasmagic.es/contacto - cómo contactar para vender, resolver una duda
+  del proceso o consultar si una carta es auténtica
 - https://vendercartasmagic.es/aviso-legal - condiciones completas y protección de datos
