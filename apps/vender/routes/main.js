@@ -15,26 +15,31 @@ const conMensaje = (datos) => ({ ...datos, mensajeError: datos.errorCode ? mensa
 // Pintar la confirmacion desde el POST hacia que recargar o ir atras y adelante disparara
 // otra vez generate_lead, y podia repetir el envio. El POST deja una marca de un solo uso
 // y redirige; la confirmacion la gasta al pintarse, asi que volver a ella ya no la encuentra
-// y manda al formulario. La cookie va limitada a la ruta de confirmacion para que no viaje
-// en ninguna otra peticion.
-const MARCA_RECIBIDO = 'lead_recibido';
-const VIDA_MARCA_MS = 10 * 60 * 1000;
+// y pinta la confirmacion sin apuntar el lead. Sin marca no se manda al formulario: un
+// navegador que bloquea la cookie veria el formulario vacio y volveria a enviarlo. La
+// cookie va limitada a la ruta de confirmacion para que no viaje en ninguna otra peticion.
+const RECEIVED_MARKER = 'lead_recibido';
+const MARKER_LIFETIME_MS = 10 * 60 * 1000;
 
-const tieneMarca = (req) =>
-  (req.headers.cookie ?? '').split(';').some((par) => par.trim().startsWith(`${MARCA_RECIBIDO}=`));
+const hasMarker = (req) =>
+  (req.headers.cookie ?? '').split(';').some((pair) => pair.trim().startsWith(`${RECEIVED_MARKER}=`));
 
-const opcionesMarca = (ruta) => ({ path: `${ruta}/recibido`, httpOnly: true, sameSite: 'lax' });
+const confirmationPath = (route) => `${route}/recibido`;
 
-const redirigirAConfirmacion = (res, ruta) => {
-  res.cookie(MARCA_RECIBIDO, '1', { ...opcionesMarca(ruta), maxAge: VIDA_MARCA_MS });
-  res.redirect(303, `${ruta}/recibido`);
+const markerOptions = (route) => ({ path: confirmationPath(route), httpOnly: true, sameSite: 'lax' });
+
+// req.route.path es la ruta declarada del POST, asi que no hace falta repetirla al llamar.
+const redirectToConfirmation = (req, res) => {
+  const route = req.route.path;
+  res.cookie(RECEIVED_MARKER, '1', { ...markerOptions(route), maxAge: MARKER_LIFETIME_MS });
+  res.redirect(303, confirmationPath(route));
 };
 
-const montarConfirmacion = (app, ruta, vista) =>
-  app.get(`${ruta}/recibido`, (req, res) => {
-    if (!tieneMarca(req)) return res.redirect(303, ruta);
-    res.clearCookie(MARCA_RECIBIDO, opcionesMarca(ruta));
-    vista(res, { enviado: true, noindex: true });
+const mountConfirmation = (app, route, view) =>
+  app.get(confirmationPath(route), (req, res) => {
+    const shouldTrackLead = hasMarker(req);
+    if (shouldTrackLead) res.clearCookie(RECEIVED_MARKER, markerOptions(route));
+    view(res, { enviado: true, noindex: true, shouldTrackLead });
   });
 
 module.exports = (app) => {
@@ -94,10 +99,10 @@ module.exports = (app) => {
       return vistaValoracion(res.status(500), { errorCode: 'ENVIO_FALLIDO', valores });
     }
 
-    redirigirAConfirmacion(res, '/valoracion-cartas-magic');
+    redirectToConfirmation(req, res);
   });
 
-  montarConfirmacion(app, '/valoracion-cartas-magic', vistaValoracion);
+  mountConfirmation(app, '/valoracion-cartas-magic', vistaValoracion);
 
   const vistaManabox = (res, extra = {}) =>
     res.render('presupuesto-manabox', conMensaje({
@@ -143,10 +148,10 @@ module.exports = (app) => {
       return vistaManabox(res.status(500), { errorCode: 'ENVIO_FALLIDO', valores });
     }
 
-    redirigirAConfirmacion(res, '/presupuesto-manabox');
+    redirectToConfirmation(req, res);
   });
 
-  montarConfirmacion(app, '/presupuesto-manabox', vistaManabox);
+  mountConfirmation(app, '/presupuesto-manabox', vistaManabox);
 
   // El enlace a la guia de estados va al hub, que es donde vive el contenido. Con utm para
   // saber cuanta gente cruza de un dominio al otro, igual que el enlace del pie.

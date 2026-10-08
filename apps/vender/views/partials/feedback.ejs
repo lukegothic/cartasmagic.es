@@ -1,9 +1,12 @@
 <% if (enviado) { %>
+    <%# Sin marca de envio la confirmacion se pinta igual, pero no apunta otro lead. %>
+    <% if (typeof shouldTrackLead === 'undefined' || shouldTrackLead) { %>
     <script>
         if (typeof gtag === 'function') {
             gtag('event', 'generate_lead', { event_category: 'formulario', event_label: '<%= etiquetaConversion %>' });
         }
     </script>
+    <% } %>
     <div class="form-feedback" role="status" tabindex="-1">
         <h2><%= textos.FORMULARIO.recibido %></h2>
         <p><%= textoRecibido %></p>
@@ -23,8 +26,8 @@
 <% } %>
 <% if (enviado || errorCode) { %>
     <script>
-        // El navegador vuelve arriba tras el POST, pero el foco se queda en el body: quien
-        // navega con teclado o con lector de pantalla no se entera de la respuesta.
+        // La confirmacion y el error se pintan con la pagina arriba, pero el foco se queda en
+        // el body: quien navega con teclado o con lector de pantalla no se entera de la respuesta.
         document.querySelector('.form-feedback').focus();
     </script>
 <% } %>

@@ -3,19 +3,19 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 
-// GA4 llego a contar 14 generate_lead sobre 10 intento_envio: el POST pintaba la vista con
-// el lead confirmado, y recargar o ir atras y adelante volvia a disparar el evento y podia
-// repetir el envio, que es un correo mas al negocio. El POST redirige a una pagina de
-// confirmacion que solo pinta el lead una vez.
-const sustituir = (relativa, exports) => {
-  const ruta = require.resolve(relativa);
-  require.cache[ruta] = { id: ruta, filename: ruta, loaded: true, exports };
+// GA4 once counted 14 generate_lead over 10 intento_envio: the POST rendered the view with
+// the confirmed lead, so reloading or going back and forward fired the event again and could
+// resubmit the form, which is one more email to the business. The POST now redirects to a
+// confirmation page that records the lead only once.
+const stubModule = (relativePath, exports) => {
+  const resolved = require.resolve(relativePath);
+  require.cache[resolved] = { id: resolved, filename: resolved, loaded: true, exports };
 };
 
-const arrancar = async () => {
-  const correos = [];
-  sustituir('../lib/mailer', { enviarAviso: async (correo) => { correos.push(correo); } });
-  sustituir('../lib/manabox-fetch', { descargarMazo: async () => ({ nombre: 'Mazo', cartas: [] }) });
+const startApp = async () => {
+  const emails = [];
+  stubModule('../lib/mailer', { enviarAviso: async (email) => { emails.push(email); } });
+  stubModule('../lib/manabox-fetch', { descargarMazo: async () => ({ nombre: 'Mazo', cartas: [] }) });
 
   delete require.cache[require.resolve('../routes/main')];
   const express = require('express');
@@ -28,105 +28,111 @@ const arrancar = async () => {
   app.use(express.urlencoded({ extended: false }));
   require('../routes/main')(app);
 
-  const servidor = app.listen(0);
-  await new Promise((listo) => servidor.once('listening', listo));
+  const server = app.listen(0);
+  await new Promise((resolve) => server.once('listening', resolve));
 
   return {
-    correos,
-    url: `http://127.0.0.1:${servidor.address().port}`,
-    cerrar: () => new Promise((listo) => servidor.close(listo))
+    emails,
+    url: `http://127.0.0.1:${server.address().port}`,
+    close: () => new Promise((resolve) => server.close(resolve))
   };
 };
 
-const FORMULARIOS = [
+const FORMS = [
   {
-    ruta: '/valoracion-cartas-magic',
-    datos: { nombre: 'Iván Pérez', email: 'ivan@correo.com', volumen: 'menos-500' },
-    invalidos: { nombre: 'Iván Pérez', email: 'no-es-un-correo', volumen: 'menos-500' }
+    route: '/valoracion-cartas-magic',
+    valid: { nombre: 'Iván Pérez', email: 'ivan@correo.com', volumen: 'menos-500' },
+    invalid: { nombre: 'Iván Pérez', email: 'no-es-un-correo', volumen: 'menos-500' }
   },
   {
-    ruta: '/presupuesto-manabox',
-    datos: { nombre: 'Ana Ruiz', email: 'ana@correo.com', url: 'https://manabox.app/decks/AZ7lfIfhflqh2vgQaCEtkg' },
-    invalidos: { nombre: 'Ana Ruiz', email: 'no-es-un-correo', url: 'https://manabox.app/decks/AZ7lfIfhflqh2vgQaCEtkg' }
+    route: '/presupuesto-manabox',
+    valid: { nombre: 'Ana Ruiz', email: 'ana@correo.com', url: 'https://manabox.app/decks/AZ7lfIfhflqh2vgQaCEtkg' },
+    invalid: { nombre: 'Ana Ruiz', email: 'no-es-un-correo', url: 'https://manabox.app/decks/AZ7lfIfhflqh2vgQaCEtkg' }
   }
 ];
 
-const enviar = (url, ruta, datos) =>
-  fetch(`${url}${ruta}`, {
+const submit = (url, route, fields) =>
+  fetch(`${url}${route}`, {
     method: 'POST',
     headers: { 'content-type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams(datos),
+    body: new URLSearchParams(fields),
     redirect: 'manual'
   });
 
-// fetch no guarda cookies: se devuelve a mano lo que el POST dejo, como haria el navegador.
-const cookieDe = (respuesta) => respuesta.headers.get('set-cookie').split(';')[0];
+// fetch does not keep cookies: send back by hand what the POST set, as a browser would.
+const cookieFrom = (response) => response.headers.get('set-cookie').split(';')[0];
 
-const visitar = (url, ruta, cookie) =>
-  fetch(`${url}${ruta}`, { headers: cookie ? { cookie } : {}, redirect: 'manual' });
+const visit = (url, route, cookie) =>
+  fetch(`${url}${route}`, { headers: cookie ? { cookie } : {}, redirect: 'manual' });
 
-FORMULARIOS.forEach(({ ruta, datos, invalidos }) => {
-  test(`${ruta} responde al envio correcto con un 303 a la confirmacion`, async (t) => {
-    const { url, correos, cerrar } = await arrancar();
-    t.after(cerrar);
+FORMS.forEach(({ route, valid, invalid }) => {
+  test(`${route} answers a valid submission with a 303 to the confirmation`, async (t) => {
+    const { url, emails, close } = await startApp();
+    t.after(close);
 
-    const respuesta = await enviar(url, ruta, datos);
+    const response = await submit(url, route, valid);
 
-    assert.equal(respuesta.status, 303);
-    assert.equal(respuesta.headers.get('location'), `${ruta}/recibido`);
-    assert.equal(correos.length, 1);
+    assert.equal(response.status, 303);
+    assert.equal(response.headers.get('location'), `${route}/recibido`);
+    assert.equal(emails.length, 1);
   });
 
-  test(`${ruta}/recibido apunta el lead una sola vez`, async (t) => {
-    const { url, cerrar } = await arrancar();
-    t.after(cerrar);
+  test(`${route}/recibido records the lead only once`, async (t) => {
+    const { url, close } = await startApp();
+    t.after(close);
 
-    const cookie = cookieDe(await enviar(url, ruta, datos));
+    const cookie = cookieFrom(await submit(url, route, valid));
 
-    const primera = await visitar(url, `${ruta}/recibido`, cookie);
-    assert.equal(primera.status, 200);
-    const html = await primera.text();
+    const first = await visit(url, `${route}/recibido`, cookie);
+    assert.equal(first.status, 200);
+    const html = await first.text();
     assert.match(html, /'generate_lead'/);
-    assert.ok(!/evento\('ver_formulario'\)/.test(html), 'la confirmacion no es una visita al formulario');
+    assert.ok(!/evento\('ver_formulario'\)/.test(html), 'the confirmation is not a form view');
 
-    // El navegador sigue mandando la cookie si no se borra: la confirmacion tiene que
-    // pedir al navegador que la olvide, y la recarga, aunque la traiga, no repite el lead.
-    assert.match(primera.headers.get('set-cookie'), /Expires=Thu, 01 Jan 1970/);
+    // The browser keeps sending the cookie unless told to drop it, so the confirmation has
+    // to expire it and a reload, even one that still carries it, does not repeat the lead.
+    assert.match(first.headers.get('set-cookie'), /Expires=Thu, 01 Jan 1970/);
   });
 
-  test(`${ruta}/recibido sin envio previo vuelve al formulario`, async (t) => {
-    const { url, cerrar } = await arrancar();
-    t.after(cerrar);
+  // A browser that blocks the cookie, or a reload after it was spent, must still see the
+  // confirmation: sending it back to the form invites a second submission.
+  test(`${route}/recibido without the marker shows the confirmation without recording a lead`, async (t) => {
+    const { url, close } = await startApp();
+    t.after(close);
 
-    const respuesta = await visitar(url, `${ruta}/recibido`);
+    const response = await visit(url, `${route}/recibido`);
 
-    assert.ok([302, 303].includes(respuesta.status), `respondio ${respuesta.status}`);
-    assert.equal(respuesta.headers.get('location'), ruta);
+    assert.equal(response.status, 200);
+    const html = await response.text();
+    assert.match(html, /class="form-feedback" role="status"/);
+    assert.ok(!/'generate_lead'/.test(html), 'no lead without a fresh submission');
+    assert.ok(!/evento\('ver_formulario'\)/.test(html), 'the confirmation is not a form view');
+    assert.match(html, /<meta name="robots" content="noindex/);
   });
 
-  test(`${ruta}/recibido no se indexa`, async (t) => {
-    const { url, cerrar } = await arrancar();
-    t.after(cerrar);
+  test(`${route}/recibido is not indexed`, async (t) => {
+    const { url, close } = await startApp();
+    t.after(close);
 
-    const cookie = cookieDe(await enviar(url, ruta, datos));
-    const html = await (await visitar(url, `${ruta}/recibido`, cookie)).text();
+    const cookie = cookieFrom(await submit(url, route, valid));
+    const html = await (await visit(url, `${route}/recibido`, cookie)).text();
 
     assert.match(html, /<meta name="robots" content="noindex/);
   });
 
-  test(`${ruta} sigue pintando el error en la respuesta al POST`, async (t) => {
-    const { url, cerrar } = await arrancar();
-    t.after(cerrar);
+  test(`${route} still renders the error in the POST response`, async (t) => {
+    const { url, close } = await startApp();
+    t.after(close);
 
-    const respuesta = await enviar(url, ruta, invalidos);
+    const response = await submit(url, route, invalid);
 
-    assert.equal(respuesta.status, 400);
-    assert.equal(respuesta.headers.get('set-cookie'), null);
-    assert.ok(!/'generate_lead'/.test(await respuesta.text()));
+    assert.equal(response.status, 400);
+    assert.equal(response.headers.get('set-cookie'), null);
+    assert.ok(!/'generate_lead'/.test(await response.text()));
   });
 });
 
-test('las confirmaciones no estan en el sitemap', () => {
+test('confirmation pages are not in the sitemap', () => {
   const sitemap = fs.readFileSync(path.join(__dirname, '../public/sitemap.xml'), 'utf8');
   assert.doesNotMatch(sitemap, /recibido/);
 });
