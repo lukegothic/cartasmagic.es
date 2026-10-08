@@ -15,9 +15,9 @@
     };
 
     <% if (!enviado && !errorCode) { %>
-    // Solo cuando la pagina se abre por su cuenta. El POST responde pintando esta misma
-    // vista, asi que apuntar aqui la respuesta a un envio sumaba una visita por cada lead
-    // y hundia todas las proporciones que cuelgan de este paso.
+    // Solo cuando la pagina se abre por su cuenta. La confirmacion y la respuesta a un POST
+    // rechazado pintan esta misma vista, asi que apuntarlas aqui sumaba una visita por cada
+    // envio y hundia todas las proporciones que cuelgan de este paso.
     evento('ver_formulario');
     <% } %>
 

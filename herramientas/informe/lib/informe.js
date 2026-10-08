@@ -1,6 +1,6 @@
 const { cliente, consultaGSC, consultaGA4 } = require('./google');
 const { construirIndice } = require('./keywords');
-const { agrupar, avisos, keywordsMuertas } = require('./analisis');
+const { agrupar, avisos, keywordsMuertas, intencion } = require('./analisis');
 const { numero, decimal, porcentaje, titulo, seccion, tabla } = require('./formato');
 
 // Una sola propiedad de GA4 para los dos dominios, cada uno con su flujo de datos. Se
@@ -150,6 +150,11 @@ const bloqueGA4 = async (auth, { dominio, ga4 }, ventana, pedirGA4 = consultaGA4
         const valor = cuenta.get(evento) || 0;
         const anterior = i > 0 && !suelto ? cuenta.get(EMBUDO[i - 1].evento) || 0 : 0;
         const ratio = anterior ? valor / anterior : null;
+        // Un paso no puede tener mas eventos que el anterior: si los tiene, el fallo es
+        // de medicion y un porcentaje por encima de 100 lo haria pasar por conversion.
+        if (ratio > 1) {
+          return [etiqueta, numero(valor), '', 'mas eventos que el paso anterior, fallo de medicion'];
+        }
         const flojo = minimo && ratio !== null && ratio < minimo;
         return [
           etiqueta,
@@ -227,12 +232,18 @@ const bloqueKeywords = (consultas, indice) => {
     )
   );
 
+  // La intencion de compra se queda sin dominio a proposito (docs/reparto-keywords.md),
+  // asi que no es candidata a reclamar. Se lista aparte para que la demanda siga a la vista.
+  const { purchaseIntent = [], claimable = [] } = Object.groupBy(sinDuenno, ({ consulta }) =>
+    intencion(consulta) === 'compra' ? 'purchaseIntent' : 'claimable'
+  );
+
   lineas.push(seccion('Nadie la reclama y aun asi rankea'));
   lineas.push('  Candidatas a meter en las keywords o en el copy de la pagina que toque.');
   lineas.push(
     tabla(
       ['consulta', 'impr', 'clics', 'pos', 'deberia ser de'],
-      sinDuenno
+      claimable
         .slice(0, 20)
         .map(({ consulta, impresiones, clics, mejor, deberia }) => [
           consulta,
@@ -243,6 +254,12 @@ const bloqueKeywords = (consultas, indice) => {
         ])
     )
   );
+  if (purchaseIntent.length) {
+    lineas.push(
+      '  Intencion de compra, sin dominio a proposito: ' +
+        purchaseIntent.map(({ consulta, impresiones }) => `${consulta} (${numero(impresiones)})`).join(', ')
+    );
+  }
 
   lineas.push(seccion('Buena posicion y casi ningun clic'));
   lineas.push('  Rankea pero el titulo o la descripcion no convencen. Se arregla en el copy.');

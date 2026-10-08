@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert');
-const { bloqueGSC, bloqueGA4 } = require('../lib/informe');
+const { bloqueGSC, bloqueGA4, bloqueKeywords } = require('../lib/informe');
 
 // GSC oculta las consultas de pocas busquedas para no identificar a quien busca, asi que
 // sumar la dimension query siempre se queda corto: en vender daba 822 impresiones cuando
@@ -114,6 +114,25 @@ test('los eventos del embudo se leen desde que existen todos sus pasos', async (
   assert.equal(eventos.desde, '2026-09-05');
 });
 
+// Con generate_lead disparando en cada recarga de la confirmacion, el informe pintaba
+// "Lead 14 / 140,0 %" sobre 10 intentos. Mas eventos que en el paso anterior no es una
+// conversion, es un fallo de medicion, y un porcentaje por encima de 100 lo esconde.
+test('un paso con mas eventos que el anterior se avisa en vez de dar un porcentaje', async () => {
+  const embudoInflado = async (_auth, _propiedad, { dimensiones = [] }) =>
+    dimensiones[0] === 'eventName'
+      ? [
+          { claves: ['intento_envio', '/valoracion-cartas-magic'], valores: [10] },
+          { claves: ['generate_lead', '/valoracion-cartas-magic'], valores: [14] }
+        ]
+      : [];
+
+  const texto = await bloqueGA4(null, { dominio: 'vendercartasmagic.es', ga4: '1' }, { desde: 'a', hasta: 'b' }, embudoInflado);
+
+  const lead = texto.split('\n').find((linea) => /^\s*Lead\s/.test(linea));
+  assert.doesNotMatch(lead, /140,0 %/);
+  assert.match(lead, /14\s+mas eventos que el paso anterior, fallo de medicion/);
+});
+
 test('una ventana que ya empieza despues no se toca', async () => {
   const pedidos = [];
   const registrar = async (_auth, _propiedad, consulta) => {
@@ -125,4 +144,42 @@ test('una ventana que ya empieza despues no se toca', async () => {
 
   const eventos = pedidos.find(({ dimensiones = [] }) => dimensiones[0] === 'eventName');
   assert.equal(eventos.desde, '2026-12-10');
+});
+
+// El reparto deja la intencion de compra sin dominio a proposito, y las acciones ya no la
+// proponian. La tabla de huerfanas de la consola si: el 8 de octubre de 2026 seguia
+// pintando "venta de cartas magic" como candidata a meter en las keywords de vender.
+test('las consultas de compra no salen como candidatas a reclamar, pero se siguen viendo', () => {
+  const consultas = [
+    { dominio: 'vendercartasmagic.es', claves: ['venta de cartas magic'], clics: 0, impresiones: 20, posicion: 9 },
+    { dominio: 'vendercartasmagic.es', claves: ['venta cartas magic'], clics: 0, impresiones: 19, posicion: 10.1 },
+    { dominio: 'vendercartasmagic.es', claves: ['vender cartas pokemon'], clics: 1, impresiones: 15, posicion: 12 }
+  ];
+
+  const texto = bloqueKeywords(consultas, { porKeyword: new Map(), paginas: [] });
+  const huerfanas = texto.split('Nadie la reclama y aun asi rankea')[1].split('Buena posicion y casi ningun clic')[0];
+  const [candidatas, compra] = huerfanas.split('Intencion de compra');
+
+  assert.match(candidatas, /vender cartas pokemon/);
+  assert.doesNotMatch(candidatas, /venta de cartas magic/);
+  assert.doesNotMatch(candidatas, /venta cartas magic/);
+  assert.ok(compra, 'falta la linea de intencion de compra');
+  assert.match(compra, /venta de cartas magic/);
+  assert.match(compra, /venta cartas magic/);
+});
+
+// Sin intencion clara el reparto tampoco le da dominio, pero eso no la hace de compra:
+// antes salia en la tabla con el dominio donde rankea, y ahi tiene que seguir.
+test('una huerfana sin intencion clara sigue saliendo como candidata a reclamar', () => {
+  const consultas = [
+    { dominio: 'vendercartasmagic.es', claves: ['cartas magic sueltas'], clics: 0, impresiones: 18, posicion: 11 },
+    { dominio: 'vendercartasmagic.es', claves: ['venta de cartas magic'], clics: 0, impresiones: 20, posicion: 9 }
+  ];
+
+  const texto = bloqueKeywords(consultas, { porKeyword: new Map(), paginas: [] });
+  const huerfanas = texto.split('Nadie la reclama y aun asi rankea')[1].split('Buena posicion y casi ningun clic')[0];
+  const [candidatas, compra] = huerfanas.split('Intencion de compra');
+
+  assert.match(candidatas, /cartas magic sueltas.*vendercartasmagic/);
+  assert.doesNotMatch(compra, /cartas magic sueltas/);
 });

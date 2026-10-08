@@ -27,7 +27,7 @@ const pintar = ({ vista, etiqueta, metadatos }, extra = {}) => {
   }, { filename: fichero });
 };
 
-// Los dos formularios responden al POST pintando otra vez la misma vista, asi que el
+// La confirmacion y los errores del POST pintan otra vez la misma vista, asi que el
 // partial de medicion se vuelve a cargar con la respuesta del envio. Contando un
 // ver_formulario en esa segunda carga, cada lead se apuntaba tambien como una visita
 // nueva al formulario: por eso el informe daba 8 leads sobre 7 intentos y una portada a

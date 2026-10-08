@@ -1,5 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
+const { intencion } = require('./analisis');
 
 // El estado vive en un volumen del contenedor, no en el repositorio. Si no hay volumen
 // el informe sigue funcionando: se comporta como si cada dia fuera el primero y manda
@@ -21,10 +22,15 @@ const guardar = (firmas) => {
 // La firma identifica el aviso, no su magnitud: si "vender cartas" pasa de 97 a 103
 // impresiones sigue siendo el mismo hallazgo y no merece otro correo. Solo cuenta que
 // aparezca uno que ayer no estaba.
+//
+// La intencion de compra no se firma: se queda sin dominio a proposito
+// (docs/reparto-keywords.md), asi que no hay nada que reclamar ni motivo para un correo.
 const firmar = ({ canibalizacion, malDominio, sinDuenno, ctrBajo }) => [
   ...canibalizacion.map(({ consulta }) => `canibal:${consulta}`),
   ...malDominio.map(({ consulta, deberia }) => `dominio:${consulta}:${deberia}`),
-  ...sinDuenno.map(({ consulta }) => `huerfana:${consulta}`),
+  ...sinDuenno
+    .filter(({ consulta }) => intencion(consulta) !== 'compra')
+    .map(({ consulta }) => `huerfana:${consulta}`),
   ...ctrBajo.map(({ consulta }) => `ctr:${consulta}`)
 ];
 
