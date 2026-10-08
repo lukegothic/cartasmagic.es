@@ -12,6 +12,31 @@ const { ACTUALIZADA, CARTAS, formatoPrecio } = require('../lib/hotlist-cartas');
 // aviso vacio por olvidarse de pasarlo.
 const conMensaje = (datos) => ({ ...datos, mensajeError: datos.errorCode ? mensajeDeError(datos.errorCode) : null });
 
+// Pintar la confirmacion desde el POST hacia que recargar o ir atras y adelante disparara
+// otra vez generate_lead, y podia repetir el envio. El POST deja una marca de un solo uso
+// y redirige; la confirmacion la gasta al pintarse, asi que volver a ella ya no la encuentra
+// y manda al formulario. La cookie va limitada a la ruta de confirmacion para que no viaje
+// en ninguna otra peticion.
+const MARCA_RECIBIDO = 'lead_recibido';
+const VIDA_MARCA_MS = 10 * 60 * 1000;
+
+const tieneMarca = (req) =>
+  (req.headers.cookie ?? '').split(';').some((par) => par.trim().startsWith(`${MARCA_RECIBIDO}=`));
+
+const opcionesMarca = (ruta) => ({ path: `${ruta}/recibido`, httpOnly: true, sameSite: 'lax' });
+
+const redirigirAConfirmacion = (res, ruta) => {
+  res.cookie(MARCA_RECIBIDO, '1', { ...opcionesMarca(ruta), maxAge: VIDA_MARCA_MS });
+  res.redirect(303, `${ruta}/recibido`);
+};
+
+const montarConfirmacion = (app, ruta, vista) =>
+  app.get(`${ruta}/recibido`, (req, res) => {
+    if (!tieneMarca(req)) return res.redirect(303, ruta);
+    res.clearCookie(MARCA_RECIBIDO, opcionesMarca(ruta));
+    vista(res, { enviado: true, noindex: true });
+  });
+
 module.exports = (app) => {
   app.get('/', (req, res) => {
     res.render('index', {
@@ -69,8 +94,10 @@ module.exports = (app) => {
       return vistaValoracion(res.status(500), { errorCode: 'ENVIO_FALLIDO', valores });
     }
 
-    vistaValoracion(res, { enviado: true });
+    redirigirAConfirmacion(res, '/valoracion-cartas-magic');
   });
+
+  montarConfirmacion(app, '/valoracion-cartas-magic', vistaValoracion);
 
   const vistaManabox = (res, extra = {}) =>
     res.render('presupuesto-manabox', conMensaje({
@@ -116,8 +143,10 @@ module.exports = (app) => {
       return vistaManabox(res.status(500), { errorCode: 'ENVIO_FALLIDO', valores });
     }
 
-    vistaManabox(res, { enviado: true });
+    redirigirAConfirmacion(res, '/presupuesto-manabox');
   });
+
+  montarConfirmacion(app, '/presupuesto-manabox', vistaManabox);
 
   // El enlace a la guia de estados va al hub, que es donde vive el contenido. Con utm para
   // saber cuanta gente cruza de un dominio al otro, igual que el enlace del pie.
