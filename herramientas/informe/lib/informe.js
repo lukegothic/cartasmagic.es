@@ -1,6 +1,6 @@
 const { cliente, consultaGSC, consultaGA4 } = require('./google');
 const { construirIndice } = require('./keywords');
-const { agrupar, avisos, keywordsMuertas } = require('./analisis');
+const { agrupar, avisos, keywordsMuertas, intencion } = require('./analisis');
 const { numero, decimal, porcentaje, titulo, seccion, tabla } = require('./formato');
 
 // Una sola propiedad de GA4 para los dos dominios, cada uno con su flujo de datos. Se
@@ -152,7 +152,7 @@ const bloqueGA4 = async (auth, { dominio, ga4 }, ventana, pedirGA4 = consultaGA4
         const ratio = anterior ? valor / anterior : null;
         // Un paso no puede tener mas eventos que el anterior: si los tiene, el fallo es
         // de medicion y un porcentaje por encima de 100 lo haria pasar por conversion.
-        if (ratio !== null && ratio > 1) {
+        if (ratio > 1) {
           return [etiqueta, numero(valor), '', 'mas eventos que el paso anterior, fallo de medicion'];
         }
         const flojo = minimo && ratio !== null && ratio < minimo;
@@ -232,30 +232,32 @@ const bloqueKeywords = (consultas, indice) => {
     )
   );
 
+  // La intencion de compra se queda sin dominio a proposito (docs/reparto-keywords.md),
+  // asi que no es candidata a reclamar. Se lista aparte para que la demanda siga a la vista.
+  const { purchaseIntent = [], claimable = [] } = Object.groupBy(sinDuenno, ({ consulta }) =>
+    intencion(consulta) === 'compra' ? 'purchaseIntent' : 'claimable'
+  );
+
   lineas.push(seccion('Nadie la reclama y aun asi rankea'));
   lineas.push('  Candidatas a meter en las keywords o en el copy de la pagina que toque.');
   lineas.push(
     tabla(
       ['consulta', 'impr', 'clics', 'pos', 'deberia ser de'],
-      sinDuenno
-        .filter(({ deberia }) => deberia)
+      claimable
         .slice(0, 20)
         .map(({ consulta, impresiones, clics, mejor, deberia }) => [
           consulta,
           numero(impresiones),
           numero(clics),
           decimal(mejor.posicion),
-          deberia.split('.')[0]
+          (deberia || mejor.dominio).split('.')[0]
         ])
     )
   );
-  // La intencion de compra se queda sin dominio a proposito (docs/reparto-keywords.md),
-  // asi que no es candidata a reclamar. Se lista aparte para que la demanda siga a la vista.
-  const compra = sinDuenno.filter(({ deberia }) => !deberia);
-  if (compra.length) {
+  if (purchaseIntent.length) {
     lineas.push(
       '  Intencion de compra, sin dominio a proposito: ' +
-        compra.map(({ consulta, impresiones }) => `${consulta} (${numero(impresiones)})`).join(', ')
+        purchaseIntent.map(({ consulta, impresiones }) => `${consulta} (${numero(impresiones)})`).join(', ')
     );
   }
 
