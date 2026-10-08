@@ -11,11 +11,11 @@
 // otra. La rareza la trae ManaBox en cada carta, asi que el corte no cuesta nada.
 const TRAMOS = [
   { id: 'premium', desde: 20, variable: 'TRAMO_PREMIUM_PCT', porDefecto: 70, etiqueta: 'Cartas de 20 € o más' },
-  { id: 'alta', desde: 5, variable: 'TRAMO_ALTA_PCT', porDefecto: 50, etiqueta: 'Cartas de 5 a 20 €' },
-  { id: 'media', desde: 1, variable: 'TRAMO_MEDIA_PCT', porDefecto: 20, etiqueta: 'Cartas de 1 a 5 €' },
+  { id: 'alta', desde: 5, variable: 'TRAMO_ALTA_PCT', porDefecto: 60, etiqueta: 'Cartas de 5 a 20 €' },
+  { id: 'media', desde: 1, variable: 'TRAMO_MEDIA_PCT', porDefecto: 25, etiqueta: 'Cartas de 1 a 5 €' },
   { id: 'baja', desde: 0.5, variable: 'TRAMO_BAJA_PCT', porDefecto: 10, etiqueta: 'Cartas de 0,50 a 1 €' },
   { id: 'bulkRara', desde: 0, soloRaras: true, variable: 'TRAMO_BULK_RARA_EUR', porDefecto: 0.05, porUnidad: true, etiqueta: 'Bulk de rara o mítica (menos de 0,50 €)' },
-  { id: 'bulk', desde: 0, variable: 'TRAMO_BULK_EUR', porDefecto: 0.005, porUnidad: true, etiqueta: 'Bulk de común o infrecuente (menos de 0,50 €)' }
+  { id: 'bulk', desde: 0, variable: 'TRAMO_BULK_EUR', porDefecto: 0.003, porUnidad: true, etiqueta: 'Bulk de común o infrecuente (menos de 0,50 €)' }
 ];
 
 // Las que ManaBox marca como rara o mitica. Una carta sin rareza cae en la tarifa de
@@ -34,6 +34,9 @@ const SIN_PRECIO = { id: 'sinPrecio', etiqueta: 'Sin precio en Cardmarket' };
 
 const OFERTA_MINIMA_POR_DEFECTO = 50;
 const COSTE_ENVIO_POR_DEFECTO = 5;
+// Desde esta oferta el envio corre de nuestra cuenta: en un lote de ese tamaño, descontarlo
+// cuesta mas en ventas perdidas de lo que ahorra. Igual que en mtginvestor.
+const ENVIO_GRATIS_DESDE_POR_DEFECTO = 100;
 const PORCENTAJE_MAXIMO = 100;
 
 // Una variable mal escrita no debe cambiar la oferta sin avisar: se ignora y se avisa por el log.
@@ -63,6 +66,13 @@ const leerOfertaMinima = (entorno = process.env) =>
 const leerCosteEnvio = (entorno = process.env) =>
   numeroValido(entorno.COSTE_ENVIO, COSTE_ENVIO_POR_DEFECTO, Infinity);
 
+const leerEnvioGratisDesde = (entorno = process.env) =>
+  numeroValido(entorno.ENVIO_GRATIS_DESDE, ENVIO_GRATIS_DESDE_POR_DEFECTO, Infinity);
+
+// Recibe la oferta de las cartas ya redondeada, la misma que se compara en el correo y en el csv.
+const costeEnvioPara = (ofertaCartas, entorno = process.env) =>
+  ofertaCartas >= leerEnvioGratisDesde(entorno) ? 0 : leerCosteEnvio(entorno);
+
 const redondear = (valor) => Math.round(valor * 100) / 100;
 
 // El tramo sale del precio de Cardmarket y la rebaja por estado se aplica despues, como en
@@ -91,7 +101,7 @@ const calcularPresupuesto = (cartas, entorno = process.env) => {
 
   const valorMercado = redondear([...acumulado.values()].reduce((s, f) => s + f.valorMercado, 0));
   const ofertaCartas = redondear([...acumulado.values()].reduce((s, f) => s + f.oferta, 0));
-  const costeEnvio = leerCosteEnvio(entorno);
+  const costeEnvio = costeEnvioPara(ofertaCartas, entorno);
   const oferta = Math.max(0, redondear(ofertaCartas - costeEnvio));
 
   return {
@@ -116,4 +126,4 @@ const calcularPresupuesto = (cartas, entorno = process.env) => {
   };
 };
 
-module.exports = { calcularPresupuesto, valorarCarta, leerTramos, leerOfertaMinima, leerCosteEnvio, SIN_PRECIO };
+module.exports = { calcularPresupuesto, valorarCarta, leerTramos, leerOfertaMinima, leerEnvioGratisDesde, costeEnvioPara, SIN_PRECIO };

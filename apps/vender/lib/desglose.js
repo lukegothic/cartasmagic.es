@@ -1,4 +1,4 @@
-const { leerTramos, leerCosteEnvio, valorarCarta, SIN_PRECIO } = require('./presupuesto');
+const { leerTramos, costeEnvioPara, valorarCarta, SIN_PRECIO } = require('./presupuesto');
 
 const CABECERAS = ['Cantidad', 'Carta', 'Edicion', 'Rareza', 'Foil', 'Precio unidad EUR', 'Precio total EUR', 'Tramo', 'Se paga EUR'];
 
@@ -27,8 +27,6 @@ const etiquetaPlana = (etiqueta) => etiqueta.replace(/€/g, 'EUR').replace(/á|
 const componerDesgloseCsv = (cartas, entorno = process.env) => {
   const tramos = leerTramos(entorno);
   const ordenadas = [...cartas].sort((a, b) => b.precio - a.precio);
-  const costeEnvio = leerCosteEnvio(entorno);
-
   let totalMercado = 0;
   let totalOferta = 0;
 
@@ -53,14 +51,16 @@ const componerDesgloseCsv = (cartas, entorno = process.env) => {
   });
 
   // El total tiene que ser la cifra del correo, que ya lleva el envio descontado. Con la
-  // fila del envio a la vista, la resta se entiende sin tener que explicarla.
+  // fila del envio a la vista, la resta se entiende sin tener que explicarla. Si no se
+  // descuenta nada, la fila sobra.
+  const costeEnvio = costeEnvioPara(redondear(totalOferta), entorno);
   const totalPagado = Math.max(0, redondear(redondear(totalOferta) - costeEnvio));
 
   // Sin BOM, Excel abre el fichero en la codificacion del sistema y destroza las tildes.
   return '﻿' + [
     fila(CABECERAS),
     ...filas,
-    fila(['ENVIO', '', '', '', '', '', '', '', euros(-costeEnvio)]),
+    ...(costeEnvio > 0 ? [fila(['ENVIO', '', '', '', '', '', '', '', euros(-costeEnvio)])] : []),
     fila(['TOTAL', '', '', '', '', '', euros(totalMercado), '', euros(totalPagado)])
   ].join('\r\n');
 };

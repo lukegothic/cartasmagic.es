@@ -1,17 +1,17 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { leerTramos, leerOfertaMinima, calcularPresupuesto } = require('../lib/presupuesto');
+const { leerTramos, leerOfertaMinima, leerEnvioGratisDesde, calcularPresupuesto } = require('../lib/presupuesto');
 
 const carta = (precio, cantidad = 1) => ({ nombre: 'x', cantidad, esFoil: false, set: 's', rareza: 'r', precio });
 
 test('sin variables de entorno se usan los porcentajes por defecto', () => {
   const tramos = leerTramos({});
   assert.equal(tramos.find((t) => t.id === 'premium').porcentaje, 0.7);
-  assert.equal(tramos.find((t) => t.id === 'alta').porcentaje, 0.5);
-  assert.equal(tramos.find((t) => t.id === 'media').porcentaje, 0.2);
+  assert.equal(tramos.find((t) => t.id === 'alta').porcentaje, 0.6);
+  assert.equal(tramos.find((t) => t.id === 'media').porcentaje, 0.25);
   assert.equal(tramos.find((t) => t.id === 'baja').porcentaje, 0.1);
   assert.equal(tramos.find((t) => t.id === 'bulkRara').porUnidad, 0.05);
-  assert.equal(tramos.find((t) => t.id === 'bulk').porUnidad, 0.005);
+  assert.equal(tramos.find((t) => t.id === 'bulk').porUnidad, 0.003);
 });
 
 test('cada variable de entorno cambia su tramo', () => {
@@ -59,4 +59,11 @@ test('el coste del envio sale del entorno', () => {
   assert.equal(calcularPresupuesto([carta(100)], { COSTE_ENVIO: '8' }).oferta, 51.5);
   assert.equal(calcularPresupuesto([carta(100)], { COSTE_ENVIO: '0' }).oferta, 59.5);
   assert.equal(calcularPresupuesto([carta(100)], { COSTE_ENVIO: 'gratis' }).costeEnvio, 5);
+});
+
+test('el umbral desde el que no se descuenta el envio sale del entorno', () => {
+  assert.equal(leerEnvioGratisDesde({}), 100);
+  assert.equal(leerEnvioGratisDesde({ ENVIO_GRATIS_DESDE: 'siempre' }), 100);
+  assert.equal(calcularPresupuesto([carta(100)], { ENVIO_GRATIS_DESDE: '50' }).oferta, 59.5);
+  assert.equal(calcularPresupuesto([carta(100)], { ENVIO_GRATIS_DESDE: '0' }).costeEnvio, 0);
 });

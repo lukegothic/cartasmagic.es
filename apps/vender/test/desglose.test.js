@@ -46,7 +46,13 @@ test('una comilla en el nombre se escapa doblandola', () => {
 test('el envio se descuenta en su propia fila antes del total', () => {
   const filas = componerDesgloseCsv([carta({ precio: 100 }), carta({ precio: 10 })]).split('\r\n');
   assert.equal(filas.at(-2), 'ENVIO;;;;;;;;-5,00');
-  assert.equal(filas.at(-1), 'TOTAL;;;;;;110,00;;58,75');
+  assert.equal(filas.at(-1), 'TOTAL;;;;;;110,00;;59,60');
+});
+
+test('a partir de 100 € de oferta no sale la fila del envio', () => {
+  const filas = componerDesgloseCsv([carta({ precio: 200 })]).split('\r\n');
+  assert.ok(filas.every((f) => !f.startsWith('ENVIO')));
+  assert.equal(filas.at(-1), 'TOTAL;;;;;;200,00;;119,00');
 });
 
 test('el bulk comun se paga a su tarifa y no a la de rara', () => {
@@ -54,7 +60,7 @@ test('el bulk comun se paga a su tarifa y no a la de rara', () => {
     carta({ precio: 0.02, cantidad: 100, rareza: 'Common' }),
     carta({ precio: 0.01, cantidad: 100, rareza: 'Rare' })
   ]).split('\r\n');
-  assert.match(filas[1], /;0,50$/);
+  assert.match(filas[1], /;0,30$/);
   assert.match(filas[2], /;5,00$/);
 });
 

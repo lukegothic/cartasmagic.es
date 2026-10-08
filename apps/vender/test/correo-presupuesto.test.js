@@ -14,7 +14,7 @@ const base = {
 test('el asunto lleva la oferta y a quien va dirigido', () => {
   const c = componerCorreoMazo(base);
   assert.match(c.subject, /Pepe/);
-  assert.match(c.subject, /212,60/);
+  assert.match(c.subject, /217,66/);
 });
 
 test('el correo va listo para reenviar: destinatario en replyTo y cuerpo html', () => {
@@ -26,7 +26,7 @@ test('el correo va listo para reenviar: destinatario en replyTo y cuerpo html', 
 
 test('el cuerpo html lleva la oferta bien visible y el nombre del mazo', () => {
   const { html } = componerCorreoMazo(base);
-  assert.match(html, /212,60/);
+  assert.match(html, /217,66/);
   assert.match(html, /Venta/);
   assert.match(html, /2 cartas/);
 });
@@ -65,7 +65,7 @@ test('avisa en el asunto cuando la oferta baja del minimo', () => {
 
 test('sigue habiendo una version en texto plano', () => {
   const c = componerCorreoMazo(base);
-  assert.match(c.text, /212,60/);
+  assert.match(c.text, /217,66/);
   assert.match(c.text, /Pepe/);
 });
 
@@ -79,8 +79,15 @@ test('el correo dice que la cifra es para cartas en EX y que en mejor estado se 
   }
 });
 
+// Por debajo de 100 € de oferta, que es cuando todavia se descuenta
 test('las notas dicen cuanto envio se ha descontado', () => {
-  const { attachments } = componerCorreoMazo(base);
+  const { attachments } = componerCorreoMazo({ ...base, cartas: [{ nombre: 'x', cantidad: 1, esFoil: false, set: 's', rareza: 'r', precio: 100 }] });
   const notas = attachments.find(({ filename }) => filename.startsWith('notas-'));
   assert.match(notas.content, /Envío descontado: 5,00 EUR/);
+});
+
+test('si el envio no se descuenta las notas no lo mencionan', () => {
+  const { attachments } = componerCorreoMazo(base);
+  const notas = attachments.find(({ filename }) => filename.startsWith('notas-'));
+  assert.doesNotMatch(notas.content, /Envío descontado/);
 });

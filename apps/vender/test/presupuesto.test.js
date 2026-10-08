@@ -12,26 +12,26 @@ const tramoDe = (precio) => calcularPresupuesto([carta(precio)]).tramos.find((t)
 // Todas las cartas se valoran como EX, que paga el 85 % de su precio de Cardmarket.
 test('cada tramo aplica su porcentaje sobre el precio en EX', () => {
   assert.equal(calcularPresupuesto([carta(100)]).ofertaCartas, 59.5);
-  assert.equal(calcularPresupuesto([carta(10)]).ofertaCartas, 4.25);
-  assert.equal(calcularPresupuesto([carta(2)]).ofertaCartas, 0.34);
+  assert.equal(calcularPresupuesto([carta(10)]).ofertaCartas, 5.1);
+  assert.equal(calcularPresupuesto([carta(4)]).ofertaCartas, 0.85);
   assert.equal(calcularPresupuesto([carta(0.6)]).ofertaCartas, 0.05);
 });
 
 test('el bulk se paga a tanto alzado por carta, sin rebaja por estado', () => {
-  assert.equal(calcularPresupuesto([carta(0.02, 100, { rareza: 'Common' })]).ofertaCartas, 0.5);
+  assert.equal(calcularPresupuesto([carta(0.02, 100, { rareza: 'Common' })]).ofertaCartas, 0.3);
 });
 
 test('el bulk de rara o mitica se paga aparte del de comun', () => {
   assert.equal(calcularPresupuesto([carta(0.02, 100, { rareza: 'Rare' })]).ofertaCartas, 5);
   assert.equal(calcularPresupuesto([carta(0.02, 100, { rareza: 'Mythic' })]).ofertaCartas, 5);
-  assert.equal(calcularPresupuesto([carta(0.02, 100, { rareza: 'Uncommon' })]).ofertaCartas, 0.5);
+  assert.equal(calcularPresupuesto([carta(0.02, 100, { rareza: 'Uncommon' })]).ofertaCartas, 0.3);
 });
 
 // ManaBox escribe la rareza en minuscula en algunos exports, y una carta sin rareza no
 // puede cobrar la tarifa alta por accidente: ante la duda cae en la de comun.
 test('la rareza se reconoce sin distinguir mayusculas y a falta de dato paga la baja', () => {
   assert.equal(calcularPresupuesto([carta(0.02, 100, { rareza: 'rare' })]).ofertaCartas, 5);
-  assert.equal(calcularPresupuesto([carta(0.02, 100, { rareza: '' })]).ofertaCartas, 0.5);
+  assert.equal(calcularPresupuesto([carta(0.02, 100, { rareza: '' })]).ofertaCartas, 0.3);
 });
 
 // El tramo sale del precio de Cardmarket, no del rebajado por estado, como en mtginvestor.
@@ -53,7 +53,7 @@ test('el total suma todas las cartas y redondea a dos decimales', () => {
     carta(100), carta(10), carta(2), carta(0.6), carta(0.02, 50, { rareza: 'Common' })
   ]);
   assert.equal(r.valorMercado, 113.6);
-  assert.equal(r.ofertaCartas, 64.39);
+  assert.equal(r.ofertaCartas, 65.23);
   assert.equal(r.totalCartas, 54);
 });
 
@@ -61,6 +61,14 @@ test('el envio se descuenta de la oferta', () => {
   const r = calcularPresupuesto([carta(100)]);
   assert.equal(r.costeEnvio, 5);
   assert.equal(r.oferta, 54.5);
+});
+
+// 168 € y 169 € en premium dan 99,96 € y 100,56 €, a cada lado de los 100 €
+test('a partir de 100 € de oferta el envio corre de nuestra cuenta', () => {
+  assert.equal(calcularPresupuesto([carta(169)]).costeEnvio, 0);
+  assert.equal(calcularPresupuesto([carta(169)]).oferta, 100.56);
+  assert.equal(calcularPresupuesto([carta(168)]).costeEnvio, 5);
+  assert.equal(calcularPresupuesto([carta(168)]).oferta, 94.96);
 });
 
 test('la oferta no baja de cero por descontar el envio', () => {
@@ -83,7 +91,7 @@ test('el bulk de rara y el de comun se desglosan por separado', () => {
   assert.equal(r.tramos.find((t) => t.id === 'bulkRara').cartas, 10);
   assert.equal(r.tramos.find((t) => t.id === 'bulkRara').oferta, 0.5);
   assert.equal(r.tramos.find((t) => t.id === 'bulk').cartas, 40);
-  assert.equal(r.tramos.find((t) => t.id === 'bulk').oferta, 0.2);
+  assert.equal(r.tramos.find((t) => t.id === 'bulk').oferta, 0.12);
 });
 
 // Una carta sin precio no es bulk: pagarla como bulk seria inventarse que no vale nada.
@@ -129,11 +137,13 @@ test('un mazo sin valor no revienta', () => {
   assert.equal(r.bajoMinimo, true);
 });
 
-// Mazo real que se valoro a mano en mtginvestor, en EX y con envio, en 371,65 €. La web
-// daba 527,16 € por el mismo mazo. Si esto se mueve, la web vuelve a prometer otra cifra.
+// Mazo real valorado en mtginvestor, en EX, en 418,59 € con las tarifas de octubre de 2026,
+// sin envio porque pasa de 100 €. La web llego a dar 527,16 € por el mismo mazo. Si esto se
+// mueve, la web vuelve a prometer otra cifra.
 test('un mazo da la misma oferta que en mtginvestor', () => {
   const r = calcularPresupuesto(mazoValorado);
   assert.equal(r.valorMercado, 978.03);
-  assert.equal(r.ofertaCartas, 376.65);
-  assert.equal(r.oferta, 371.65);
+  assert.equal(r.ofertaCartas, 418.59);
+  assert.equal(r.costeEnvio, 0);
+  assert.equal(r.oferta, 418.59);
 });

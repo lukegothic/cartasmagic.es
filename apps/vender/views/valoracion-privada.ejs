@@ -29,7 +29,9 @@
             <li><%= textos.PRIVADA.resultado.porcentaje %>: <strong><%= porcentaje %> %</strong></li>
             <li><%= textos.PRIVADA.resultado.cartas %>: <strong><%= presupuesto.totalCartas %></strong></li>
             <li><%= textos.PRIVADA.resultado.foils %>: <strong><%= presupuesto.totalFoils %></strong></li>
+            <% if (presupuesto.costeEnvio > 0) { %>
             <li><%= textos.PRIVADA.resultado.envio %>: <strong><%= euros(presupuesto.costeEnvio) %> €</strong></li>
+            <% } %>
         </ul>
 
         <% if (presupuesto.bajoMinimo) { %>
