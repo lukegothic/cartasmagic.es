@@ -150,6 +150,11 @@ const bloqueGA4 = async (auth, { dominio, ga4 }, ventana, pedirGA4 = consultaGA4
         const valor = cuenta.get(evento) || 0;
         const anterior = i > 0 && !suelto ? cuenta.get(EMBUDO[i - 1].evento) || 0 : 0;
         const ratio = anterior ? valor / anterior : null;
+        // Un paso no puede tener mas eventos que el anterior: si los tiene, el fallo es
+        // de medicion y un porcentaje por encima de 100 lo haria pasar por conversion.
+        if (ratio !== null && ratio > 1) {
+          return [etiqueta, numero(valor), '', 'mas eventos que el paso anterior, fallo de medicion'];
+        }
         const flojo = minimo && ratio !== null && ratio < minimo;
         return [
           etiqueta,
