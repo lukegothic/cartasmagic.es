@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert');
-const { bloqueGSC, bloqueGA4 } = require('../lib/informe');
+const { bloqueGSC, bloqueGA4, bloqueKeywords } = require('../lib/informe');
 
 // GSC oculta las consultas de pocas busquedas para no identificar a quien busca, asi que
 // sumar la dimension query siempre se queda corto: en vender daba 822 impresiones cuando
@@ -144,4 +144,26 @@ test('una ventana que ya empieza despues no se toca', async () => {
 
   const eventos = pedidos.find(({ dimensiones = [] }) => dimensiones[0] === 'eventName');
   assert.equal(eventos.desde, '2026-12-10');
+});
+
+// El reparto deja la intencion de compra sin dominio a proposito, y las acciones ya no la
+// proponian. La tabla de huerfanas de la consola si: el 8 de octubre de 2026 seguia
+// pintando "venta de cartas magic" como candidata a meter en las keywords de vender.
+test('las consultas de compra no salen como candidatas a reclamar, pero se siguen viendo', () => {
+  const consultas = [
+    { dominio: 'vendercartasmagic.es', claves: ['venta de cartas magic'], clics: 0, impresiones: 20, posicion: 9 },
+    { dominio: 'vendercartasmagic.es', claves: ['venta cartas magic'], clics: 0, impresiones: 19, posicion: 10.1 },
+    { dominio: 'vendercartasmagic.es', claves: ['vender cartas pokemon'], clics: 1, impresiones: 15, posicion: 12 }
+  ];
+
+  const texto = bloqueKeywords(consultas, { porKeyword: new Map(), paginas: [] });
+  const huerfanas = texto.split('Nadie la reclama y aun asi rankea')[1].split('Buena posicion y casi ningun clic')[0];
+  const [candidatas, compra] = huerfanas.split('Intencion de compra');
+
+  assert.match(candidatas, /vender cartas pokemon/);
+  assert.doesNotMatch(candidatas, /venta de cartas magic/);
+  assert.doesNotMatch(candidatas, /venta cartas magic/);
+  assert.ok(compra, 'falta la linea de intencion de compra');
+  assert.match(compra, /venta de cartas magic/);
+  assert.match(compra, /venta cartas magic/);
 });

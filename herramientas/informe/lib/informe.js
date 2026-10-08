@@ -238,16 +238,26 @@ const bloqueKeywords = (consultas, indice) => {
     tabla(
       ['consulta', 'impr', 'clics', 'pos', 'deberia ser de'],
       sinDuenno
+        .filter(({ deberia }) => deberia)
         .slice(0, 20)
         .map(({ consulta, impresiones, clics, mejor, deberia }) => [
           consulta,
           numero(impresiones),
           numero(clics),
           decimal(mejor.posicion),
-          (deberia || mejor.dominio).split('.')[0]
+          deberia.split('.')[0]
         ])
     )
   );
+  // La intencion de compra se queda sin dominio a proposito (docs/reparto-keywords.md),
+  // asi que no es candidata a reclamar. Se lista aparte para que la demanda siga a la vista.
+  const compra = sinDuenno.filter(({ deberia }) => !deberia);
+  if (compra.length) {
+    lineas.push(
+      '  Intencion de compra, sin dominio a proposito: ' +
+        compra.map(({ consulta, impresiones }) => `${consulta} (${numero(impresiones)})`).join(', ')
+    );
+  }
 
   lineas.push(seccion('Buena posicion y casi ningun clic'));
   lineas.push('  Rankea pero el titulo o la descripcion no convencen. Se arregla en el copy.');
