@@ -114,6 +114,25 @@ test('los eventos del embudo se leen desde que existen todos sus pasos', async (
   assert.equal(eventos.desde, '2026-09-05');
 });
 
+// Con generate_lead disparando en cada recarga de la confirmacion, el informe pintaba
+// "Lead 14 / 140,0 %" sobre 10 intentos. Mas eventos que en el paso anterior no es una
+// conversion, es un fallo de medicion, y un porcentaje por encima de 100 lo esconde.
+test('un paso con mas eventos que el anterior se avisa en vez de dar un porcentaje', async () => {
+  const embudoInflado = async (_auth, _propiedad, { dimensiones = [] }) =>
+    dimensiones[0] === 'eventName'
+      ? [
+          { claves: ['intento_envio', '/valoracion-cartas-magic'], valores: [10] },
+          { claves: ['generate_lead', '/valoracion-cartas-magic'], valores: [14] }
+        ]
+      : [];
+
+  const texto = await bloqueGA4(null, { dominio: 'vendercartasmagic.es', ga4: '1' }, { desde: 'a', hasta: 'b' }, embudoInflado);
+
+  const lead = texto.split('\n').find((linea) => /^\s*Lead\s/.test(linea));
+  assert.doesNotMatch(lead, /140,0 %/);
+  assert.match(lead, /14\s+mas eventos que el paso anterior, fallo de medicion/);
+});
+
 test('una ventana que ya empieza despues no se toca', async () => {
   const pedidos = [];
   const registrar = async (_auth, _propiedad, consulta) => {
