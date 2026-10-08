@@ -167,3 +167,19 @@ test('las consultas de compra no salen como candidatas a reclamar, pero se sigue
   assert.match(compra, /venta de cartas magic/);
   assert.match(compra, /venta cartas magic/);
 });
+
+// Sin intencion clara el reparto tampoco le da dominio, pero eso no la hace de compra:
+// antes salia en la tabla con el dominio donde rankea, y ahi tiene que seguir.
+test('una huerfana sin intencion clara sigue saliendo como candidata a reclamar', () => {
+  const consultas = [
+    { dominio: 'vendercartasmagic.es', claves: ['cartas magic sueltas'], clics: 0, impresiones: 18, posicion: 11 },
+    { dominio: 'vendercartasmagic.es', claves: ['venta de cartas magic'], clics: 0, impresiones: 20, posicion: 9 }
+  ];
+
+  const texto = bloqueKeywords(consultas, { porKeyword: new Map(), paginas: [] });
+  const huerfanas = texto.split('Nadie la reclama y aun asi rankea')[1].split('Buena posicion y casi ningun clic')[0];
+  const [candidatas, compra] = huerfanas.split('Intencion de compra');
+
+  assert.match(candidatas, /cartas magic sueltas.*vendercartasmagic/);
+  assert.doesNotMatch(compra, /cartas magic sueltas/);
+});

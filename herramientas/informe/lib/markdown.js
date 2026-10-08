@@ -74,22 +74,37 @@ const seccionGeo = (consultas) => {
   );
 };
 
-const seccionHuecos = (sinDuenno) => {
-  const temas = agruparTemas(sinDuenno);
-  if (!temas.length) return '## Huecos de contenido\n\n_Sin huecos._';
-
-  const cuerpo = temas
+const listQueries = (consultas) =>
+  consultas
     .slice(0, 6)
-    .map(({ tema, impresiones, consultas }) => {
-      const lista = consultas
-        .slice(0, 6)
-        .map(({ consulta, impresiones: i, mejor }) => `  - ${consulta} (${numero(i)} impr, pos ${decimal(mejor.posicion)})`)
-        .join('\n');
-      return `- **${tema}**: ${numero(impresiones)} impresiones sin pagina que las reclame\n${lista}`;
-    })
+    .map(({ consulta, impresiones: i, mejor }) => `  - ${consulta} (${numero(i)} impr, pos ${decimal(mejor.posicion)})`)
     .join('\n');
 
-  return `## Huecos de contenido\n\nConsultas con impresiones agrupadas por tema.\n\n${cuerpo}`;
+// El tema compra es la intencion de compra, que se queda sin dominio a proposito
+// (docs/reparto-keywords.md). No es un hueco que cubrir, pero su cifra es la que el reparto
+// manda vigilar, asi que se sigue viendo como informacion.
+const seccionHuecos = (sinDuenno) => {
+  const temas = agruparTemas(sinDuenno);
+  const purchaseIntent = temas.find(({ tema }) => tema === 'compra');
+  const gaps = temas.filter((tema) => tema !== purchaseIntent);
+
+  const cuerpo = gaps.length
+    ? 'Consultas con impresiones agrupadas por tema.\n\n' +
+      gaps
+        .slice(0, 6)
+        .map(({ tema, impresiones, consultas }) =>
+          `- **${tema}**: ${numero(impresiones)} impresiones sin pagina que las reclame\n${listQueries(consultas)}`
+        )
+        .join('\n')
+    : '_Sin huecos._';
+
+  const informacion = purchaseIntent
+    ? `\n\n**compra**: ${numero(purchaseIntent.impresiones)} impresiones de intencion de compra, ` +
+      'sin dominio a proposito (docs/reparto-keywords.md). No es un hueco que reclamar, ' +
+      `solo la demanda a la vista.\n${listQueries(purchaseIntent.consultas)}`
+    : '';
+
+  return `## Huecos de contenido\n\n${cuerpo}${informacion}`;
 };
 
 const seccionLlm = (llms, consultas) => {

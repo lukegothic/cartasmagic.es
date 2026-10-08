@@ -58,6 +58,16 @@ test('cambiar de dominio el mismo aviso cuenta como cambio', () => {
   assert.equal(resueltas.length, 1);
 });
 
+// La intencion de compra se queda sin dominio a proposito (docs/reparto-keywords.md), asi
+// que no es un aviso que atender: firmarla mandaba el correo por una consulta que no hay
+// que tocar.
+test('una consulta de compra sin duenno no se firma ni dispara el correo', () => {
+  const ayer = firmar(hallazgo);
+  const hoy = firmar({ ...hallazgo, sinDuenno: [...hallazgo.sinDuenno, { consulta: 'venta cartas magic' }] });
+  assert.doesNotMatch(hoy.join('\n'), /venta cartas magic/);
+  assert.equal(comparar(hoy, ayer).nuevas.length, 0);
+});
+
 // El embudo solo el lunes: es lo que evita que los ratios se lean con ruido diario,
 // que es contra lo que avisa docs/plan-medicion-embudo.md.
 test('el embudo sale los lunes y ningun otro dia', () => {
