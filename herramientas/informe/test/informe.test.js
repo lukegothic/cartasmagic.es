@@ -38,6 +38,47 @@ test('el total nunca queda por debajo de la pagina con mas impresiones', async (
   assert.ok(total.impresiones >= mayor, `total ${total.impresiones} por debajo de ${mayor}`);
 });
 
+// GSC returns one page row per URL variant, so the same path showed up several times in
+// the page table ("/" four times on the hub).
+const variantPages = [
+  { claves: ['https://cartasmagic.es/'], clics: 10, impresiones: 100, ctr: 0.1, posicion: 5 },
+  { claves: ['http://cartasmagic.es/'], clics: 2, impresiones: 300, ctr: 0.0067, posicion: 9 },
+  { claves: ['https://www.cartasmagic.es/'], clics: 0, impresiones: 100, ctr: 0, posicion: 7 },
+  { claves: ['https://cartasmagic.es/?utm_source=newsletter'], clics: 1, impresiones: 100, ctr: 0.01, posicion: 3 },
+  { claves: ['https://cartasmagic.es/blog/precio-cartas'], clics: 4, impresiones: 50, ctr: 0.08, posicion: 12 }
+];
+
+const withPages = (page) => async (_auth, _dominio, { dimensiones }) =>
+  dimensiones?.[0] === 'page' ? page : [];
+
+test('page rows that resolve to the same path are merged into one', async () => {
+  const { paginas } = await bloqueGSC(null, 'cartasmagic.es', { desde: 'a', hasta: 'b' }, withPages(variantPages));
+
+  assert.equal(paginas.filter(({ claves }) => claves[0] === '/').length, 1);
+  assert.equal(paginas.length, 2);
+});
+
+test('a merged page row sums impressions and clicks and weights position by impressions', async () => {
+  const { paginas } = await bloqueGSC(null, 'cartasmagic.es', { desde: 'a', hasta: 'b' }, withPages(variantPages));
+  const home = paginas.find(({ claves }) => claves[0] === '/');
+
+  assert.equal(home.impresiones, 600);
+  assert.equal(home.clics, 13);
+  // (5*100 + 9*300 + 7*100 + 3*100) / 600 = 4200 / 600
+  assert.equal(home.posicion, 7);
+  assert.equal(home.ctr, 13 / 600);
+});
+
+test('the console page table lists each path once', async () => {
+  const { texto } = await bloqueGSC(null, 'cartasmagic.es', { desde: 'a', hasta: 'b' }, withPages(variantPages));
+  const filasPaginas = texto
+    .split('Paginas')[1]
+    .split('\n')
+    .filter((linea) => /^\s*\/\s/.test(linea));
+
+  assert.equal(filasPaginas.length, 1);
+});
+
 // Una propiedad recien dada de alta no devuelve ninguna fila. Antes el total salia de un
 // reduce sobre un array vacio y daba cero sin romper, asi que el arreglo tiene que
 // aguantar lo mismo.

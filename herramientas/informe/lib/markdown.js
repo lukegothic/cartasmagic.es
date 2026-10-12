@@ -172,7 +172,7 @@ const seccionDatos = (porDominio) => {
       .sort((a, b) => b.impresiones - a.impresiones)
       .slice(0, 12)
       .map(({ claves, impresiones, clics, posicion }) => [
-        new URL(claves[0]).pathname,
+        claves[0],
         numero(impresiones),
         numero(clics),
         decimal(posicion)

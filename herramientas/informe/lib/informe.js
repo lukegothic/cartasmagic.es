@@ -39,15 +39,39 @@ const fechas = (dias) => {
   };
 };
 
+// GSC devuelve una fila por URL: http y https, con y sin www, con y sin parametros. Todas
+// son la misma pagina, y la clave del resultado pasa a ser la ruta.
+const fusionarPaginasPorRuta = (filas) => {
+  const porRuta = new Map();
+  for (const { claves, impresiones, clics, posicion } of filas) {
+    const ruta = new URL(claves[0]).pathname;
+    const previa = porRuta.get(ruta) || { impresiones: 0, clics: 0, posicionPonderada: 0 };
+    porRuta.set(ruta, {
+      impresiones: previa.impresiones + impresiones,
+      clics: previa.clics + clics,
+      posicionPonderada: previa.posicionPonderada + posicion * impresiones
+    });
+  }
+  return [...porRuta].map(([ruta, { impresiones, clics, posicionPonderada }]) => ({
+    claves: [ruta],
+    impresiones,
+    clics,
+    ctr: clics / impresiones,
+    posicion: posicionPonderada / impresiones
+  }));
+};
+
 const bloqueGSC = async (auth, dominio, ventana, pedirGSC = consultaGSC) => {
   // El total va aparte y sin desglosar. Sumar la dimension query se queda corto porque
   // GSC oculta las consultas de pocas busquedas, y sumar la dimension page se pasa
   // porque una consulta que saca dos paginas cuenta en las dos.
-  const [consultas, paginas, [totales]] = await Promise.all([
+  const [consultas, paginasPorUrl, [totales]] = await Promise.all([
     pedirGSC(auth, dominio, { ...ventana, dimensiones: ['query'] }),
     pedirGSC(auth, dominio, { ...ventana, dimensiones: ['page'] }),
     pedirGSC(auth, dominio, { ...ventana, dimensiones: [] })
   ]);
+
+  const paginas = fusionarPaginasPorRuta(paginasPorUrl);
 
   // Sin desglosar GSC devuelve una fila unica, o ninguna si la propiedad aun no tiene datos.
   const total = totales || { clics: 0, impresiones: 0 };
@@ -85,7 +109,7 @@ const bloqueGSC = async (auth, dominio, ventana, pedirGSC = consultaGSC) => {
         .sort((a, b) => b.impresiones - a.impresiones)
         .slice(0, 10)
         .map(({ claves, impresiones, clics, posicion }) => [
-          new URL(claves[0]).pathname,
+          claves[0],
           numero(impresiones),
           numero(clics),
           decimal(posicion)
