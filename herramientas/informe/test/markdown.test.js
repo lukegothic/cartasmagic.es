@@ -1,6 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert');
 const { componerMarkdown } = require('../lib/markdown');
+const { bloqueGSC } = require('../lib/informe');
 
 // docs/reparto-keywords.md leaves buy intent without a domain on purpose. The gaps section
 // still presented it as impressions waiting for a page to claim them, which reads as work
@@ -41,4 +42,28 @@ test('orphans with another intent are still a gap to claim', () => {
   const section = gapsSection(withOrphans([orphan('vender cartas', 39), orphan('venta cartas magic', 34)]));
 
   assert.match(section, /\*\*venta\*\*: 39 impresiones sin pagina que las reclame/);
+});
+
+test('the raw data page table lists "/" once when GSC returned several URL variants', async () => {
+  const urlRows = [
+    { claves: ['https://cartasmagic.es/'], clics: 10, impresiones: 100, ctr: 0.1, posicion: 5 },
+    { claves: ['http://cartasmagic.es/'], clics: 2, impresiones: 300, ctr: 0.0067, posicion: 9 },
+    { claves: ['https://www.cartasmagic.es/?utm_source=newsletter'], clics: 1, impresiones: 100, ctr: 0.01, posicion: 3 }
+  ];
+  const askGSC = async (_auth, _domain, { dimensiones }) => (dimensiones?.[0] === 'page' ? urlRows : []);
+  const { paginas, total, consultas } = await bloqueGSC(null, 'cartasmagic.es', { desde: 'a', hasta: 'b' }, askGSC);
+
+  const markdown = componerMarkdown({
+    ventana: { desde: '2026-07-10', hasta: '2026-10-07' },
+    indice: { paginas: [], porKeyword: new Map() },
+    hallazgos: { canibalizacion: [], malDominio: [], sinDuenno: [], ctrBajo: [], muertas: [] },
+    consultas: [],
+    porDominio: [{ dominio: 'cartasmagic.es', total, consultas, paginas }],
+    llms: [],
+    embudo: null,
+    previas: []
+  });
+  const pageRows = markdown.split('#### Paginas')[1].split('\n').filter((line) => line.startsWith('| /'));
+
+  assert.equal(pageRows.length, 1);
 });
