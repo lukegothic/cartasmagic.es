@@ -1,7 +1,6 @@
 const { numero, decimal, porcentaje } = require('./formato');
 const { agruparGeo, IMPRESIONES_PARA_PAGINA } = require('./geo');
 const { agruparTemas, canibalizacionInterna, coberturaLlm } = require('./huecos');
-const { derivarAcciones } = require('./acciones');
 
 const enlace = ({ fichero, numeroLinea }) => `\`${fichero}:${numeroLinea}\``;
 
@@ -191,9 +190,7 @@ const seccionDatos = (porDominio) => {
   return `## Datos en bruto\n\n${bloques.join('\n\n')}`;
 };
 
-const componerMarkdown = ({ ventana, indice, hallazgos, consultas, porDominio, llms, embudo, previas }) => {
-  const acciones = derivarAcciones(hallazgos, indice, previas, ventana);
-
+const componerMarkdown = ({ ventana, indice, acciones, hallazgos, consultas, porDominio, llms, embudo }) => {
   const partes = [
     `# Informe cartasmagic ${ventana.hasta}`,
     '',
