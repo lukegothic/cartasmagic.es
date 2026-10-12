@@ -43,10 +43,11 @@ const ventana = { desde: '2026-07-10', hasta: '2026-10-07' };
 const martes = new Date('2026-10-13T12:00:00');
 const lunes = new Date('2026-10-12T12:00:00');
 
+const ESTADO_VACIO = { acciones: [], alarmas: [], fecha: null };
 const FIRMAS_DE_HOY = ['dominio:tasar cartas magic:cartasmagic.es', 'huerfana:vender cartas'];
 
 const decide = (extra = {}) =>
-  decidir({ consultas, indice, estado: { firmas: [], fecha: null }, hoy: martes, ventana, ...extra });
+  decidir({ consultas, indice, estado: ESTADO_VACIO, hoy: martes, ventana, ...extra });
 
 test('the actions come with their file and line', () => {
   const { acciones } = decide();
@@ -105,7 +106,7 @@ test('an action carries the impressions and position of each domain', () => {
 });
 
 test('an action seen yesterday is not new', () => {
-  const { acciones } = decide({ estado: { firmas: ['huerfana:vender cartas'], fecha: null } });
+  const { acciones } = decide({ estado: { acciones: ['huerfana:vender cartas'], alarmas: [], fecha: null } });
 
   assert.deepEqual(
     acciones.map(({ firma, esNueva }) => [firma, esNueva]),
@@ -117,27 +118,27 @@ test('an action seen yesterday is not new', () => {
 });
 
 test('sends when a finding appears that was not there yesterday', () => {
-  const { enviar, siguiente } = decide({ estado: { firmas: ['huerfana:vender cartas'], fecha: null } });
+  const { enviar, siguiente } = decide({ estado: { acciones: ['huerfana:vender cartas'], alarmas: [], fecha: null } });
 
   assert.equal(enviar, true);
-  assert.deepEqual(siguiente.firmas, FIRMAS_DE_HOY);
+  assert.deepEqual(siguiente.acciones, ['huerfana:vender cartas', 'dominio:tasar cartas magic:cartasmagic.es']);
 });
 
 test('sends when a finding from yesterday is gone', () => {
-  const firmas = [...FIRMAS_DE_HOY, 'ctr:otra consulta'];
+  const acciones = [...FIRMAS_DE_HOY, 'ctr:otra consulta'];
 
-  assert.equal(decide({ estado: { firmas, fecha: null } }).enviar, true);
+  assert.equal(decide({ estado: { acciones, alarmas: [], fecha: null } }).enviar, true);
 });
 
 test('does not send on a weekday when the findings are the same as yesterday', () => {
-  const { enviar, conEmbudo } = decide({ estado: { firmas: FIRMAS_DE_HOY, fecha: null } });
+  const { enviar, conEmbudo } = decide({ estado: { acciones: FIRMAS_DE_HOY, alarmas: [], fecha: null } });
 
   assert.equal(enviar, false);
   assert.equal(conEmbudo, false);
 });
 
 test('sends on Monday even when nothing changed, with the funnel', () => {
-  const { enviar, conEmbudo } = decide({ estado: { firmas: FIRMAS_DE_HOY, fecha: null }, hoy: lunes });
+  const { enviar, conEmbudo } = decide({ estado: { acciones: FIRMAS_DE_HOY, alarmas: [], fecha: null }, hoy: lunes });
 
   assert.equal(enviar, true);
   assert.equal(conEmbudo, true);
@@ -177,4 +178,88 @@ test('a Demand of exactly 40 is an Action', () => {
 
   assert.equal(acciones.length, 1);
   assert.deepEqual(vigilancia, []);
+});
+
+// The old email went out whenever any Finding changed. A Candidate that did not become an
+// Action is not something the founder can act on, so its coming and going is not news.
+test('does not send when only a discarded Candidate appears', () => {
+  const { enviar, descartes } = decide({
+    consultas: [...consultas, fila(VENDER, 'tasacion de cartas', 25, 15.3)],
+    estado: { acciones: FIRMAS_DE_HOY, alarmas: [], fecha: null }
+  });
+
+  assert.equal(descartes.length, 1);
+  assert.equal(enviar, false);
+});
+
+test('does not send when only a discarded Candidate is gone', () => {
+  const { enviar } = decide({
+    estado: { acciones: FIRMAS_DE_HOY, alarmas: [], fecha: null },
+    consultas
+  });
+
+  assert.equal(enviar, false);
+});
+
+test('sends when a Candidate gets enough Demand to become an Action', () => {
+  const { enviar } = decide({
+    consultas: [...consultas, fila(VENDER, 'tasacion de cartas', 45, 15.3)],
+    estado: { acciones: FIRMAS_DE_HOY, alarmas: [], fecha: null }
+  });
+
+  assert.equal(enviar, true);
+});
+
+test('sends when an Action drops out because its Demand fell below the gate', () => {
+  const { enviar, vigilancia } = decide({
+    consultas: [fila(VENDER, 'tasar cartas magic', 45, 15.3), fila(VENDER, 'vender cartas', 25, 16.2)],
+    estado: { acciones: FIRMAS_DE_HOY, alarmas: [], fecha: null }
+  });
+
+  assert.equal(vigilancia.length, 1);
+  assert.equal(enviar, true);
+});
+
+test('sends when a Measurement alarm appears that was not there before', () => {
+  const { enviar, siguiente } = decide({
+    estado: { acciones: FIRMAS_DE_HOY, alarmas: [], fecha: null },
+    alarmas: ['embudo:lead:mas eventos que el paso anterior']
+  });
+
+  assert.equal(enviar, true);
+  assert.deepEqual(siguiente.alarmas, ['embudo:lead:mas eventos que el paso anterior']);
+});
+
+test('sends when a Measurement alarm is resolved', () => {
+  const { enviar } = decide({
+    estado: { acciones: FIRMAS_DE_HOY, alarmas: ['embudo:lead:mas eventos que el paso anterior'], fecha: null }
+  });
+
+  assert.equal(enviar, true);
+});
+
+test('does not send when the same Measurement alarm is still raised', () => {
+  const alarmas = ['embudo:lead:mas eventos que el paso anterior'];
+  const { enviar } = decide({ estado: { acciones: FIRMAS_DE_HOY, alarmas, fecha: null }, alarmas });
+
+  assert.equal(enviar, false);
+});
+
+// The old state held the signature of every Finding, a superset of the visible Actions, so a
+// signature missing from it is really new. One that is missing from today proves nothing:
+// it may have been a Finding that was never visible, so it must not trigger the email.
+test('on a migrated state only a new Action sends, never a missing one', () => {
+  const migrado = { acciones: [...FIRMAS_DE_HOY, 'ctr:consulta oculta'], alarmas: [], fecha: null, migrado: true };
+
+  assert.equal(decide({ estado: migrado }).enviar, false);
+  assert.equal(decide({ estado: { ...migrado, acciones: ['huerfana:vender cartas'] } }).enviar, true);
+});
+
+test('the no-send summary counts the Actions, discards and Watch list entries', () => {
+  const { resumen } = decide({
+    consultas: [...consultas, fila(VENDER, 'tasacion de cartas', 25, 15.3)],
+    estado: { acciones: FIRMAS_DE_HOY, alarmas: [], fecha: null }
+  });
+
+  assert.deepEqual(resumen, { acciones: 2, descartes: 1, vigilancia: 1 });
 });

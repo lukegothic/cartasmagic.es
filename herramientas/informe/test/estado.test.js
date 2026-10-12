@@ -1,40 +1,9 @@
 const test = require('node:test');
 const assert = require('node:assert');
-const { firmar, comparar, esDiaDeEmbudo } = require('../lib/estado');
-
-const hallazgo = {
-  canibalizacion: [{ consulta: 'donde vender cartas magic' }],
-  malDominio: [{ consulta: 'tasar cartas magic', deberia: 'cartasmagic.es' }],
-  sinDuenno: [{ consulta: 'vender cartas' }],
-  ctrBajo: []
-};
-
-test('la firma distingue el tipo de aviso, no solo la consulta', () => {
-  const firmas = firmar(hallazgo);
-  assert.deepEqual(firmas, [
-    'canibal:donde vender cartas magic',
-    'dominio:tasar cartas magic:cartasmagic.es',
-    'huerfana:vender cartas'
-  ]);
-});
-
-// El motivo de que la firma no lleve impresiones: si las cifras entraran, cualquier
-// variacion diaria contaria como aviso nuevo y el correo llegaria todos los dias.
-test('que cambien las impresiones no cuenta como aviso nuevo', () => {
-  const ayer = firmar({ ...hallazgo, sinDuenno: [{ consulta: 'vender cartas', impresiones: 97 }] });
-  const hoy = firmar({ ...hallazgo, sinDuenno: [{ consulta: 'vender cartas', impresiones: 121 }] });
-  const { nuevas, resueltas } = comparar(hoy, ayer);
-  assert.equal(nuevas.length, 0);
-  assert.equal(resueltas.length, 0);
-});
-
-test('una consulta que aparece hoy es un aviso nuevo', () => {
-  const ayer = ['huerfana:vender cartas'];
-  const hoy = ['huerfana:vender cartas', 'huerfana:venta cartas magic'];
-  const { nuevas, resueltas } = comparar(hoy, ayer);
-  assert.deepEqual(nuevas, ['huerfana:venta cartas magic']);
-  assert.equal(resueltas.length, 0);
-});
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
+const { leer, guardar, comparar, esDiaDeEmbudo } = require('../lib/estado');
 
 test('una que desaparece cuenta como resuelta', () => {
   const { nuevas, resueltas } = comparar(['huerfana:vender cartas'], [
@@ -46,8 +15,8 @@ test('una que desaparece cuenta como resuelta', () => {
 });
 
 test('el primer dia todo es nuevo', () => {
-  const { nuevas } = comparar(firmar(hallazgo), []);
-  assert.equal(nuevas.length, 3);
+  const { nuevas } = comparar(['huerfana:vender cartas', 'huerfana:venta cartas magic'], []);
+  assert.equal(nuevas.length, 2);
 });
 
 test('cambiar de dominio el mismo aviso cuenta como cambio', () => {
@@ -56,16 +25,6 @@ test('cambiar de dominio el mismo aviso cuenta como cambio', () => {
   const { nuevas, resueltas } = comparar(hoy, ayer);
   assert.equal(nuevas.length, 1);
   assert.equal(resueltas.length, 1);
-});
-
-// La intencion de compra se queda sin dominio a proposito (docs/reparto-keywords.md), asi
-// que no es un aviso que atender: firmarla mandaba el correo por una consulta que no hay
-// que tocar.
-test('una consulta de compra sin duenno no se firma ni dispara el correo', () => {
-  const ayer = firmar(hallazgo);
-  const hoy = firmar({ ...hallazgo, sinDuenno: [...hallazgo.sinDuenno, { consulta: 'venta cartas magic' }] });
-  assert.doesNotMatch(hoy.join('\n'), /venta cartas magic/);
-  assert.equal(comparar(hoy, ayer).nuevas.length, 0);
 });
 
 // El embudo solo el lunes: es lo que evita que los ratios se lean con ruido diario,
@@ -84,4 +43,54 @@ test('marca que firmas son nuevas respecto a ayer', () => {
   const hoy = ['huerfana:vender cartas', 'huerfana:venta cartas magic'];
   const { nuevas } = comparar(hoy, ['huerfana:vender cartas']);
   assert.deepEqual(nuevas, ['huerfana:venta cartas magic']);
+});
+
+const conEstadoEn = (contenido, prueba) => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'informe-estado-'));
+  const anterior = process.env.INFORME_ESTADO_DIR;
+  process.env.INFORME_ESTADO_DIR = dir;
+  try {
+    if (contenido !== undefined) fs.writeFileSync(path.join(dir, 'ultimo-aviso.json'), contenido);
+    prueba(dir);
+  } finally {
+    if (anterior === undefined) delete process.env.INFORME_ESTADO_DIR;
+    else process.env.INFORME_ESTADO_DIR = anterior;
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+};
+
+test('sin fichero de estado el primer dia empieza vacio', () => {
+  conEstadoEn(undefined, () => {
+    const estado = leer();
+    assert.deepEqual([estado.acciones, estado.alarmas], [[], []]);
+  });
+});
+
+test('lo que se guarda es lo que se lee, tal cual', () => {
+  conEstadoEn(undefined, () => {
+    guardar({ acciones: ['huerfana:vender cartas'], alarmas: ['embudo:lead'] });
+    const estado = leer();
+    assert.deepEqual(estado.acciones, ['huerfana:vender cartas']);
+    assert.deepEqual(estado.alarmas, ['embudo:lead']);
+    assert.ok(!estado.migrado);
+  });
+});
+
+// El formato anterior guardaba la firma de cada hallazgo, visible o no.
+test('un fichero en el formato anterior se lee y se migra sin error', () => {
+  const viejo = JSON.stringify({ firmas: ['huerfana:vender cartas', 'ctr:oculta'], fecha: '2026-10-11T07:00:00.000Z' });
+  conEstadoEn(viejo, () => {
+    const estado = leer();
+    assert.deepEqual(estado.acciones, ['huerfana:vender cartas', 'ctr:oculta']);
+    assert.deepEqual(estado.alarmas, []);
+    assert.equal(estado.migrado, true);
+  });
+});
+
+test('guardar sobre el formato anterior lo deja ya en el nuevo', () => {
+  const viejo = JSON.stringify({ firmas: ['huerfana:vender cartas'], fecha: '2026-10-11T07:00:00.000Z' });
+  conEstadoEn(viejo, () => {
+    guardar({ acciones: ['huerfana:vender cartas'], alarmas: [] });
+    assert.ok(!leer().migrado);
+  });
 });

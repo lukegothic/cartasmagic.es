@@ -21,7 +21,7 @@ const principal = async () => {
     porDominio.push({ dominio, total: gsc.total, consultas: gsc.consultas, paginas: gsc.paginas });
   }
 
-  const { acciones, descartes, vigilancia, hallazgos, nuevas, conEmbudo, enviar, siguiente } = decidir({
+  const { acciones, descartes, vigilancia, hallazgos, nuevas, conEmbudo, enviar, resumen, siguiente } = decidir({
     consultas,
     indice,
     estado: leer(),
@@ -30,8 +30,11 @@ const principal = async () => {
   });
 
   if (!enviar) {
-    console.log(`Sin cambios: ${siguiente.firmas.length} avisos, los mismos de ayer. No se envia correo.`);
-    guardar(siguiente.firmas);
+    console.log(
+      `Sin cambios visibles: ${resumen.acciones} acciones, ${resumen.descartes} descartes, ` +
+        `${resumen.vigilancia} en vigilancia. No se envia correo.`
+    );
+    guardar(siguiente);
     return;
   }
 
@@ -63,9 +66,10 @@ const principal = async () => {
     adjuntos: [{ nombre: `informe-${ventana.hasta}.md`, contenido: markdown }]
   });
 
-  guardar(siguiente.firmas);
+  guardar(siguiente);
   console.log(
-    `Enviado el informe del ${ventana.hasta}. ${siguiente.firmas.length} avisos, ${nuevas.length} nuevos.`
+    `Enviado el informe del ${ventana.hasta}. ${resumen.acciones} acciones, ${nuevas.length} nuevas, ` +
+      `${resumen.descartes} descartes, ${resumen.vigilancia} en vigilancia.`
   );
 };
 
