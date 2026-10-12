@@ -94,3 +94,22 @@ test('guardar sobre el formato anterior lo deja ya en el nuevo', () => {
     assert.ok(!leer().migrado);
   });
 });
+
+test('a state saved before the Target snapshot existed is read with an empty snapshot and its signatures', () => {
+  const anterior = JSON.stringify({ acciones: ['huerfana:vender cartas'], alarmas: ['embudo:lead'], fecha: '2026-10-12T07:00:00.000Z' });
+  conEstadoEn(anterior, () => {
+    const estado = leer();
+    assert.deepEqual(estado.acciones, ['huerfana:vender cartas']);
+    assert.deepEqual(estado.alarmas, ['embudo:lead']);
+    assert.deepEqual(estado.targets, {});
+    assert.ok(!estado.migrado);
+  });
+});
+
+test('the Target snapshot is saved and read back as it was', () => {
+  const targets = { 'cartasmagic.es/#title': { huella: 'abc123', cambio: '2026-10-13' } };
+  conEstadoEn(undefined, () => {
+    guardar({ acciones: [], alarmas: [], targets });
+    assert.deepEqual(leer().targets, targets);
+  });
+});

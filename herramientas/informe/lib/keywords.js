@@ -26,10 +26,34 @@ const separar = (linea) =>
     .map(normalizar)
     .filter(Boolean);
 
+const relativoARaiz = (fichero) => path.relative(RAIZ, fichero).replace(/\\/g, '/');
+
+// Title y description van antes que las keywords en cada bloque de metadatos, asi que la
+// ultima aparicion antes de ellas es la del propio bloque. El lookbehind deja fuera
+// og_title y og_description.
+const textoAnterior = (fuente, indice, campo) => {
+  const antes = fuente.slice(Math.max(0, indice - 1000), indice);
+  const aparicion = [...antes.matchAll(new RegExp(`(?<!\\w)${campo}:\\s*'((?:[^'\\\\]|\\\\.)*)'`, 'g'))].at(-1);
+  return aparicion?.[1].replace(/\\'/g, "'") ?? '';
+};
+
+// El copy visible de una pagina de aplicacion sale de su vista y de los textos de la app.
+// Los textos son comunes a todas las paginas, asi que tocarlos cuenta como cambio de todas:
+// es el lado seguro, porque el informe no puede separar que parte de textos.js pinta cada vista.
+const ficherosDeCopy = (app, ruta) => {
+  const vista = ruta === '/' ? 'index' : ruta.slice(1);
+  return [`apps/${app}/views/${vista}.ejs`, `apps/${app}/lib/textos.js`].filter((relativo) =>
+    fs.existsSync(path.join(RAIZ, relativo))
+  );
+};
+
+const leerCopy = (ficheros) =>
+  ficheros.map((relativo) => fs.readFileSync(path.join(RAIZ, relativo), 'utf8')).join('\n');
+
 const leerMetadatos = (app, dominio) => {
   const fichero = path.join(RAIZ, 'apps', app, 'lib', 'metadatos.js');
   const fuente = fs.readFileSync(fichero, 'utf8');
-  const relativo = path.relative(RAIZ, fichero).replace(/\\/g, '/');
+  const relativo = relativoARaiz(fichero);
 
   const paginas = [...fuente.matchAll(BLOQUE)]
     .map((coincidencia) => {
@@ -39,10 +63,18 @@ const leerMetadatos = (app, dominio) => {
       // dentro de una plantilla. Los dos casos se resuelven a la URL real.
       const raiz = `https://${dominio}`;
       const canonical = constante ? raiz : (plantilla || literal).replace(/\$\{\w+\}/, raiz);
+      const ruta = new URL(canonical).pathname || '/';
+      const ficherosCopy = ficherosDeCopy(app, ruta);
       return {
         dominio,
-        ruta: new URL(canonical).pathname || '/',
+        ruta,
         keywords: separar(linea),
+        texto: {
+          title: textoAnterior(fuente, coincidencia.index, 'title'),
+          description: textoAnterior(fuente, coincidencia.index, 'description'),
+          copy: leerCopy(ficherosCopy)
+        },
+        ficherosCopy,
         fichero: relativo,
         // El informe cita fichero:linea para poder abrir el sitio exacto del cambio.
         numeroLinea: fuente.slice(0, coincidencia.index).split('\n').length
@@ -60,6 +92,11 @@ const leerMetadatos = (app, dominio) => {
   return paginas;
 };
 
+const valorDeFrontMatter = (frontMatter = '', clave) => {
+  const linea = frontMatter.match(new RegExp(`^${clave}:\\s*(.+)$`, 'm'));
+  return linea?.[1].trim().replace(/^"(.*)"$/, '$1') ?? '';
+};
+
 const leerArticulos = (dominio) => {
   const dir = path.join(RAIZ, 'apps', 'hub', 'content');
   if (!fs.existsSync(dir)) return [];
@@ -74,10 +111,17 @@ const leerArticulos = (dominio) => {
       const linea = frontMatter?.[1].match(/^keywords:\s*(.+)$/m);
       const fecha = frontMatter?.[1].match(/^fecha:\s*(\d{4}-\d{2}-\d{2})\s*$/m);
       const indice = linea ? contenido.indexOf(linea[0]) : -1;
+      const titulo = valorDeFrontMatter(frontMatter?.[1], 'titulo');
       return {
         dominio,
         ruta: `/blog/${nombre.replace(/\.md$/, '')}`,
         keywords: linea ? separar(linea[1]) : [],
+        // El title lo compone la ruta del articulo igual que en apps/hub/lib/metadatos.js.
+        texto: {
+          title: `${titulo} | CartasMagic.es`,
+          description: valorDeFrontMatter(frontMatter?.[1], 'descripcion'),
+          copy: contenido.slice(frontMatter?.[0].length ?? 0).trim()
+        },
         // Solo la traen los articulos. Los metadatos de las apps no declaran fecha porque
         // esas paginas existen desde el principio.
         fecha: fecha?.[1],

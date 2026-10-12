@@ -17,6 +17,7 @@ const DISCARD_REASONS = Object.freeze({
   QUERY_VARIANT_PERFORMS: 'QUERY_VARIANT_PERFORMS',
   NO_OWNER_DOMAIN: 'NO_OWNER_DOMAIN',
   OWNER_ALREADY_FIRST: 'OWNER_ALREADY_FIRST',
+  TARGET_IN_COOLDOWN: 'TARGET_IN_COOLDOWN',
   OVER_LIST_LIMIT: 'OVER_LIST_LIMIT'
 });
 
@@ -126,7 +127,8 @@ const derivarAcciones = (
   { canibalizacion, malDominio, sinDuenno, ctrBajo },
   { porKeyword, paginas },
   previas = [],
-  ventana = null
+  ventana = null,
+  enCooldown = () => false
 ) => {
   const vistas = new Set(previas);
 
@@ -144,14 +146,21 @@ const derivarAcciones = (
     return declaradaDondeToca(porKeyword.get(consulta) || [], deberia) && mejor.dominio === deberia;
   };
 
+  // Lo que cada tipo cambia, para saber si ya se toco hace poco: mover o reforzar toca las
+  // keywords y el copy de quien declara la consulta; reclamar, las de la pagina destino;
+  // reescribir, el title y la description de la pagina que rankea.
+  const keywordsEnCooldown = ({ consulta }) => enCooldown(porKeyword.get(consulta) || [], ['keywords', 'copy']);
+  const paginaDestino = ({ deberia }) => paginas.filter(({ dominio }) => dominio === deberia).slice(0, 1);
+
   // Los motivos van por orden: la demanda es el ultimo, porque una candidata que ademas
   // falla por otra cosa no esta en vigilancia, solo sin demanda. Las listas llegan
   // ordenadas por demanda, asi que el tope se queda con las de mas demanda.
-  const evaluar = (tipo, hallazgos, construir, motivoPrevio, maximo = Infinity) => {
+  const evaluar = (tipo, hallazgos, construir, motivoPrevio, enEspera, maximo = Infinity) => {
     let aceptadas = 0;
     return hallazgos.map((hallazgo) => {
       const motivo = motivoPrevio(hallazgo);
       if (motivo) return { tipo, hallazgo, motivo };
+      if (enEspera(hallazgo)) return { tipo, hallazgo, motivo: DISCARD_REASONS.TARGET_IN_COOLDOWN };
       if (hallazgo.impresiones < IMPRESIONES_FIABLES) {
         return { tipo, hallazgo, motivo: DISCARD_REASONS.TOO_LITTLE_DEMAND };
       }
@@ -171,13 +180,15 @@ const derivarAcciones = (
         (!h.deberia && DISCARD_REASONS.NO_OWNER_DOMAIN) ||
         (faltaSoloTiempo(h) && DISCARD_REASONS.PAGE_NEWER_THAN_WINDOW) ||
         (vaDelanteQuienToca(h) && DISCARD_REASONS.OWNER_ALREADY_FIRST) ||
-        null
+        null,
+      keywordsEnCooldown
     ),
     ...evaluar(
       'malDominio',
       malDominio,
       (h) => moverDeDominio(h, porKeyword),
-      (h) => (faltaSoloTiempo(h) ? DISCARD_REASONS.PAGE_NEWER_THAN_WINDOW : null)
+      (h) => (faltaSoloTiempo(h) ? DISCARD_REASONS.PAGE_NEWER_THAN_WINDOW : null),
+      keywordsEnCooldown
     ),
     // Las que el reparto deja sin dominio a proposito no se proponen: no hay pagina que
     // pueda responderlas. Ver docs/reparto-keywords.md.
@@ -186,6 +197,7 @@ const derivarAcciones = (
       sinDuenno,
       (h) => reclamar(h, paginas),
       (h) => (h.deberia ? null : DISCARD_REASONS.NO_OWNER_DOMAIN),
+      (h) => enCooldown(paginaDestino(h), ['keywords', 'copy']),
       MAXIMO_HUERFANAS
     ),
     // Una variante con las mismas palabras que ya convierte en la misma pagina es la prueba
@@ -195,6 +207,7 @@ const derivarAcciones = (
       ctrBajo,
       reescribirTitle,
       (h) => (h.variantes?.length ? DISCARD_REASONS.QUERY_VARIANT_PERFORMS : null),
+      (h) => enCooldown(h.reclaman.slice(0, 1), ['title', 'description']),
       MAXIMO_CTR
     )
   ];

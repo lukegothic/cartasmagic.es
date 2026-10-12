@@ -6,7 +6,7 @@ const path = require('node:path');
 // siempre, que es peor pero no rompe nada.
 const rutaEstado = () => path.join(process.env.INFORME_ESTADO_DIR || '/datos', 'ultimo-aviso.json');
 
-const VACIO = { acciones: [], alarmas: [], fecha: null };
+const VACIO = { acciones: [], alarmas: [], targets: {}, fecha: null };
 
 // El formato anterior guardaba `firmas`: la de cada hallazgo, visible o no. Se lee una vez
 // y se marca como migrado, porque de el no se puede saber cuales eran visibles: sirve para
