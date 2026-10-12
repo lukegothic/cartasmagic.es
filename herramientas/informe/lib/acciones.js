@@ -18,7 +18,11 @@ const DISCARD_REASONS = Object.freeze({
   NO_OWNER_DOMAIN: 'NO_OWNER_DOMAIN',
   OWNER_ALREADY_FIRST: 'OWNER_ALREADY_FIRST',
   TARGET_IN_COOLDOWN: 'TARGET_IN_COOLDOWN',
-  OVER_LIST_LIMIT: 'OVER_LIST_LIMIT'
+  OVER_LIST_LIMIT: 'OVER_LIST_LIMIT',
+  POST_CHANGE_NO_DATA: 'POST_CHANGE_NO_DATA',
+  POST_CHANGE_RANK_OUT_OF_RANGE: 'POST_CHANGE_RANK_OUT_OF_RANGE',
+  POST_CHANGE_CTR_NORMAL: 'POST_CHANGE_CTR_NORMAL',
+  POST_CHANGE_OTHER_TYPE: 'POST_CHANGE_OTHER_TYPE'
 });
 
 const ubicacion = ({ fichero, numeroLinea }) => ({ fichero, numeroLinea });
@@ -207,7 +211,7 @@ const derivarAcciones = (
       'ctrBajo',
       ctrBajo,
       reescribirTitle,
-      (h) => (h.variantes?.length ? DISCARD_REASONS.QUERY_VARIANT_PERFORMS : null),
+      (h) => h.descarte ?? (h.variantes?.length ? DISCARD_REASONS.QUERY_VARIANT_PERFORMS : null),
       (h) => enCooldown(h.reclaman.slice(0, 1), ['title', 'description']),
       MAXIMO_CTR
     )
@@ -236,4 +240,4 @@ const derivarAcciones = (
   };
 };
 
-module.exports = { derivarAcciones };
+module.exports = { derivarAcciones, DISCARD_REASONS };

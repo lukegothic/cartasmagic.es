@@ -53,6 +53,7 @@ const dominioQueTocaria = (consulta, porKeyword) => {
 // diferencia es ruido, asi que no se avisa de nada que no las alcance.
 const MINIMO_IMPRESIONES = 10;
 const POSICION_ALCANZABLE = 20;
+const POSICION_CTR = 10;
 const CTR_POBRE = 0.02;
 
 const agrupar = (filas) => {
@@ -141,7 +142,7 @@ const avisos = (porConsulta, porKeyword) => {
 
     // El CTR es el de quien rankea, no el de las dos cifras mezcladas: los clics de un
     // dominio no se reparten entre las impresiones del otro.
-    if (mejor.posicion <= 10 && ctrDe(mejor) < CTR_POBRE) {
+    if (mejor.posicion <= POSICION_CTR && ctrDe(mejor) < CTR_POBRE) {
       const variantes = variantesQueRinden(consulta, reclaman, porConsulta, porKeyword);
       ctrBajo.push({ consulta, impresiones, clics, apariciones, mejor, reclaman, variantes });
     }
@@ -175,4 +176,14 @@ const keywordsMuertas = (porConsulta, paginas) => {
     .filter(({ muertas }) => muertas.length);
 };
 
-module.exports = { agrupar, avisos, keywordsMuertas, intencion, dominioQueTocaria, HUB, VENDER };
+module.exports = {
+  agrupar,
+  avisos,
+  keywordsMuertas,
+  intencion,
+  dominioQueTocaria,
+  MINIMO_IMPRESIONES,
+  POSICION_CTR,
+  HUB,
+  VENDER
+};

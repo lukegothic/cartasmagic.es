@@ -91,16 +91,45 @@ test('post-change Demand under 10 is not a Candidate at all', () => {
   assert.deepEqual([acciones, descartes, vigilancia], [[], [], []]);
 });
 
-test('a query with no data after the change is not a Candidate', () => {
+// "No Candidate is dropped without a reason": a Candidate of the full window that the
+// post-change data removes is discarded with the cause, except under 10 of Demand, which the
+// spec allows to vanish.
+test('a Candidate with no data after the change is discarded with POST_CHANGE_NO_DATA', () => {
   const { acciones, descartes } = decide({ consultasPostCambio: postCambio() });
 
-  assert.deepEqual([acciones, descartes], [[], []]);
+  assert.deepEqual(acciones, []);
+  assert.deepEqual(motivosDe(descartes), [[CONSULTA, 'POST_CHANGE_NO_DATA']]);
+  assert.equal(descartes[0].impresiones, 268);
 });
 
-test('a title that converts after the change is not a Candidate, whatever the old one did', () => {
+test('a Candidate that ranks outside the CTR range after the change is discarded with POST_CHANGE_RANK_OUT_OF_RANGE', () => {
+  const { acciones, descartes } = decide({ consultasPostCambio: postCambio(fila(CONSULTA, 120, 15, 0)) });
+
+  assert.deepEqual(acciones, []);
+  assert.deepEqual(motivosDe(descartes), [[CONSULTA, 'POST_CHANGE_RANK_OUT_OF_RANGE']]);
+  assert.equal(descartes[0].impresiones, 120);
+});
+
+test('a Candidate whose CTR is normal after the change is discarded with POST_CHANGE_CTR_NORMAL', () => {
   const { acciones, descartes } = decide({ consultasPostCambio: postCambio(fila(CONSULTA, 120, 5, 9)) });
 
-  assert.deepEqual([acciones, descartes], [[], []]);
+  assert.deepEqual(acciones, []);
+  assert.deepEqual(motivosDe(descartes), [[CONSULTA, 'POST_CHANGE_CTR_NORMAL']]);
+});
+
+test('a Candidate that becomes another type after the change is discarded with POST_CHANGE_OTHER_TYPE', () => {
+  const { acciones, descartes } = decide({
+    consultasPostCambio: postCambio(fila(CONSULTA, 120, 5, 0), fila(CONSULTA, 100, 8, 0, HUB))
+  });
+
+  assert.deepEqual(acciones, []);
+  assert.deepEqual(motivosDe(descartes), [[CONSULTA, 'POST_CHANGE_OTHER_TYPE']]);
+});
+
+test('a discarded post-change Candidate does not reach the Watch list', () => {
+  const { vigilancia } = decide({ consultasPostCambio: postCambio() });
+
+  assert.deepEqual(vigilancia, []);
 });
 
 test('a query that only looks poor after the change becomes a Candidate', () => {
