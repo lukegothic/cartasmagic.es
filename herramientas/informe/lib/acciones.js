@@ -14,6 +14,7 @@ const IMPRESIONES_FIABLES = 40;
 const DISCARD_REASONS = Object.freeze({
   TOO_LITTLE_DEMAND: 'TOO_LITTLE_DEMAND',
   PAGE_NEWER_THAN_WINDOW: 'PAGE_NEWER_THAN_WINDOW',
+  QUERY_VARIANT_PERFORMS: 'QUERY_VARIANT_PERFORMS',
   NO_OWNER_DOMAIN: 'NO_OWNER_DOMAIN',
   OWNER_ALREADY_FIRST: 'OWNER_ALREADY_FIRST',
   OVER_LIST_LIMIT: 'OVER_LIST_LIMIT'
@@ -187,7 +188,15 @@ const derivarAcciones = (
       (h) => (h.deberia ? null : DISCARD_REASONS.NO_OWNER_DOMAIN),
       MAXIMO_HUERFANAS
     ),
-    ...evaluar('ctrBajo', ctrBajo, reescribirTitle, () => null, MAXIMO_CTR)
+    // Una variante con las mismas palabras que ya convierte en la misma pagina es la prueba
+    // de que el title funciona: el CTR pobre es de la candidata, no de la pagina.
+    ...evaluar(
+      'ctrBajo',
+      ctrBajo,
+      reescribirTitle,
+      (h) => (h.variantes?.length ? DISCARD_REASONS.QUERY_VARIANT_PERFORMS : null),
+      MAXIMO_CTR
+    )
   ];
 
   const porDemanda = (a, b) => b.impresiones - a.impresiones;
