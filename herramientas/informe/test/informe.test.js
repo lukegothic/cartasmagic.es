@@ -141,7 +141,8 @@ test('sin clic_cta en el sitio no se pinta la cifra de la portada', async () => 
 
 // generate_lead existe desde el 2026-09-04 y el resto del embudo desde el 09-05. Con la
 // ventana empezando antes, los leads de prueba del 09-04 salian sin su intento de envio
-// y el informe del 2026-09-25 daba un 120 % de intento a lead.
+// y el informe del 2026-09-25 daba un 120 % de intento a lead. El 2026-10-08 se corrigio
+// el doble conteo de leads, y antes de esa fecha generate_lead supera a intento_envio.
 test('los eventos del embudo se leen desde que existen todos sus pasos', async () => {
   const pedidos = [];
   const registrar = async (_auth, _propiedad, consulta) => {
@@ -152,7 +153,7 @@ test('los eventos del embudo se leen desde que existen todos sus pasos', async (
   await bloqueGA4(null, { dominio: 'vendercartasmagic.es', ga4: '1' }, { desde: '2026-06-30', hasta: '2026-09-28' }, registrar);
 
   const eventos = pedidos.find(({ dimensiones = [] }) => dimensiones[0] === 'eventName');
-  assert.equal(eventos.desde, '2026-09-05');
+  assert.equal(eventos.desde, '2026-10-09');
 });
 
 // Con generate_lead disparando en cada recarga de la confirmacion, el informe pintaba
