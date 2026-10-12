@@ -23,6 +23,10 @@ const pedir = async (auth, url, body) => {
   return res.data;
 };
 
+// El maximo de filas que la API de Search Console devuelve en una peticion (rowLimit va de
+// 1 a 25.000). Por encima hay que paginar con startRow.
+const GSC_MAXIMO_FILAS = 25000;
+
 // GSC indexa las propiedades de dominio como sc-domain:, no como https://. Las dos
 // formas conviven en la consola y solo una responde, asi que se prueba la de dominio.
 const consultaGSC = async (auth, dominio, { desde, hasta, dimensiones, limite = 200 }) => {
@@ -71,4 +75,4 @@ const consultaGA4 = async (
   }));
 };
 
-module.exports = { cliente, consultaGSC, consultaGA4 };
+module.exports = { cliente, consultaGSC, consultaGA4, GSC_MAXIMO_FILAS };

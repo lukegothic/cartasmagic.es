@@ -1,6 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert');
-const { bloqueGSC, bloqueGA4, bloqueKeywords } = require('../lib/informe');
+const { bloqueGSC, bloqueGA4, bloqueKeywords, alarmasDeEmbudo } = require('../lib/informe');
+const { decidir } = require('../lib/decision');
 
 // GSC oculta las consultas de pocas busquedas para no identificar a quien busca, asi que
 // sumar la dimension query siempre se queda corto: en vender daba 822 impresiones cuando
@@ -36,6 +37,47 @@ test('el total nunca queda por debajo de la pagina con mas impresiones', async (
 
   const mayor = Math.max(...paginas.map(({ impresiones }) => impresiones));
   assert.ok(total.impresiones >= mayor, `total ${total.impresiones} por debajo de ${mayor}`);
+});
+
+// GSC returns one page row per URL variant, so the same path showed up several times in
+// the page table ("/" four times on the hub).
+const variantPages = [
+  { claves: ['https://cartasmagic.es/'], clics: 10, impresiones: 100, ctr: 0.1, posicion: 5 },
+  { claves: ['http://cartasmagic.es/'], clics: 2, impresiones: 300, ctr: 0.0067, posicion: 9 },
+  { claves: ['https://www.cartasmagic.es/'], clics: 0, impresiones: 100, ctr: 0, posicion: 7 },
+  { claves: ['https://cartasmagic.es/?utm_source=newsletter'], clics: 1, impresiones: 100, ctr: 0.01, posicion: 3 },
+  { claves: ['https://cartasmagic.es/blog/precio-cartas'], clics: 4, impresiones: 50, ctr: 0.08, posicion: 12 }
+];
+
+const withPages = (page) => async (_auth, _dominio, { dimensiones }) =>
+  dimensiones?.[0] === 'page' ? page : [];
+
+test('page rows that resolve to the same path are merged into one', async () => {
+  const { paginas } = await bloqueGSC(null, 'cartasmagic.es', { desde: 'a', hasta: 'b' }, withPages(variantPages));
+
+  assert.equal(paginas.filter(({ claves }) => claves[0] === '/').length, 1);
+  assert.equal(paginas.length, 2);
+});
+
+test('a merged page row sums impressions and clicks and weights position by impressions', async () => {
+  const { paginas } = await bloqueGSC(null, 'cartasmagic.es', { desde: 'a', hasta: 'b' }, withPages(variantPages));
+  const home = paginas.find(({ claves }) => claves[0] === '/');
+
+  assert.equal(home.impresiones, 600);
+  assert.equal(home.clics, 13);
+  // (5*100 + 9*300 + 7*100 + 3*100) / 600 = 4200 / 600
+  assert.equal(home.posicion, 7);
+  assert.equal(home.ctr, 13 / 600);
+});
+
+test('the console page table lists each path once', async () => {
+  const { texto } = await bloqueGSC(null, 'cartasmagic.es', { desde: 'a', hasta: 'b' }, withPages(variantPages));
+  const filasPaginas = texto
+    .split('Paginas')[1]
+    .split('\n')
+    .filter((linea) => /^\s*\/\s/.test(linea));
+
+  assert.equal(filasPaginas.length, 1);
 });
 
 // Una propiedad recien dada de alta no devuelve ninguna fila. Antes el total salia de un
@@ -100,7 +142,8 @@ test('sin clic_cta en el sitio no se pinta la cifra de la portada', async () => 
 
 // generate_lead existe desde el 2026-09-04 y el resto del embudo desde el 09-05. Con la
 // ventana empezando antes, los leads de prueba del 09-04 salian sin su intento de envio
-// y el informe del 2026-09-25 daba un 120 % de intento a lead.
+// y el informe del 2026-09-25 daba un 120 % de intento a lead. El 2026-10-08 se corrigio
+// el doble conteo de leads, y antes de esa fecha generate_lead supera a intento_envio.
 test('los eventos del embudo se leen desde que existen todos sus pasos', async () => {
   const pedidos = [];
   const registrar = async (_auth, _propiedad, consulta) => {
@@ -111,7 +154,7 @@ test('los eventos del embudo se leen desde que existen todos sus pasos', async (
   await bloqueGA4(null, { dominio: 'vendercartasmagic.es', ga4: '1' }, { desde: '2026-06-30', hasta: '2026-09-28' }, registrar);
 
   const eventos = pedidos.find(({ dimensiones = [] }) => dimensiones[0] === 'eventName');
-  assert.equal(eventos.desde, '2026-09-05');
+  assert.equal(eventos.desde, '2026-10-09');
 });
 
 // Con generate_lead disparando en cada recarga de la confirmacion, el informe pintaba
@@ -182,4 +225,103 @@ test('una huerfana sin intencion clara sigue saliendo como candidata a reclamar'
 
   assert.match(candidatas, /cartas magic sueltas.*vendercartasmagic/);
   assert.doesNotMatch(compra, /cartas magic sueltas/);
+});
+
+// A Measurement alarm says the analytics are wrong, not that a page should change. The
+// funnel is the only place that can show it: a step cannot have more events than the one
+// before it.
+const eventosDeEmbudo = (...pares) => async (_auth, _propiedad, { dimensiones = [] }) =>
+  dimensiones[0] === 'eventName'
+    ? pares.map(([evento, veces]) => ({ claves: [evento, '/valoracion-cartas-magic'], valores: [veces] }))
+    : [];
+
+const SITIO_VENDER = { dominio: 'vendercartasmagic.es', ga4: '1' };
+const VENTANA_GA4 = { desde: '2026-10-01', hasta: '2026-10-12' };
+
+test('a funnel step with more events than the previous one raises a Measurement alarm', async () => {
+  const alarmas = await alarmasDeEmbudo(
+    null,
+    [SITIO_VENDER],
+    VENTANA_GA4,
+    eventosDeEmbudo(['ver_formulario', 100], ['empezar_formulario', 50], ['intento_envio', 10], ['generate_lead', 14])
+  );
+
+  assert.deepEqual(
+    alarmas.map(({ firma }) => firma),
+    ['embudo:vendercartasmagic.es:generate_lead:mas-eventos-que-el-anterior']
+  );
+});
+
+test('leads with no submit attempts at all also raise a Measurement alarm', async () => {
+  const alarmas = await alarmasDeEmbudo(null, [SITIO_VENDER], VENTANA_GA4, eventosDeEmbudo(['generate_lead', 3]));
+
+  assert.deepEqual(alarmas.map(({ evento }) => evento), ['generate_lead']);
+});
+
+test('a funnel whose steps never exceed the previous one raises no Measurement alarm', async () => {
+  const alarmas = await alarmasDeEmbudo(
+    null,
+    [SITIO_VENDER],
+    VENTANA_GA4,
+    eventosDeEmbudo(['ver_formulario', 100], ['empezar_formulario', 50], ['intento_envio', 30], ['generate_lead', 30], ['envio_rechazado', 99])
+  );
+
+  assert.deepEqual(alarmas, []);
+});
+
+test('a site without a GA4 property raises no Measurement alarm and is not queried', async () => {
+  const pedidos = [];
+  const registrar = async (...args) => {
+    pedidos.push(args);
+    return [];
+  };
+
+  const alarmas = await alarmasDeEmbudo(null, [{ dominio: 'cartasmagic.es', ga4: undefined }], VENTANA_GA4, registrar);
+
+  assert.deepEqual(alarmas, []);
+  assert.deepEqual(pedidos, []);
+});
+
+test('the Measurement alarms read events only from the date the funnel is measured cleanly', async () => {
+  const pedidos = [];
+  const registrar = async (_auth, _propiedad, consulta) => {
+    pedidos.push(consulta);
+    return [];
+  };
+
+  await alarmasDeEmbudo(null, [SITIO_VENDER], { desde: '2026-06-30', hasta: '2026-10-12' }, registrar);
+
+  assert.equal(pedidos[0].desde, '2026-10-09');
+  assert.equal(pedidos[0].dominio, 'vendercartasmagic.es');
+});
+
+test('a Measurement alarm sends on a weekday, and the same alarm the next day does not', async () => {
+  const [alarma] = await alarmasDeEmbudo(
+    null,
+    [SITIO_VENDER],
+    VENTANA_GA4,
+    eventosDeEmbudo(['ver_formulario', 100], ['empezar_formulario', 50], ['intento_envio', 10], ['generate_lead', 14])
+  );
+  const martes = new Date('2026-10-13T12:00:00');
+  const decide = (estado) =>
+    decidir({
+      consultas: [],
+      indice: { porKeyword: new Map(), paginas: [] },
+      estado,
+      hoy: martes,
+      ventana: { desde: '2026-07-10', hasta: '2026-10-10' },
+      ultimoCambioGit: () => null,
+      alarmas: [alarma.firma]
+    });
+
+  const primera = decide({ acciones: [], alarmas: [], fecha: null });
+  assert.equal(primera.enviar, true);
+  assert.equal(decide({ acciones: [], alarmas: primera.siguiente.alarmas, fecha: null }).enviar, false);
+});
+
+test('the funnel table flags leads that have no submit attempts before them', async () => {
+  const texto = await bloqueGA4(null, SITIO_VENDER, VENTANA_GA4, eventosDeEmbudo(['generate_lead', 3]));
+
+  const lead = texto.split('\n').find((linea) => /^\s*Lead\s/.test(linea));
+  assert.match(lead, /mas eventos que el paso anterior, fallo de medicion/);
 });

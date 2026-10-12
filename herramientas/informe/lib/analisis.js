@@ -53,6 +53,7 @@ const dominioQueTocaria = (consulta, porKeyword) => {
 // diferencia es ruido, asi que no se avisa de nada que no las alcance.
 const MINIMO_IMPRESIONES = 10;
 const POSICION_ALCANZABLE = 20;
+const POSICION_CTR = 10;
 const CTR_POBRE = 0.02;
 
 const agrupar = (filas) => {
@@ -78,6 +79,29 @@ const paginasQueLaReclaman = (consulta, porKeyword) => {
   return parciales;
 };
 
+// Dos consultas con las mismas palabras en otro orden son una sola busqueda para el
+// buscador, asi que lo que rinde una lo rinde la otra.
+const clavePalabras = (consulta) => [...new Set(consulta.split(' '))].sort().join(' ');
+
+const ctrDe = ({ clics, impresiones }) => clics / impresiones;
+
+const mismaPagina = (a, b) =>
+  a.some((x) => b.some((y) => x.dominio === y.dominio && x.ruta === y.ruta));
+
+// Variantes de la consulta, en la misma pagina, cuyo CTR ya no es pobre: el title ya
+// funciona para esa busqueda y reescribirlo por el orden de las palabras solo arriesga lo
+// que convierte. El CTR de cada una es el de quien mejor rankea, como el de la candidata.
+const variantesQueRinden = (consulta, reclaman, porConsulta, porKeyword) => {
+  const clave = clavePalabras(consulta);
+  return [...porConsulta]
+    .filter(([otra]) => otra !== consulta && clavePalabras(otra) === clave)
+    .filter(([otra, apariciones]) => {
+      const mejor = apariciones.reduce((a, b) => (a.posicion <= b.posicion ? a : b));
+      return ctrDe(mejor) >= CTR_POBRE && mismaPagina(reclaman, paginasQueLaReclaman(otra, porKeyword));
+    })
+    .map(([otra]) => otra);
+};
+
 const avisos = (porConsulta, porKeyword) => {
   const canibalizacion = [];
   const sinDuenno = [];
@@ -85,7 +109,10 @@ const avisos = (porConsulta, porKeyword) => {
   const ctrBajo = [];
 
   for (const [consulta, apariciones] of porConsulta) {
-    const impresiones = apariciones.reduce((t, a) => t + a.impresiones, 0);
+    // La demanda es la del dominio que mas impresiones ve: dos dominios en la misma pagina de
+    // resultados son una sola busqueda, y sumarlos la contaba dos veces. El campo se llama
+    // impresiones porque asi lo leen todos los consumidores de los avisos.
+    const impresiones = Math.max(...apariciones.map((a) => a.impresiones));
     if (impresiones < MINIMO_IMPRESIONES) continue;
 
     const clics = apariciones.reduce((t, a) => t + a.clics, 0);
@@ -104,17 +131,20 @@ const avisos = (porConsulta, porKeyword) => {
     }
 
     if (deberia && mejor.dominio !== deberia) {
-      malDominio.push({ consulta, impresiones, actual: mejor, deberia });
+      malDominio.push({ consulta, impresiones, apariciones, actual: mejor, deberia });
       continue;
     }
 
     if (!reclaman.length && mejor.posicion <= POSICION_ALCANZABLE) {
-      sinDuenno.push({ consulta, impresiones, clics, mejor, deberia });
+      sinDuenno.push({ consulta, impresiones, clics, apariciones, mejor, deberia });
       continue;
     }
 
-    if (mejor.posicion <= 10 && impresiones >= MINIMO_IMPRESIONES && clics / impresiones < CTR_POBRE) {
-      ctrBajo.push({ consulta, impresiones, clics, mejor, reclaman });
+    // El CTR es el de quien rankea, no el de las dos cifras mezcladas: los clics de un
+    // dominio no se reparten entre las impresiones del otro.
+    if (mejor.posicion <= POSICION_CTR && ctrDe(mejor) < CTR_POBRE) {
+      const variantes = variantesQueRinden(consulta, reclaman, porConsulta, porKeyword);
+      ctrBajo.push({ consulta, impresiones, clics, apariciones, mejor, reclaman, variantes });
     }
   }
 
@@ -146,4 +176,14 @@ const keywordsMuertas = (porConsulta, paginas) => {
     .filter(({ muertas }) => muertas.length);
 };
 
-module.exports = { agrupar, avisos, keywordsMuertas, intencion, dominioQueTocaria, HUB, VENDER };
+module.exports = {
+  agrupar,
+  avisos,
+  keywordsMuertas,
+  intencion,
+  dominioQueTocaria,
+  MINIMO_IMPRESIONES,
+  POSICION_CTR,
+  HUB,
+  VENDER
+};

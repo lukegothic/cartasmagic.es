@@ -1,7 +1,9 @@
 const { cliente } = require('./lib/google');
 const { construirIndice, leerLlms } = require('./lib/keywords');
-const { SITIOS, fechas, bloqueGSC, bloqueGA4, hallazgos } = require('./lib/informe');
-const { leer, guardar, firmar, comparar, esDiaDeEmbudo } = require('./lib/estado');
+const { SITIOS, fechas, bloqueGSC, bloqueGA4, alarmasDeEmbudo, consultasPostCambio } = require('./lib/informe');
+const { decidir, fechasPostCambio } = require('./lib/decision');
+const { leer, guardar } = require('./lib/estado');
+const { ultimoCambioGit } = require('./lib/git');
 const { enviar } = require('./lib/correo');
 const { componerMarkdown } = require('./lib/markdown');
 
@@ -20,15 +22,34 @@ const principal = async () => {
     porDominio.push({ dominio, total: gsc.total, consultas: gsc.consultas, paginas: gsc.paginas });
   }
 
-  const encontrados = hallazgos(consultas, indice);
-  const firmas = firmar(encontrados);
-  const { firmas: previas } = leer();
-  const { nuevas, resueltas } = comparar(firmas, previas);
+  const estado = leer();
+  const hoy = new Date();
 
-  const conEmbudo = esDiaDeEmbudo();
-  if (!nuevas.length && !resueltas.length && !conEmbudo) {
-    console.log(`Sin cambios: ${firmas.length} avisos, los mismos de ayer. No se envia correo.`);
-    guardar(firmas);
+  // La decision no pide nada a GSC: se le dice que cifras de despues de cambio necesita y
+  // se le pasan ya traidas.
+  const cambios = fechasPostCambio({ indice, estado, hoy, ventana, ultimoCambioGit });
+
+  // Las alarmas de medicion pueden mandar el correo cualquier dia, asi que los eventos del
+  // embudo se leen antes de decidir y no solo los lunes, cuando se pinta la tabla.
+  const alarmas = await alarmasDeEmbudo(auth, SITIOS, ventana);
+
+  const { acciones, descartes, vigilancia, hallazgos, nuevas, conEmbudo, enviar, resumen, siguiente } = decidir({
+    consultas,
+    indice,
+    estado,
+    hoy,
+    ventana,
+    ultimoCambioGit,
+    alarmas: alarmas.map(({ firma }) => firma),
+    consultasPostCambio: await consultasPostCambio(auth, cambios, ventana)
+  });
+
+  if (!enviar) {
+    console.log(
+      `Sin cambios visibles: ${resumen.acciones} acciones, ${resumen.descartes} descartes, ` +
+        `${resumen.vigilancia} en vigilancia. No se envia correo.`
+    );
+    guardar(siguiente);
     return;
   }
 
@@ -44,12 +65,15 @@ const principal = async () => {
   const markdown = componerMarkdown({
     ventana,
     indice,
-    hallazgos: encontrados,
+    acciones,
+    descartes,
+    vigilancia,
+    hallazgos,
     consultas,
     porDominio,
     llms: leerLlms(),
-    embudo: conEmbudo ? bloquesEmbudo.join('\n') : null,
-    previas
+    alarmas,
+    embudo: conEmbudo ? bloquesEmbudo.join('\n') : null
   });
 
   await enviar({
@@ -58,8 +82,11 @@ const principal = async () => {
     adjuntos: [{ nombre: `informe-${ventana.hasta}.md`, contenido: markdown }]
   });
 
-  guardar(firmas);
-  console.log(`Enviado el informe del ${ventana.hasta}. ${firmas.length} avisos, ${nuevas.length} nuevos.`);
+  guardar(siguiente);
+  console.log(
+    `Enviado el informe del ${ventana.hasta}. ${resumen.acciones} acciones, ${nuevas.length} nuevas, ` +
+      `${resumen.descartes} descartes, ${resumen.vigilancia} en vigilancia.`
+  );
 };
 
 principal().catch(({ message }) => {
