@@ -1,6 +1,7 @@
 const { cliente, consultaGSC, consultaGA4 } = require('./google');
 const { construirIndice } = require('./keywords');
 const { agrupar, avisos, keywordsMuertas, intencion } = require('./analisis');
+const { diaSiguiente } = require('./postcambio');
 const { numero, decimal, porcentaje, titulo, seccion, tabla } = require('./formato');
 
 // Una sola propiedad de GA4 para los dos dominios, cada uno con su flujo de datos. Se
@@ -214,6 +215,28 @@ const bloqueGA4 = async (auth, { dominio, ga4 }, ventana, pedirGA4 = consultaGA4
   return lineas.join('\n');
 };
 
+// Las consultas de cada dominio desde el dia siguiente a cada cambio de un Target hasta el
+// final de la ventana: ese dia mezcla las dos versiones. GSC incluye en el rango los dos
+// extremos. El resultado es `{ [fechaDeCambio]: filas }`, la forma que `decidir` espera.
+const consultasPostCambio = async (auth, cambios, ventana, pedirGSC = consultaGSC) =>
+  Object.fromEntries(
+    await Promise.all(
+      cambios.map(async (cambio) => {
+        const porDominio = await Promise.all(
+          SITIOS.map(async ({ dominio }) => {
+            const filas = await pedirGSC(auth, dominio, {
+              desde: diaSiguiente(cambio),
+              hasta: ventana.hasta,
+              dimensiones: ['query']
+            });
+            return filas.map((fila) => ({ ...fila, dominio }));
+          })
+        );
+        return [cambio, porDominio.flat()];
+      })
+    )
+  );
+
 // Los hallazgos se calculan aparte del texto porque el trabajo diario necesita
 // compararlos con los de ayer, no pintarlos.
 const hallazgos = (consultas, indice) => {
@@ -317,4 +340,4 @@ const bloqueKeywords = (consultas, indice) => {
   return lineas.join('\n');
 };
 
-module.exports = { SITIOS, EMBUDO, fechas, bloqueGSC, bloqueGA4, bloqueKeywords, hallazgos };
+module.exports = { SITIOS, EMBUDO, fechas, bloqueGSC, bloqueGA4, bloqueKeywords, hallazgos, consultasPostCambio };

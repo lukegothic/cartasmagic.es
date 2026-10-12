@@ -1,7 +1,7 @@
 const { cliente } = require('./lib/google');
 const { construirIndice, leerLlms } = require('./lib/keywords');
-const { SITIOS, fechas, bloqueGSC, bloqueGA4 } = require('./lib/informe');
-const { decidir } = require('./lib/decision');
+const { SITIOS, fechas, bloqueGSC, bloqueGA4, consultasPostCambio } = require('./lib/informe');
+const { decidir, fechasPostCambio } = require('./lib/decision');
 const { leer, guardar } = require('./lib/estado');
 const { ultimoCambioGit } = require('./lib/git');
 const { enviar } = require('./lib/correo');
@@ -22,13 +22,21 @@ const principal = async () => {
     porDominio.push({ dominio, total: gsc.total, consultas: gsc.consultas, paginas: gsc.paginas });
   }
 
+  const estado = leer();
+  const hoy = new Date();
+
+  // La decision no pide nada a GSC: se le dice que cifras de despues de cambio necesita y
+  // se le pasan ya traidas.
+  const cambios = fechasPostCambio({ indice, estado, hoy, ventana, ultimoCambioGit });
+
   const { acciones, descartes, vigilancia, hallazgos, nuevas, conEmbudo, enviar, resumen, siguiente } = decidir({
     consultas,
     indice,
-    estado: leer(),
-    hoy: new Date(),
+    estado,
+    hoy,
     ventana,
-    ultimoCambioGit
+    ultimoCambioGit,
+    consultasPostCambio: await consultasPostCambio(auth, cambios, ventana)
   });
 
   if (!enviar) {
