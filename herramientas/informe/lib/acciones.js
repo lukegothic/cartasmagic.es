@@ -160,12 +160,12 @@ const derivarAcciones = (
   // Los motivos van por orden: la demanda es el ultimo, porque una candidata que ademas
   // falla por otra cosa no esta en vigilancia, solo sin demanda. Las listas llegan
   // ordenadas por demanda, asi que el tope se queda con las de mas demanda.
-  const evaluar = (tipo, hallazgos, construir, motivoPrevio, enEspera, maximo = Infinity) => {
+  const evaluar = (tipo, hallazgos, construir, motivoPrevio, enCooldown, maximo = Infinity) => {
     let aceptadas = 0;
     return hallazgos.map((hallazgo) => {
       const motivo = motivoPrevio(hallazgo);
       if (motivo) return { tipo, hallazgo, motivo };
-      if (enEspera(hallazgo)) return { tipo, hallazgo, motivo: DISCARD_REASONS.TARGET_IN_COOLDOWN };
+      if (enCooldown(hallazgo)) return { tipo, hallazgo, motivo: DISCARD_REASONS.TARGET_IN_COOLDOWN };
       if (hallazgo.impresiones < IMPRESIONES_FIABLES) {
         return { tipo, hallazgo, motivo: DISCARD_REASONS.TOO_LITTLE_DEMAND };
       }

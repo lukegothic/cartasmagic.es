@@ -2,6 +2,7 @@ const { cliente, consultaGSC, consultaGA4, GSC_MAXIMO_FILAS } = require('./googl
 const { construirIndice } = require('./keywords');
 const { agrupar, avisos, keywordsMuertas, intencion } = require('./analisis');
 const { diaSiguiente } = require('./postcambio');
+const { iso } = require('./dias');
 const { numero, decimal, porcentaje, titulo, seccion, tabla } = require('./formato');
 
 // Una sola propiedad de GA4 para los dos dominios, cada uno con su flujo de datos. Se
@@ -24,8 +25,6 @@ const EMBUDO = [
 // Primer dia con el embudo medido sin errores: el doble conteo de generate_lead se
 // corrigio el 2026-10-08, y antes de eso sacaba mas leads que intentos de envio.
 const EMBUDO_DESDE = '2026-10-09';
-
-const iso = (d) => d.toISOString().slice(0, 10);
 
 // GSC no tiene consolidados los ultimos tres dias y contarlos hunde las medias. GA4 si
 // los tiene, y ademas es donde esta casi todo lo que ha recogido hasta ahora, asi que

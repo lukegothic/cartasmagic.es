@@ -1,10 +1,9 @@
 const { avisos, agrupar, MINIMO_IMPRESIONES, POSICION_CTR } = require('./analisis');
 const { DISCARD_REASONS } = require('./acciones');
+const { DIA_MS, iso } = require('./dias');
 const { claveObjetivo, enCooldown } = require('./objetivos');
 
-const DIA_MS = 86400000;
-
-const diaSiguiente = (fecha) => new Date(Date.parse(fecha) + DIA_MS).toISOString().slice(0, 10);
+const diaSiguiente = (fecha) => iso(new Date(Date.parse(fecha) + DIA_MS));
 
 // Un CTR se juzga sobre el title y la description de la pagina que rankea.
 const CAMPOS_CTR = ['title', 'description'];
