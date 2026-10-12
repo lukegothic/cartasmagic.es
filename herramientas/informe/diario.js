@@ -31,7 +31,16 @@ const principal = async () => {
 
   // Las alarmas de medicion pueden mandar el correo cualquier dia, asi que los eventos del
   // embudo se leen antes de decidir y no solo los lunes, cuando se pinta la tabla.
-  const alarmas = await alarmasDeEmbudo(auth, SITIOS, ventana);
+  // Si GA4 falla, se arrastran las firmas de ayer: un dia sin lectura no es una alarma
+  // resuelta, y el informe de Search Console no debe caerse por ello.
+  let alarmas = [];
+  let firmasAlarmas = estado.alarmas;
+  try {
+    alarmas = await alarmasDeEmbudo(auth, SITIOS, ventana);
+    firmasAlarmas = alarmas.map(({ firma }) => firma);
+  } catch ({ message }) {
+    console.warn(`No se pudo leer el embudo de GA4, se mantienen las alarmas de ayer: ${message}`);
+  }
 
   const { acciones, descartes, vigilancia, hallazgos, nuevas, conEmbudo, enviar, resumen, siguiente } = decidir({
     consultas,
@@ -40,7 +49,7 @@ const principal = async () => {
     hoy,
     ventana,
     ultimoCambioGit,
-    alarmas: alarmas.map(({ firma }) => firma),
+    alarmas: firmasAlarmas,
     consultasPostCambio: await consultasPostCambio(auth, cambios, ventana)
   });
 
