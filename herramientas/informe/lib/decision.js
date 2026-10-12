@@ -11,8 +11,12 @@ const decidir = ({ consultas, indice, estado, hoy, ventana }) => {
   const { nuevas, resueltas } = comparar(firmas, estado.firmas);
   const conEmbudo = esDiaDeEmbudo(hoy);
 
+  const { acciones, descartes, vigilancia } = derivarAcciones(hallazgos, indice, estado.firmas, ventana);
+
   return {
-    acciones: derivarAcciones(hallazgos, indice, estado.firmas, ventana),
+    acciones,
+    descartes,
+    vigilancia,
     hallazgos,
     nuevas,
     conEmbudo,

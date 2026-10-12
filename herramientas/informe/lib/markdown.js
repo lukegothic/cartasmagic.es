@@ -22,33 +22,61 @@ const seccionAcciones = (acciones) => {
   if (!acciones.length) return '## Acciones\n\n_Sin acciones pendientes._';
 
   const cuerpo = acciones
-    .map(({ titulo, porque, apariciones, donde, hacer, esNueva, esRuido }, i) => {
-      const marcas = [esNueva ? 'NUEVA' : null, esRuido ? 'POCO VOLUMEN' : null].filter(Boolean);
-      return (
-        `### ${i + 1}. ${titulo}${marcas.length ? ` _(${marcas.join(', ')})_` : ''}\n\n` +
+    .map(
+      ({ titulo, porque, apariciones, donde, hacer, esNueva }, i) =>
+        `### ${i + 1}. ${titulo}${esNueva ? ' _(NUEVA)_' : ''}\n\n` +
         `- **Por que:** ${porque}\n` +
         `- **Cifras:** ${cifrasPorDominio(apariciones)}\n` +
         `- **Donde:** ${donde.length ? donde.map(enlace).join(', ') : 'sin pagina asignada'}\n` +
         `- **Hacer:** ${hacer}`
-      );
-    })
+    )
     .join('\n\n');
 
   const nuevas = acciones.filter(({ esNueva }) => esNueva).length;
-  const ruido = acciones.filter(({ esRuido }) => esRuido).length;
 
   // El adjunto repite las acciones hasta que se aplican, asi que sin decir cuantas son
   // nuevas se lee como un inventario y no como una lista de trabajo.
-  const aviso = ruido
-    ? `\n\n${ruido} de estas acciones se apoyan en menos de 40 impresiones y van marcadas ` +
-      'como POCO VOLUMEN. A ese nivel la diferencia entre acertar y no cabe dentro del ruido, ' +
-      'asi que conviene aplicarlas solo si el cambio no cuesta nada y no tocan nada que ya ' +
-      'funcione.'
-    : '';
-
   return (
     `## Acciones\n\n${acciones.length} en total, ${nuevas} sin ver ayer. ` +
-    `Ordenadas por demanda.${aviso}\n\n${cuerpo}`
+    `Ordenadas por demanda.\n\n${cuerpo}`
+  );
+};
+
+// Sin esta seccion un "Sin acciones pendientes" no se distingue de un informe roto: aqui
+// se ve que candidatas hubo y por que ninguna llego a accion. Los motivos son codigos
+// estables, no prosa.
+const seccionDescartes = (descartes) => {
+  const cuerpo = descartes.length
+    ? tabla(
+        ['candidata', 'motivo', 'demanda'],
+        descartes.map(({ titulo, motivo, impresiones }) => [titulo, motivo, numero(impresiones)])
+      )
+    : '_Ningun candidato descartado._';
+
+  return (
+    '## Descartes\n\n' +
+    'Candidatas que no han llegado a accion, con el motivo. No hay nada que aplicar aqui.\n\n' +
+    cuerpo
+  );
+};
+
+// Candidatas que solo fallan por demanda: se ven para notar una senal que crece, sin una
+// instruccion pegada.
+const seccionVigilancia = (vigilancia) => {
+  const cuerpo = vigilancia.length
+    ? vigilancia
+        .map(
+          ({ consulta, impresiones, apariciones }) =>
+            `- **${consulta}** (demanda ${numero(impresiones)}): ${cifrasPorDominio(apariciones)}`
+        )
+        .join('\n')
+    : '_Nada en vigilancia._';
+
+  return (
+    '## Vigilancia\n\n' +
+    'Consultas con demanda por debajo de la que pide una accion. Son solo informacion: ' +
+    'no hay nada que aplicar.\n\n' +
+    cuerpo
   );
 };
 
@@ -196,7 +224,7 @@ const seccionDatos = (porDominio) => {
   return `## Datos en bruto\n\n${bloques.join('\n\n')}`;
 };
 
-const componerMarkdown = ({ ventana, indice, acciones, hallazgos, consultas, porDominio, llms, embudo }) => {
+const componerMarkdown = ({ ventana, indice, acciones, descartes, vigilancia, hallazgos, consultas, porDominio, llms, embudo }) => {
   const partes = [
     `# Informe cartasmagic ${ventana.hasta}`,
     '',
@@ -207,6 +235,10 @@ const componerMarkdown = ({ ventana, indice, acciones, hallazgos, consultas, por
     '> Cada accion lleva el fichero y la linea exacta.',
     '',
     seccionAcciones(acciones),
+    '',
+    seccionDescartes(descartes),
+    '',
+    seccionVigilancia(vigilancia),
     '',
     seccionGeo(consultas),
     '',

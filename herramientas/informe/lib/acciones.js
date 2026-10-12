@@ -6,9 +6,18 @@ const MAXIMO_HUERFANAS = 10;
 const MAXIMO_CTR = 8;
 
 // Con unas 48 visitas al mes, por debajo de esto la diferencia entre actuar y no actuar
-// cabe dentro del ruido. La accion se sigue proponiendo, pero marcada, porque
-// docs/plan-medicion-embudo.md avisa de que decidir sobre azar es peor que no decidir.
+// cabe dentro del ruido. La candidata no se propone como accion y pasa a vigilancia,
+// porque docs/plan-medicion-embudo.md avisa de que decidir sobre azar es peor que no decidir.
 const IMPRESIONES_FIABLES = 40;
+
+// Motivos por los que una candidata no llega a accion. Son codigos estables, no texto.
+const DISCARD_REASONS = Object.freeze({
+  TOO_LITTLE_DEMAND: 'TOO_LITTLE_DEMAND',
+  PAGE_NEWER_THAN_WINDOW: 'PAGE_NEWER_THAN_WINDOW',
+  NO_OWNER_DOMAIN: 'NO_OWNER_DOMAIN',
+  OWNER_ALREADY_FIRST: 'OWNER_ALREADY_FIRST',
+  OVER_LIST_LIMIT: 'OVER_LIST_LIMIT'
+});
 
 const ubicacion = ({ fichero, numeroLinea }) => ({ fichero, numeroLinea });
 
@@ -97,11 +106,21 @@ const reescribirTitle = ({ consulta, impresiones, apariciones, mejor, reclaman }
   hacer: 'Reescribir title y description para que respondan a esa busqueda.'
 });
 
+const ETIQUETAS = {
+  canibalizacion: 'Competencia entre dominios',
+  malDominio: 'Dominio equivocado',
+  sinDuenno: 'Sin declarar',
+  ctrBajo: 'CTR bajo'
+};
+
 // Cada accion sale con su ubicacion en el codigo, para poder aplicarla sin buscar nada.
 // El orden es el de demanda, la misma para todos los tipos: primero lo que mas se busca.
 //
 // El adjunto llega cada dia con las mismas acciones hasta que se aplican, asi que cada
 // una dice si ya estaba ayer. Sin eso no hay forma de separar lo hecho de lo pendiente.
+//
+// Ninguna candidata se pierde en silencio: la que no llega a accion sale en `descartes`
+// con su motivo, y la que solo falla por demanda sale ademas en `vigilancia`.
 const derivarAcciones = (
   { canibalizacion, malDominio, sinDuenno, ctrBajo },
   { porKeyword, paginas },
@@ -124,28 +143,74 @@ const derivarAcciones = (
     return declaradaDondeToca(porKeyword.get(consulta) || [], deberia) && mejor.dominio === deberia;
   };
 
-  const candidatas = [
+  // Los motivos van por orden: la demanda es el ultimo, porque una candidata que ademas
+  // falla por otra cosa no esta en vigilancia, solo sin demanda. Las listas llegan
+  // ordenadas por demanda, asi que el tope se queda con las de mas demanda.
+  const evaluar = (tipo, hallazgos, construir, motivoPrevio, maximo = Infinity) => {
+    let aceptadas = 0;
+    return hallazgos.map((hallazgo) => {
+      const motivo = motivoPrevio(hallazgo);
+      if (motivo) return { tipo, hallazgo, motivo };
+      if (hallazgo.impresiones < IMPRESIONES_FIABLES) {
+        return { tipo, hallazgo, motivo: DISCARD_REASONS.TOO_LITTLE_DEMAND };
+      }
+      aceptadas += 1;
+      if (aceptadas > maximo) return { tipo, hallazgo, motivo: DISCARD_REASONS.OVER_LIST_LIMIT };
+      return { tipo, hallazgo, accion: construir(hallazgo) };
+    });
+  };
+
+  const evaluadas = [
     // Las de compra no tienen dominio que las responda, asi que no hay a quien darle la razon.
-    ...canibalizacion
-      .filter((h) => h.deberia && !faltaSoloTiempo(h) && !vaDelanteQuienToca(h))
-      .map((h) => resolverCompetencia(h, porKeyword)),
-    ...malDominio.filter((h) => !faltaSoloTiempo(h)).map((h) => moverDeDominio(h, porKeyword)),
+    ...evaluar(
+      'canibalizacion',
+      canibalizacion,
+      (h) => resolverCompetencia(h, porKeyword),
+      (h) =>
+        (!h.deberia && DISCARD_REASONS.NO_OWNER_DOMAIN) ||
+        (faltaSoloTiempo(h) && DISCARD_REASONS.PAGE_NEWER_THAN_WINDOW) ||
+        (vaDelanteQuienToca(h) && DISCARD_REASONS.OWNER_ALREADY_FIRST) ||
+        null
+    ),
+    ...evaluar(
+      'malDominio',
+      malDominio,
+      (h) => moverDeDominio(h, porKeyword),
+      (h) => (faltaSoloTiempo(h) ? DISCARD_REASONS.PAGE_NEWER_THAN_WINDOW : null)
+    ),
     // Las que el reparto deja sin dominio a proposito no se proponen: no hay pagina que
     // pueda responderlas. Ver docs/reparto-keywords.md.
-    ...sinDuenno
-      .filter(({ deberia }) => deberia)
-      .slice(0, MAXIMO_HUERFANAS)
-      .map((h) => reclamar(h, paginas)),
-    ...ctrBajo.slice(0, MAXIMO_CTR).map(reescribirTitle)
+    ...evaluar(
+      'sinDuenno',
+      sinDuenno,
+      (h) => reclamar(h, paginas),
+      (h) => (h.deberia ? null : DISCARD_REASONS.NO_OWNER_DOMAIN),
+      MAXIMO_HUERFANAS
+    ),
+    ...evaluar('ctrBajo', ctrBajo, reescribirTitle, () => null, MAXIMO_CTR)
   ];
 
-  return candidatas
-    .map((accion) => ({
-      ...accion,
-      esNueva: !vistas.has(accion.firma),
-      esRuido: accion.impresiones < IMPRESIONES_FIABLES
+  const porDemanda = (a, b) => b.impresiones - a.impresiones;
+
+  const descartes = evaluadas
+    .filter(({ motivo }) => motivo)
+    .map(({ tipo, hallazgo: { consulta, impresiones, apariciones }, motivo }) => ({
+      titulo: `${ETIQUETAS[tipo]} "${consulta}"`,
+      consulta,
+      impresiones,
+      apariciones,
+      motivo
     }))
-    .sort((a, b) => b.impresiones - a.impresiones);
+    .sort(porDemanda);
+
+  return {
+    acciones: evaluadas
+      .filter(({ accion }) => accion)
+      .map(({ accion }) => ({ ...accion, esNueva: !vistas.has(accion.firma) }))
+      .sort(porDemanda),
+    descartes,
+    vigilancia: descartes.filter(({ motivo }) => motivo === DISCARD_REASONS.TOO_LITTLE_DEMAND)
+  };
 };
 
 module.exports = { derivarAcciones };
