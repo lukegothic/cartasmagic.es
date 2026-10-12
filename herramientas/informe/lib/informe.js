@@ -20,9 +20,9 @@ const EMBUDO = [
   { evento: 'envio_rechazado', etiqueta: 'Envio rechazado', suelto: true }
 ];
 
-// Primer dia con los cinco pasos medidos. generate_lead salta desde el dia antes, y
-// contarlo sin su intento de envio sacaba mas leads que intentos.
-const EMBUDO_DESDE = '2026-09-05';
+// Primer dia con el embudo medido sin errores: el doble conteo de generate_lead se
+// corrigio el 2026-10-08, y antes de eso sacaba mas leads que intentos de envio.
+const EMBUDO_DESDE = '2026-10-09';
 
 const iso = (d) => d.toISOString().slice(0, 10);
 
