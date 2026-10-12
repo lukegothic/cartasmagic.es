@@ -1,38 +1,33 @@
 const fs = require('node:fs');
 const path = require('node:path');
-const { intencion } = require('./analisis');
 
 // El estado vive en un volumen del contenedor, no en el repositorio. Si no hay volumen
 // el informe sigue funcionando: se comporta como si cada dia fuera el primero y manda
 // siempre, que es peor pero no rompe nada.
 const rutaEstado = () => path.join(process.env.INFORME_ESTADO_DIR || '/datos', 'ultimo-aviso.json');
 
+const VACIO = { acciones: [], alarmas: [], fecha: null };
+
+// El formato anterior guardaba `firmas`: la de cada hallazgo, visible o no. Se lee una vez
+// y se marca como migrado, porque de el no se puede saber cuales eran visibles: sirve para
+// detectar acciones nuevas, no para dar por resueltas las que faltan. El siguiente guardado
+// ya sale en el formato nuevo.
+const migrar = ({ firmas, fecha = null }) => ({ ...VACIO, acciones: firmas, fecha, migrado: true });
+
 const leer = () => {
   const fichero = rutaEstado();
-  if (!fs.existsSync(fichero)) return { firmas: [], fecha: null };
-  return JSON.parse(fs.readFileSync(fichero, 'utf8'));
+  if (!fs.existsSync(fichero)) return VACIO;
+  const guardado = JSON.parse(fs.readFileSync(fichero, 'utf8'));
+  return guardado.firmas ? migrar(guardado) : { ...VACIO, ...guardado };
 };
 
-const guardar = (firmas) => {
+// Guarda lo que decidir devuelve como `siguiente`, sin elegir campos: asi lo que se anada
+// al estado solo hay que anadirlo en un sitio.
+const guardar = (siguiente) => {
   const fichero = rutaEstado();
   fs.mkdirSync(path.dirname(fichero), { recursive: true });
-  fs.writeFileSync(fichero, JSON.stringify({ firmas, fecha: new Date().toISOString() }, null, 2));
+  fs.writeFileSync(fichero, JSON.stringify({ ...siguiente, fecha: new Date().toISOString() }, null, 2));
 };
-
-// La firma identifica el aviso, no su magnitud: si "vender cartas" pasa de 97 a 103
-// impresiones sigue siendo el mismo hallazgo y no merece otro correo. Solo cuenta que
-// aparezca uno que ayer no estaba.
-//
-// La intencion de compra no se firma: se queda sin dominio a proposito
-// (docs/reparto-keywords.md), asi que no hay nada que reclamar ni motivo para un correo.
-const firmar = ({ canibalizacion, malDominio, sinDuenno, ctrBajo }) => [
-  ...canibalizacion.map(({ consulta }) => `canibal:${consulta}`),
-  ...malDominio.map(({ consulta, deberia }) => `dominio:${consulta}:${deberia}`),
-  ...sinDuenno
-    .filter(({ consulta }) => intencion(consulta) !== 'compra')
-    .map(({ consulta }) => `huerfana:${consulta}`),
-  ...ctrBajo.map(({ consulta }) => `ctr:${consulta}`)
-];
 
 const comparar = (firmas, previas) => {
   const antes = new Set(previas);
@@ -48,4 +43,4 @@ const comparar = (firmas, previas) => {
 // impresion, por eso esos si van a diario.
 const esDiaDeEmbudo = (hoy = new Date()) => hoy.getDay() === 1;
 
-module.exports = { leer, guardar, firmar, comparar, esDiaDeEmbudo };
+module.exports = { leer, guardar, comparar, esDiaDeEmbudo };
