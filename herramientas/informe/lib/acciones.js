@@ -96,14 +96,15 @@ const reclamar = ({ consulta, impresiones, clics, apariciones, mejor, deberia },
   };
 };
 
-const reescribirTitle = ({ consulta, impresiones, apariciones, mejor, reclaman }) => ({
+const reescribirTitle = ({ consulta, impresiones, apariciones, mejor, reclaman, desde }) => ({
   firma: `ctr:${consulta}`,
   impresiones,
   apariciones,
   titulo: `Reescribir el title de "${consulta}"`,
   porque:
     `${mejor.dominio} en posicion ${decimal(mejor.posicion)} con ${numero(mejor.impresiones)} ` +
-    `impresiones y solo ${numero(mejor.clics)} clics: sale arriba pero no convence.`,
+    `impresiones y solo ${numero(mejor.clics)} clics: sale arriba pero no convence.` +
+    (desde ? ` Cifras desde ${desde}, el dia siguiente al ultimo cambio del title o la description.` : ''),
   donde: reclaman.slice(0, 1).map(ubicacion),
   hacer: 'Reescribir title y description para que respondan a esa busqueda.'
 });

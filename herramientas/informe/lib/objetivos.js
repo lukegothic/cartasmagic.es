@@ -57,15 +57,12 @@ const instantanea = ({ paginas, previos = {}, hoy, ultimoCambioGit }) => {
 
 // Una fecha de cambio desconocida (git sin historial) no pone nada en Cooldown: sin saber
 // cuando cambio no hay base para descartar.
-const cooldownDe = (targets, hoy) => {
-  const hoyMs = Date.parse(iso(hoy));
-  return (paginas, campos) =>
-    paginas.some((pagina) =>
-      campos.some((campo) => {
-        const cambio = targets[claveObjetivo(pagina, campo)]?.cambio;
-        return Boolean(cambio) && (hoyMs - Date.parse(cambio)) / DIA_MS <= COOLDOWN_DIAS;
-      })
-    );
-};
+const enCooldown = (cambio, hoy) =>
+  Boolean(cambio) && (Date.parse(iso(hoy)) - Date.parse(cambio)) / DIA_MS <= COOLDOWN_DIAS;
 
-module.exports = { instantanea, cooldownDe, claveObjetivo, COOLDOWN_DIAS };
+const cooldownDe = (targets, hoy) => (paginas, campos) =>
+  paginas.some((pagina) =>
+    campos.some((campo) => enCooldown(targets[claveObjetivo(pagina, campo)]?.cambio, hoy))
+  );
+
+module.exports = { instantanea, cooldownDe, enCooldown, claveObjetivo, COOLDOWN_DIAS };
