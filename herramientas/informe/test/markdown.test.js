@@ -11,6 +11,8 @@ const withOrphans = (sinDuenno) =>
     ventana: { desde: '2026-07-10', hasta: '2026-10-07' },
     indice: { paginas: [], porKeyword: new Map() },
     acciones: [],
+    descartes: [],
+    vigilancia: [],
     hallazgos: { canibalizacion: [], malDominio: [], sinDuenno, ctrBajo: [], muertas: [] },
     consultas: [],
     porDominio: [],
@@ -57,6 +59,8 @@ test('the raw data page table lists "/" once when GSC returned several URL varia
     ventana: { desde: '2026-07-10', hasta: '2026-10-07' },
     indice: { paginas: [], porKeyword: new Map() },
     acciones: [],
+    descartes: [],
+    vigilancia: [],
     hallazgos: { canibalizacion: [], malDominio: [], sinDuenno: [], ctrBajo: [], muertas: [] },
     consultas: [],
     porDominio: [{ dominio: 'cartasmagic.es', total, consultas, paginas }],
@@ -79,8 +83,7 @@ const action = {
   porque: '50 impresiones de demanda',
   donde: [],
   hacer: 'Anadirla al meta keywords',
-  esNueva: true,
-  esRuido: false
+  esNueva: true
 };
 
 const actionsSection = (acciones) =>
@@ -88,6 +91,8 @@ const actionsSection = (acciones) =>
     ventana: { desde: '2026-07-10', hasta: '2026-10-07' },
     indice: { paginas: [], porKeyword: new Map() },
     acciones,
+    descartes: [],
+    vigilancia: [],
     hallazgos: { canibalizacion: [], malDominio: [], sinDuenno: [], ctrBajo: [], muertas: [] },
     consultas: [],
     porDominio: [],
@@ -99,6 +104,68 @@ const actionsSection = (acciones) =>
 
 test('the actions heading says they are ordered by Demand', () => {
   assert.match(actionsSection([action]), /Ordenadas por demanda\./);
+});
+
+const render = (extra) =>
+  componerMarkdown({
+    ventana: { desde: '2026-07-10', hasta: '2026-10-07' },
+    indice: { paginas: [], porKeyword: new Map() },
+    acciones: [],
+    descartes: [],
+    vigilancia: [],
+    hallazgos: { canibalizacion: [], malDominio: [], sinDuenno: [], ctrBajo: [], muertas: [] },
+    consultas: [],
+    porDominio: [],
+    llms: [],
+    embudo: null,
+    ...extra
+  });
+
+const sectionOf = (markdown, heading) => markdown.split(`\n## ${heading}`)[1].split('\n## ')[0];
+
+const WATCHED = {
+  titulo: 'Sin declarar "tasar cartas magic"',
+  consulta: 'tasar cartas magic',
+  impresiones: 25,
+  apariciones: [
+    { dominio: 'cartasmagic.es', impresiones: 25, clics: 0, posicion: 12 },
+    { dominio: 'vendercartasmagic.es', impresiones: 18, clics: 0, posicion: 16.5 }
+  ],
+  motivo: 'TOO_LITTLE_DEMAND'
+};
+
+const NEWER_PAGE = {
+  titulo: 'Dominio equivocado "cartas magic antiguas"',
+  consulta: 'cartas magic antiguas',
+  impresiones: 60,
+  apariciones: [{ dominio: 'vendercartasmagic.es', impresiones: 60, clics: 0, posicion: 16.6 }],
+  motivo: 'PAGE_NEWER_THAN_WINDOW'
+};
+
+test('the discards section lists each Candidate with its Discard reason code and Demand, next to an empty actions section', () => {
+  const markdown = render({ descartes: [NEWER_PAGE, WATCHED] });
+
+  assert.match(sectionOf(markdown, 'Acciones'), /Sin acciones pendientes/);
+  const discards = sectionOf(markdown, 'Descartes');
+  assert.match(discards, /Dominio equivocado "cartas magic antiguas" \| PAGE_NEWER_THAN_WINDOW \| 60/);
+  assert.match(discards, /Sin declarar "tasar cartas magic" \| TOO_LITTLE_DEMAND \| 25/);
+});
+
+test('the discards section says so when nothing was discarded', () => {
+  assert.match(sectionOf(render({}), 'Descartes'), /Ningun candidato descartado/);
+});
+
+test('the Watch list shows impressions and position per domain, with no Hacer line', () => {
+  const section = sectionOf(render({ vigilancia: [WATCHED], descartes: [WATCHED] }), 'Vigilancia');
+
+  assert.match(section, /tasar cartas magic/);
+  assert.match(section, /cartasmagic\.es: 25 impr, pos 12,0/);
+  assert.match(section, /vendercartasmagic\.es: 18 impr, pos 16,5/);
+  assert.doesNotMatch(section, /Hacer/);
+});
+
+test('the report no longer mentions POCO VOLUMEN', () => {
+  assert.doesNotMatch(render({ acciones: [action], vigilancia: [WATCHED], descartes: [WATCHED] }), /POCO VOLUMEN/);
 });
 
 test('each action shows impressions and position labelled with their domain', () => {

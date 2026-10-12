@@ -35,7 +35,7 @@ const fila = (dominio, consulta, impresiones, posicion, clics = 0) => ({
 
 const consultas = [
   fila(VENDER, 'vender cartas magic', 268, 10.7, 25),
-  fila(VENDER, 'tasar cartas magic', 25, 15.3),
+  fila(VENDER, 'tasar cartas magic', 45, 15.3),
   fila(VENDER, 'vender cartas', 97, 16.2)
 ];
 
@@ -55,18 +55,16 @@ test('the actions come with their file and line', () => {
 
   assert.deepEqual(mover.donde, []);
   assert.deepEqual(reclamar.donde, [{ fichero: 'apps/vender/lib/metadatos.js', numeroLinea: 75 }]);
-  assert.equal(mover.impresiones, 25);
-  assert.equal(mover.esRuido, true);
+  assert.equal(mover.impresiones, 45);
   assert.equal(reclamar.impresiones, 97);
-  assert.equal(reclamar.esRuido, false);
 });
 
-// Types in the order the old code emitted them: move (25), claim (97), rewrite (60).
+// Types in the order the old code emitted them: move (40), claim (97), rewrite (60).
 // By Demand the claim comes first, then the rewrite, then the move.
 test('the actions are ordered by Demand whatever their type', () => {
   const { acciones } = decide({
     consultas: [
-      fila(VENDER, 'tasar cartas magic', 25, 15.3),
+      fila(VENDER, 'tasar cartas magic', 40, 15.3),
       fila(VENDER, 'vender cartas', 97, 16.2),
       fila(VENDER, 'vender cartas magic online', 60, 8, 1)
     ]
@@ -143,4 +141,40 @@ test('sends on Monday even when nothing changed, with the funnel', () => {
 
   assert.equal(enviar, true);
   assert.equal(conEmbudo, true);
+});
+
+// Between 10 and 39 impressions of Demand a query is a Candidate but not an Action: the
+// difference between acting and not acting fits inside the noise.
+test('a Candidate with a Demand between 10 and 39 goes to the Watch list and the discards, not to the actions', () => {
+  const { acciones, vigilancia, descartes } = decide({
+    consultas: [fila(VENDER, 'tasar cartas magic', 25, 15.3), fila(VENDER, 'vender cartas', 97, 16.2)]
+  });
+
+  assert.deepEqual(acciones.map(({ firma }) => firma), ['huerfana:vender cartas']);
+  assert.deepEqual(vigilancia.map(({ consulta, impresiones }) => [consulta, impresiones]), [['tasar cartas magic', 25]]);
+  assert.deepEqual(
+    descartes.map(({ consulta, motivo }) => [consulta, motivo]),
+    [['tasar cartas magic', 'TOO_LITTLE_DEMAND']]
+  );
+});
+
+test('the Watch list keeps the impressions and position of each domain', () => {
+  const { vigilancia } = decide({
+    consultas: [fila(HUB, 'vender cartas', 30, 12), fila(VENDER, 'vender cartas', 22, 16)]
+  });
+
+  assert.deepEqual(
+    vigilancia[0].apariciones.map(({ dominio, impresiones, posicion }) => [dominio, impresiones, posicion]),
+    [
+      [HUB, 30, 12],
+      [VENDER, 22, 16]
+    ]
+  );
+});
+
+test('a Demand of exactly 40 is an Action', () => {
+  const { acciones, vigilancia } = decide({ consultas: [fila(VENDER, 'vender cartas', 40, 16.2)] });
+
+  assert.equal(acciones.length, 1);
+  assert.deepEqual(vigilancia, []);
 });

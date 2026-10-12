@@ -21,7 +21,7 @@ const principal = async () => {
     porDominio.push({ dominio, total: gsc.total, consultas: gsc.consultas, paginas: gsc.paginas });
   }
 
-  const { acciones, hallazgos, nuevas, conEmbudo, enviar, siguiente } = decidir({
+  const { acciones, descartes, vigilancia, hallazgos, nuevas, conEmbudo, enviar, siguiente } = decidir({
     consultas,
     indice,
     estado: leer(),
@@ -48,6 +48,8 @@ const principal = async () => {
     ventana,
     indice,
     acciones,
+    descartes,
+    vigilancia,
     hallazgos,
     consultas,
     porDominio,
