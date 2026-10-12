@@ -1,6 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert');
-const { bloqueGSC, bloqueGA4, bloqueKeywords } = require('../lib/informe');
+const { bloqueGSC, bloqueGA4, bloqueKeywords, alarmasDeEmbudo } = require('../lib/informe');
+const { decidir } = require('../lib/decision');
 
 // GSC oculta las consultas de pocas busquedas para no identificar a quien busca, asi que
 // sumar la dimension query siempre se queda corto: en vender daba 822 impresiones cuando
@@ -224,4 +225,103 @@ test('una huerfana sin intencion clara sigue saliendo como candidata a reclamar'
 
   assert.match(candidatas, /cartas magic sueltas.*vendercartasmagic/);
   assert.doesNotMatch(compra, /cartas magic sueltas/);
+});
+
+// A Measurement alarm says the analytics are wrong, not that a page should change. The
+// funnel is the only place that can show it: a step cannot have more events than the one
+// before it.
+const eventosDeEmbudo = (...pares) => async (_auth, _propiedad, { dimensiones = [] }) =>
+  dimensiones[0] === 'eventName'
+    ? pares.map(([evento, veces]) => ({ claves: [evento, '/valoracion-cartas-magic'], valores: [veces] }))
+    : [];
+
+const SITIO_VENDER = { dominio: 'vendercartasmagic.es', ga4: '1' };
+const VENTANA_GA4 = { desde: '2026-10-01', hasta: '2026-10-12' };
+
+test('a funnel step with more events than the previous one raises a Measurement alarm', async () => {
+  const alarmas = await alarmasDeEmbudo(
+    null,
+    [SITIO_VENDER],
+    VENTANA_GA4,
+    eventosDeEmbudo(['ver_formulario', 100], ['empezar_formulario', 50], ['intento_envio', 10], ['generate_lead', 14])
+  );
+
+  assert.deepEqual(
+    alarmas.map(({ firma }) => firma),
+    ['embudo:vendercartasmagic.es:generate_lead:mas-eventos-que-el-anterior']
+  );
+});
+
+test('leads with no submit attempts at all also raise a Measurement alarm', async () => {
+  const alarmas = await alarmasDeEmbudo(null, [SITIO_VENDER], VENTANA_GA4, eventosDeEmbudo(['generate_lead', 3]));
+
+  assert.deepEqual(alarmas.map(({ evento }) => evento), ['generate_lead']);
+});
+
+test('a funnel whose steps never exceed the previous one raises no Measurement alarm', async () => {
+  const alarmas = await alarmasDeEmbudo(
+    null,
+    [SITIO_VENDER],
+    VENTANA_GA4,
+    eventosDeEmbudo(['ver_formulario', 100], ['empezar_formulario', 50], ['intento_envio', 30], ['generate_lead', 30], ['envio_rechazado', 99])
+  );
+
+  assert.deepEqual(alarmas, []);
+});
+
+test('a site without a GA4 property raises no Measurement alarm and is not queried', async () => {
+  const pedidos = [];
+  const registrar = async (...args) => {
+    pedidos.push(args);
+    return [];
+  };
+
+  const alarmas = await alarmasDeEmbudo(null, [{ dominio: 'cartasmagic.es', ga4: undefined }], VENTANA_GA4, registrar);
+
+  assert.deepEqual(alarmas, []);
+  assert.deepEqual(pedidos, []);
+});
+
+test('the Measurement alarms read events only from the date the funnel is measured cleanly', async () => {
+  const pedidos = [];
+  const registrar = async (_auth, _propiedad, consulta) => {
+    pedidos.push(consulta);
+    return [];
+  };
+
+  await alarmasDeEmbudo(null, [SITIO_VENDER], { desde: '2026-06-30', hasta: '2026-10-12' }, registrar);
+
+  assert.equal(pedidos[0].desde, '2026-10-09');
+  assert.equal(pedidos[0].dominio, 'vendercartasmagic.es');
+});
+
+test('a Measurement alarm sends on a weekday, and the same alarm the next day does not', async () => {
+  const [alarma] = await alarmasDeEmbudo(
+    null,
+    [SITIO_VENDER],
+    VENTANA_GA4,
+    eventosDeEmbudo(['ver_formulario', 100], ['empezar_formulario', 50], ['intento_envio', 10], ['generate_lead', 14])
+  );
+  const martes = new Date('2026-10-13T12:00:00');
+  const decide = (estado) =>
+    decidir({
+      consultas: [],
+      indice: { porKeyword: new Map(), paginas: [] },
+      estado,
+      hoy: martes,
+      ventana: { desde: '2026-07-10', hasta: '2026-10-10' },
+      ultimoCambioGit: () => null,
+      alarmas: [alarma.firma]
+    });
+
+  const primera = decide({ acciones: [], alarmas: [], fecha: null });
+  assert.equal(primera.enviar, true);
+  assert.equal(decide({ acciones: [], alarmas: primera.siguiente.alarmas, fecha: null }).enviar, false);
+});
+
+test('the funnel table flags leads that have no submit attempts before them', async () => {
+  const texto = await bloqueGA4(null, SITIO_VENDER, VENTANA_GA4, eventosDeEmbudo(['generate_lead', 3]));
+
+  const lead = texto.split('\n').find((linea) => /^\s*Lead\s/.test(linea));
+  assert.match(lead, /mas eventos que el paso anterior, fallo de medicion/);
 });

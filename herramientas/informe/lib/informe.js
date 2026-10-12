@@ -126,6 +126,48 @@ const bloqueGSC = async (auth, dominio, ventana, pedirGSC = consultaGSC) => {
   };
 };
 
+// Un paso no puede tener mas eventos que el anterior: si los tiene, el fallo es de medicion
+// y un porcentaje por encima de 100 lo haria pasar por conversion. Con cero eventos antes
+// tambien cuenta: leads sin un solo intento de envio no son conversion, son el mismo fallo.
+const superaAlAnterior = (cuenta, i) =>
+  i > 0 &&
+  !EMBUDO[i].suelto &&
+  (cuenta.get(EMBUDO[i].evento) || 0) > (cuenta.get(EMBUDO[i - 1].evento) || 0);
+
+// Por pagina, porque la portada se mide con lo que pasa en ella y no en todo el sitio.
+const pedirEventosEmbudo = (pedirGA4, auth, ga4, rango, dominio) =>
+  pedirGA4(auth, ga4, {
+    ...rango,
+    desde: rango.desde > EMBUDO_DESDE ? rango.desde : EMBUDO_DESDE,
+    dominio,
+    dimensiones: ['eventName', 'pagePath'],
+    metricas: ['eventCount'],
+    limite: 1000
+  });
+
+// Alarmas de medicion: lo que el embudo dice sobre los datos y no sobre las paginas. Cada
+// una lleva su firma, que es lo que guarda el estado para saber si hoy hay una nueva.
+const alarmasDeEmbudo = async (auth, sitios, ventana, pedirGA4 = consultaGA4) => {
+  const rango = ventana.ga4 || ventana;
+  const porSitio = await Promise.all(
+    sitios
+      .filter(({ ga4 }) => ga4)
+      .map(async ({ dominio, ga4 }) => {
+        const eventos = await pedirEventosEmbudo(pedirGA4, auth, ga4, rango, dominio);
+        const cuenta = new Map();
+        for (const { claves: [evento], valores: [veces] } of eventos) {
+          cuenta.set(evento, (cuenta.get(evento) || 0) + veces);
+        }
+        return EMBUDO.flatMap(({ evento, etiqueta }, i) =>
+          superaAlAnterior(cuenta, i)
+            ? [{ firma: `embudo:${dominio}:${evento}:mas-eventos-que-el-anterior`, dominio, evento, etiqueta }]
+            : []
+        );
+      })
+  );
+  return porSitio.flat();
+};
+
 const bloqueGA4 = async (auth, { dominio, ga4 }, ventana, pedirGA4 = consultaGA4) => {
   if (!ga4) {
     return (
@@ -139,15 +181,7 @@ const bloqueGA4 = async (auth, { dominio, ga4 }, ventana, pedirGA4 = consultaGA4
 
   const [resumen, eventos, campanas] = await Promise.all([
     pedirGA4(auth, ga4, { ...rango, dominio, metricas: ['sessions', 'activeUsers'] }),
-    // Por pagina, porque la portada se mide con lo que pasa en ella y no en todo el sitio.
-    pedirGA4(auth, ga4, {
-      ...rango,
-      desde: rango.desde > EMBUDO_DESDE ? rango.desde : EMBUDO_DESDE,
-      dominio,
-      dimensiones: ['eventName', 'pagePath'],
-      metricas: ['eventCount'],
-      limite: 1000
-    }),
+    pedirEventosEmbudo(pedirGA4, auth, ga4, rango, dominio),
     pedirGA4(auth, ga4, {
       ...rango,
       dominio,
@@ -175,9 +209,7 @@ const bloqueGA4 = async (auth, { dominio, ga4 }, ventana, pedirGA4 = consultaGA4
         const valor = cuenta.get(evento) || 0;
         const anterior = i > 0 && !suelto ? cuenta.get(EMBUDO[i - 1].evento) || 0 : 0;
         const ratio = anterior ? valor / anterior : null;
-        // Un paso no puede tener mas eventos que el anterior: si los tiene, el fallo es
-        // de medicion y un porcentaje por encima de 100 lo haria pasar por conversion.
-        if (ratio > 1) {
+        if (superaAlAnterior(cuenta, i)) {
           return [etiqueta, numero(valor), '', 'mas eventos que el paso anterior, fallo de medicion'];
         }
         const flojo = minimo && ratio !== null && ratio < minimo;
@@ -340,4 +372,4 @@ const bloqueKeywords = (consultas, indice) => {
   return lineas.join('\n');
 };
 
-module.exports = { SITIOS, EMBUDO, fechas, bloqueGSC, bloqueGA4, bloqueKeywords, hallazgos, consultasPostCambio };
+module.exports = { SITIOS, EMBUDO, fechas, bloqueGSC, bloqueGA4, alarmasDeEmbudo, bloqueKeywords, hallazgos, consultasPostCambio };
