@@ -1,7 +1,8 @@
 const { cliente } = require('./lib/google');
 const { construirIndice, leerLlms } = require('./lib/keywords');
-const { SITIOS, fechas, bloqueGSC, bloqueGA4, hallazgos } = require('./lib/informe');
-const { leer, guardar, firmar, comparar, esDiaDeEmbudo } = require('./lib/estado');
+const { SITIOS, fechas, bloqueGSC, bloqueGA4 } = require('./lib/informe');
+const { decidir } = require('./lib/decision');
+const { leer, guardar } = require('./lib/estado');
 const { enviar } = require('./lib/correo');
 const { componerMarkdown } = require('./lib/markdown');
 
@@ -20,15 +21,17 @@ const principal = async () => {
     porDominio.push({ dominio, total: gsc.total, consultas: gsc.consultas, paginas: gsc.paginas });
   }
 
-  const encontrados = hallazgos(consultas, indice);
-  const firmas = firmar(encontrados);
-  const { firmas: previas } = leer();
-  const { nuevas, resueltas } = comparar(firmas, previas);
+  const { acciones, hallazgos, nuevas, conEmbudo, enviar, siguiente } = decidir({
+    consultas,
+    indice,
+    estado: leer(),
+    hoy: new Date(),
+    ventana
+  });
 
-  const conEmbudo = esDiaDeEmbudo();
-  if (!nuevas.length && !resueltas.length && !conEmbudo) {
-    console.log(`Sin cambios: ${firmas.length} avisos, los mismos de ayer. No se envia correo.`);
-    guardar(firmas);
+  if (!enviar) {
+    console.log(`Sin cambios: ${siguiente.firmas.length} avisos, los mismos de ayer. No se envia correo.`);
+    guardar(siguiente.firmas);
     return;
   }
 
@@ -44,12 +47,12 @@ const principal = async () => {
   const markdown = componerMarkdown({
     ventana,
     indice,
-    hallazgos: encontrados,
+    acciones,
+    hallazgos,
     consultas,
     porDominio,
     llms: leerLlms(),
-    embudo: conEmbudo ? bloquesEmbudo.join('\n') : null,
-    previas
+    embudo: conEmbudo ? bloquesEmbudo.join('\n') : null
   });
 
   await enviar({
@@ -58,8 +61,10 @@ const principal = async () => {
     adjuntos: [{ nombre: `informe-${ventana.hasta}.md`, contenido: markdown }]
   });
 
-  guardar(firmas);
-  console.log(`Enviado el informe del ${ventana.hasta}. ${firmas.length} avisos, ${nuevas.length} nuevos.`);
+  guardar(siguiente.firmas);
+  console.log(
+    `Enviado el informe del ${ventana.hasta}. ${siguiente.firmas.length} avisos, ${nuevas.length} nuevos.`
+  );
 };
 
 principal().catch(({ message }) => {

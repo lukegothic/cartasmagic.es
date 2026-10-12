@@ -9,12 +9,12 @@ const withOrphans = (sinDuenno) =>
   componerMarkdown({
     ventana: { desde: '2026-07-10', hasta: '2026-10-07' },
     indice: { paginas: [], porKeyword: new Map() },
+    acciones: [],
     hallazgos: { canibalizacion: [], malDominio: [], sinDuenno, ctrBajo: [], muertas: [] },
     consultas: [],
     porDominio: [],
     llms: [],
-    embudo: null,
-    previas: []
+    embudo: null
   });
 
 const gapsSection = (markdown) => markdown.split('## Huecos de contenido')[1].split('\n## ')[0];
