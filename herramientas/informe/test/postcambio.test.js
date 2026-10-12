@@ -2,6 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert');
 const { decidir, fechasPostCambio } = require('../lib/decision');
 const { consultasPostCambio } = require('../lib/informe');
+const { consultaGSC } = require('../lib/google');
 
 const HUB = 'cartasmagic.es';
 const VENDER = 'vendercartasmagic.es';
@@ -191,4 +192,33 @@ test('the post-change rows are fetched per change date, from the day after the c
   );
   assert.deepEqual(Object.keys(porFecha), [HACE_40_DIAS]);
   assert.deepEqual(porFecha[HACE_40_DIAS].map(({ dominio }) => dominio), [HUB, VENDER]);
+});
+
+// The default of 200 rows cut the query list by clicks, so a query beyond row 200 came back
+// as "no rows after the change". 25,000 is the most the Search Console API returns in one
+// request.
+test('the post-change fetch asks for the most rows the Search Console API allows', async () => {
+  const pedidas = [];
+  const pedirGSC = async (_auth, _dominio, parametros) => {
+    pedidas.push(parametros);
+    return [];
+  };
+
+  await consultasPostCambio(null, [HACE_40_DIAS], ventana, pedirGSC);
+
+  assert.deepEqual(pedidas.map(({ limite }) => limite), [25000, 25000]);
+});
+
+test('consultaGSC sends the requested limit as rowLimit', async () => {
+  const cuerpos = [];
+  const auth = {
+    request: async ({ data }) => {
+      cuerpos.push(data);
+      return { data: {} };
+    }
+  };
+
+  await consultaGSC(auth, HUB, { desde: '2026-09-04', hasta: '2026-10-10', dimensiones: ['query'], limite: 25000 });
+
+  assert.equal(cuerpos[0].rowLimit, 25000);
 });

@@ -1,4 +1,4 @@
-const { cliente, consultaGSC, consultaGA4 } = require('./google');
+const { cliente, consultaGSC, consultaGA4, GSC_MAXIMO_FILAS } = require('./google');
 const { construirIndice } = require('./keywords');
 const { agrupar, avisos, keywordsMuertas, intencion } = require('./analisis');
 const { diaSiguiente } = require('./postcambio');
@@ -250,6 +250,8 @@ const bloqueGA4 = async (auth, { dominio, ga4 }, ventana, pedirGA4 = consultaGA4
 // Las consultas de cada dominio desde el dia siguiente a cada cambio de un Target hasta el
 // final de la ventana: ese dia mezcla las dos versiones. GSC incluye en el rango los dos
 // extremos. El resultado es `{ [fechaDeCambio]: filas }`, la forma que `decidir` espera.
+// Con el limite por defecto (200, ordenadas por clics) una consulta sin clics quedaba fuera
+// y salia como "sin datos de despues del cambio", asi que se pide el maximo.
 const consultasPostCambio = async (auth, cambios, ventana, pedirGSC = consultaGSC) =>
   Object.fromEntries(
     await Promise.all(
@@ -259,7 +261,8 @@ const consultasPostCambio = async (auth, cambios, ventana, pedirGSC = consultaGS
             const filas = await pedirGSC(auth, dominio, {
               desde: diaSiguiente(cambio),
               hasta: ventana.hasta,
-              dimensiones: ['query']
+              dimensiones: ['query'],
+              limite: GSC_MAXIMO_FILAS
             });
             return filas.map((fila) => ({ ...fila, dominio }));
           })
