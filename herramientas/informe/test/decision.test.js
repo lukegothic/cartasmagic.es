@@ -178,3 +178,68 @@ test('a Demand of exactly 40 is an Action', () => {
   assert.equal(acciones.length, 1);
   assert.deepEqual(vigilancia, []);
 });
+
+// "cartas magic vender" and "vender cartas magic" are one search for the engines. When the
+// variant converts, the title already works and rewriting it for the other word order only
+// risks the query that pays.
+const indiceConVariante = (paginaDeCartasMagic) => ({
+  porKeyword: new Map([
+    ['vender cartas magic', [paginaVender]],
+    ['cartas magic', [paginaDeCartasMagic]]
+  ]),
+  paginas: [paginaHub, paginaVender]
+});
+
+const titulosDeAcciones = (acciones) => acciones.map(({ titulo }) => titulo);
+const REESCRIBIR_VARIANTE = 'Reescribir el title de "cartas magic vender"';
+
+test('a CTR Candidate is discarded when its Query variant on the same page has normal CTR', () => {
+  const { acciones, descartes } = decide({
+    indice: indiceConVariante(paginaVender),
+    consultas: [fila(VENDER, 'cartas magic vender', 268, 5, 0), fila(VENDER, 'vender cartas magic', 1000, 6, 87)]
+  });
+
+  assert.deepEqual(titulosDeAcciones(acciones), []);
+  assert.deepEqual(
+    descartes.map(({ consulta, motivo }) => [consulta, motivo]),
+    [['cartas magic vender', 'QUERY_VARIANT_PERFORMS']]
+  );
+});
+
+test('a Query variant on a different page does not discard the CTR Candidate', () => {
+  const { acciones, descartes } = decide({
+    indice: indiceConVariante(paginaHub),
+    consultas: [fila(VENDER, 'cartas magic vender', 268, 5, 0), fila(VENDER, 'vender cartas magic', 1000, 6, 87)]
+  });
+
+  assert.deepEqual(titulosDeAcciones(acciones), [REESCRIBIR_VARIANTE]);
+  assert.deepEqual(descartes, []);
+});
+
+test('a Query variant that is also below the CTR threshold does not discard', () => {
+  const { acciones, descartes } = decide({
+    indice: indiceConVariante(paginaVender),
+    consultas: [fila(VENDER, 'cartas magic vender', 268, 5, 0), fila(VENDER, 'vender cartas magic', 1000, 6, 5)]
+  });
+
+  assert.ok(titulosDeAcciones(acciones).includes(REESCRIBIR_VARIANTE));
+  assert.ok(!descartes.some(({ motivo }) => motivo === 'QUERY_VARIANT_PERFORMS'));
+});
+
+test('a variant with a CTR at exactly the threshold counts as performing', () => {
+  const { descartes } = decide({
+    indice: indiceConVariante(paginaVender),
+    consultas: [fila(VENDER, 'cartas magic vender', 268, 5, 0), fila(VENDER, 'vender cartas magic', 1000, 6, 20)]
+  });
+
+  assert.deepEqual(descartes.map(({ motivo }) => motivo), ['QUERY_VARIANT_PERFORMS']);
+});
+
+test('a query with different words is not a Query variant', () => {
+  const { acciones } = decide({
+    indice: indiceConVariante(paginaVender),
+    consultas: [fila(VENDER, 'cartas magic vender', 268, 5, 0), fila(VENDER, 'vender cartas magic online', 1000, 6, 87)]
+  });
+
+  assert.deepEqual(titulosDeAcciones(acciones), [REESCRIBIR_VARIANTE]);
+});
