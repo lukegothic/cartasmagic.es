@@ -56,12 +56,12 @@ test('the raw data page table lists "/" once when GSC returned several URL varia
   const markdown = componerMarkdown({
     ventana: { desde: '2026-07-10', hasta: '2026-10-07' },
     indice: { paginas: [], porKeyword: new Map() },
+    acciones: [],
     hallazgos: { canibalizacion: [], malDominio: [], sinDuenno: [], ctrBajo: [], muertas: [] },
     consultas: [],
     porDominio: [{ dominio: 'cartasmagic.es', total, consultas, paginas }],
     llms: [],
-    embudo: null,
-    previas: []
+    embudo: null
   });
   const pageRows = markdown.split('#### Paginas')[1].split('\n').filter((line) => line.startsWith('| /'));
 
