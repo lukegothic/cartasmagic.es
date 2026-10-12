@@ -61,8 +61,7 @@ test('the raw data page table lists "/" once when GSC returned several URL varia
     consultas: [],
     porDominio: [{ dominio: 'cartasmagic.es', total, consultas, paginas }],
     llms: [],
-    embudo: null,
-    previas: []
+    embudo: null
   });
   const pageRows = markdown.split('#### Paginas')[1].split('\n').filter((line) => line.startsWith('| /'));
 
