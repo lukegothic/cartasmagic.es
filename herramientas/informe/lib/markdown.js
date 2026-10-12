@@ -13,15 +13,21 @@ const tabla = (cabeceras, filas) =>
       ].join('\n')
     : '_Nada._';
 
+const cifrasPorDominio = (apariciones) =>
+  apariciones
+    .map(({ dominio, impresiones, posicion }) => `${dominio}: ${numero(impresiones)} impr, pos ${decimal(posicion)}`)
+    .join(' | ');
+
 const seccionAcciones = (acciones) => {
   if (!acciones.length) return '## Acciones\n\n_Sin acciones pendientes._';
 
   const cuerpo = acciones
-    .map(({ titulo, porque, donde, hacer, esNueva, esRuido }, i) => {
+    .map(({ titulo, porque, apariciones, donde, hacer, esNueva, esRuido }, i) => {
       const marcas = [esNueva ? 'NUEVA' : null, esRuido ? 'POCO VOLUMEN' : null].filter(Boolean);
       return (
         `### ${i + 1}. ${titulo}${marcas.length ? ` _(${marcas.join(', ')})_` : ''}\n\n` +
         `- **Por que:** ${porque}\n` +
+        `- **Cifras:** ${cifrasPorDominio(apariciones)}\n` +
         `- **Donde:** ${donde.length ? donde.map(enlace).join(', ') : 'sin pagina asignada'}\n` +
         `- **Hacer:** ${hacer}`
       );
@@ -42,7 +48,7 @@ const seccionAcciones = (acciones) => {
 
   return (
     `## Acciones\n\n${acciones.length} en total, ${nuevas} sin ver ayer. ` +
-    `Ordenadas por impresiones perdidas.${aviso}\n\n${cuerpo}`
+    `Ordenadas por demanda.${aviso}\n\n${cuerpo}`
   );
 };
 
