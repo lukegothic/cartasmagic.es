@@ -99,14 +99,34 @@ hasta hoy: ahí no hay ese retraso, y de momento casi todo lo que ha recogido es
 
 ## El aviso diario en Dokploy
 
-`diario.js` es lo que corre cada día. No es el informe entero: compara los hallazgos de
-hoy con los de ayer y solo escribe si hay alguno nuevo o si alguno ha dejado de
-aparecer. Un correo diario idéntico se deja de leer en una semana, que es lo mismo que
-no medir.
+`diario.js` es lo que corre cada día. No es el informe entero: deriva las acciones de
+hoy y las compara con las del último envío, y solo escribe si hay una acción nueva o
+resuelta, o si cambia una alarma de medición. Que aparezca o desaparezca una candidata
+descartada o en vigilancia no manda nada, porque no es algo que se pueda atender. Un
+correo diario idéntico se deja de leer en una semana, que es lo mismo que no medir.
 
-Los lunes añade el embudo y las campañas de GA4. Esos ratios necesitan acumular semanas
-para decir algo, y mirarlos a diario es justo el error contra el que avisa
-`docs/plan-medicion-embudo.md`.
+Los lunes añade el embudo y las campañas de GA4, y manda aunque nada haya cambiado. Esos
+ratios necesitan acumular semanas para decir algo, y mirarlos a diario es justo el error
+contra el que avisa `docs/plan-medicion-embudo.md`. Lo que sí se lee todos los días son
+los eventos del embudo, para las alarmas de medición: un paso con más eventos que el
+anterior (más leads que intentos de envío, por ejemplo) quiere decir que los datos están
+mal, y manda el correo el día que aparece o se resuelve.
+
+### Cooldown y foto de Targets
+
+Una acción es una candidata que ha pasado todos los motivos de descarte. Uno de ellos es
+el Cooldown: cuando cambia un Target (el title, la description, las keywords o el copy de
+una página) sus cifras siguen describiendo la versión anterior, así que durante
+`COOLDOWN_DIAS` (28) sus candidatas se descartan con `TARGET_IN_COOLDOWN`.
+
+Para saber cuándo cambió cada Target, el estado guarda una foto: la huella de su texto y
+el último día que cambió. Si la huella de hoy difiere de la de ayer, cambió hoy. La
+primera vez que se ve un Target, la fecha sale del último commit de su fichero en git.
+
+Pasado el Cooldown, el CTR de una página cuyo title o description cambió dentro de la
+ventana se juzga solo con las cifras posteriores al cambio. La candidata que esas cifras
+no confirman no desaparece: sale en Descartes con un motivo `POST_CHANGE_*`. Con menos de
+diez impresiones después del cambio no hay candidata.
 
 No hace falta dar de alta ningún servicio. Un servicio de Dokploy es un proceso que se
 queda escuchando, y esto tarda diez segundos y termina: dado de alta como aplicación,
@@ -170,9 +190,12 @@ FIN
 Los valores de SMTP son los mismos que ya usa vender: se copian de su panel de
 variables en Dokploy.
 
-`INFORME_ESTADO_DIR` es lo que hace que el aviso no se repita: ahí se guarda qué se
-mandó ayer. Si apunta a un sitio que se borra, cada ejecución vuelve a mandar todos los
-avisos como si fuera el primer día.
+`INFORME_ESTADO_DIR` es lo que hace que el aviso no se repita: ahí se guardan las firmas
+de las acciones y de las alarmas de medición del último envío, y la foto de Targets. Si
+apunta a un sitio que se borra, cada ejecución vuelve a mandar todo como si fuera el
+primer día y el Cooldown se recalcula desde git. Un estado en el formato anterior (una
+lista de firmas de hallazgos) se lee una vez y se migra; mientras tanto no se da por
+resuelta ninguna acción que falte en él.
 
 Si `INFORME_EMAIL_TO` no está, se usa `EMAIL_TO`, que es el mismo que ya usa vender.
 
@@ -184,16 +207,23 @@ que no hay que ir a buscar nada.
 
 Secciones, por orden de utilidad:
 
-1. **Acciones.** Que tocar, por que, en que fichero y en que linea.
-2. **Intencion local.** Consultas que mencionan una provincia o ciudad, agrupadas por
+1. **Alarmas de medicion.** Solo sale si hay alguna, antes de las acciones. Dice que la
+   analitica esta mal, no que haya una pagina que cambiar.
+2. **Acciones.** Que tocar, por que, en que fichero y en que linea.
+3. **Descartes.** Las candidatas que no han llegado a accion, cada una con su motivo
+   (`TOO_LITTLE_DEMAND`, `TARGET_IN_COOLDOWN`, `QUERY_VARIANT_PERFORMS`...). No hay nada
+   que aplicar: sirve para distinguir un "sin acciones" de un informe roto.
+4. **Vigilancia.** Las candidatas que solo fallan por demanda (entre 10 y 39 impresiones),
+   para ver una senal que crece sin una instruccion pegada.
+5. **Intencion local.** Consultas que mencionan una provincia o ciudad, agrupadas por
    zona, y si alguna tiene volumen para una pagina propia.
-3. **Huecos de contenido.** Consultas con impresiones que ninguna pagina reclama,
+6. **Huecos de contenido.** Consultas con impresiones que ninguna pagina reclama,
    agrupadas por tema, para decidir el proximo articulo con datos.
-4. **Cobertura de llm.txt.** Consultas reales que el llm.txt no responde. Es la parte
+7. **Cobertura de llm.txt.** Consultas reales que el llm.txt no responde. Es la parte
    GEO: un modelo no cita lo que no encuentra escrito.
-5. **Canibalizacion interna.** La misma keyword declarada en varias paginas del mismo
+8. **Canibalizacion interna.** La misma keyword declarada en varias paginas del mismo
    dominio, que se quitan posiciones entre ellas.
-6. **Datos en bruto.** Las tablas completas de consultas y paginas.
+9. **Datos en bruto.** Las tablas completas de consultas y paginas.
 
 ### Sobre las paginas por provincia
 

@@ -80,6 +80,16 @@ const seccionVigilancia = (vigilancia) => {
   );
 };
 
+// El embudo solo sale los lunes, pero una alarma nueva manda el correo cualquier dia: sin
+// esta seccion el adjunto de un martes no diria por que se envio.
+const seccionAlarmas = (alarmas) =>
+  '## Alarmas de medicion\n\n' +
+  'Los datos de analitica estan mal, no hay una pagina que cambiar. Hay que arreglar la ' +
+  'medicion antes de fiarse del embudo.\n\n' +
+  alarmas
+    .map(({ dominio, etiqueta }) => `- ${dominio}: ${etiqueta} tiene mas eventos que el paso anterior`)
+    .join('\n');
+
 const seccionGeo = (consultas) => {
   const zonas = agruparGeo(consultas);
   if (!zonas.length) return '## Intencion local\n\n_Ninguna consulta menciona una zona._';
@@ -224,7 +234,7 @@ const seccionDatos = (porDominio) => {
   return `## Datos en bruto\n\n${bloques.join('\n\n')}`;
 };
 
-const componerMarkdown = ({ ventana, indice, acciones, descartes, vigilancia, hallazgos, consultas, porDominio, llms, embudo }) => {
+const componerMarkdown = ({ ventana, indice, acciones, descartes, vigilancia, hallazgos, consultas, porDominio, llms, embudo, alarmas = [] }) => {
   const partes = [
     `# Informe cartasmagic ${ventana.hasta}`,
     '',
@@ -234,6 +244,7 @@ const componerMarkdown = ({ ventana, indice, acciones, descartes, vigilancia, ha
     '> Este fichero esta pensado para pasarselo a un agente y que aplique los cambios.',
     '> Cada accion lleva el fichero y la linea exacta.',
     '',
+    ...(alarmas.length ? [seccionAlarmas(alarmas), ''] : []),
     seccionAcciones(acciones),
     '',
     seccionDescartes(descartes),

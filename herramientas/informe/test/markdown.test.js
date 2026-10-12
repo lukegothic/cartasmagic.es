@@ -174,3 +174,37 @@ test('each action shows impressions and position labelled with their domain', ()
   assert.match(section, /cartasmagic\.es: 50 impr, pos 12,0/);
   assert.match(section, /vendercartasmagic\.es: 44 impr, pos 16,5/);
 });
+
+const alarm = {
+  firma: 'embudo:vendercartasmagic.es:generate_lead:mas-eventos-que-el-anterior',
+  dominio: 'vendercartasmagic.es',
+  etiqueta: 'Lead'
+};
+
+const withAlarms = (alarmas) =>
+  componerMarkdown({
+    ventana: { desde: '2026-07-10', hasta: '2026-10-07' },
+    indice: { paginas: [], porKeyword: new Map() },
+    acciones: [],
+    descartes: [],
+    vigilancia: [],
+    hallazgos: { canibalizacion: [], malDominio: [], sinDuenno: [], ctrBajo: [], muertas: [] },
+    consultas: [],
+    porDominio: [],
+    llms: [],
+    alarmas,
+    embudo: null
+  });
+
+// On a weekday there is no funnel in the report, so the alarm has to say by itself why the
+// email went out.
+test('a Measurement alarm is named in the report even without the funnel section', () => {
+  const markdown = withAlarms([alarm]);
+
+  assert.match(markdown, /## Alarmas de medicion/);
+  assert.match(markdown, /vendercartasmagic\.es: Lead tiene mas eventos que el paso anterior/);
+});
+
+test('no Measurement alarm section when none is raised', () => {
+  assert.doesNotMatch(withAlarms([]), /Alarmas de medicion/);
+});

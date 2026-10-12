@@ -1,6 +1,6 @@
 const { cliente } = require('./lib/google');
 const { construirIndice, leerLlms } = require('./lib/keywords');
-const { SITIOS, fechas, bloqueGSC, bloqueGA4, consultasPostCambio } = require('./lib/informe');
+const { SITIOS, fechas, bloqueGSC, bloqueGA4, alarmasDeEmbudo, consultasPostCambio } = require('./lib/informe');
 const { decidir, fechasPostCambio } = require('./lib/decision');
 const { leer, guardar } = require('./lib/estado');
 const { ultimoCambioGit } = require('./lib/git');
@@ -29,6 +29,10 @@ const principal = async () => {
   // se le pasan ya traidas.
   const cambios = fechasPostCambio({ indice, estado, hoy, ventana, ultimoCambioGit });
 
+  // Las alarmas de medicion pueden mandar el correo cualquier dia, asi que los eventos del
+  // embudo se leen antes de decidir y no solo los lunes, cuando se pinta la tabla.
+  const alarmas = await alarmasDeEmbudo(auth, SITIOS, ventana);
+
   const { acciones, descartes, vigilancia, hallazgos, nuevas, conEmbudo, enviar, resumen, siguiente } = decidir({
     consultas,
     indice,
@@ -36,6 +40,7 @@ const principal = async () => {
     hoy,
     ventana,
     ultimoCambioGit,
+    alarmas: alarmas.map(({ firma }) => firma),
     consultasPostCambio: await consultasPostCambio(auth, cambios, ventana)
   });
 
@@ -67,6 +72,7 @@ const principal = async () => {
     consultas,
     porDominio,
     llms: leerLlms(),
+    alarmas,
     embudo: conEmbudo ? bloquesEmbudo.join('\n') : null
   });
 

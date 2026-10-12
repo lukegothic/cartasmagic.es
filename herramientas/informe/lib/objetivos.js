@@ -1,14 +1,12 @@
 const crypto = require('node:crypto');
 
+const { DIA_MS, iso } = require('./dias');
+
 // 3 dias de retraso de GSC mas el tiempo que tarda Google en volver a rastrear la pagina.
 // Mientras dura, las cifras de un Target describen su version anterior.
 const COOLDOWN_DIAS = 28;
 
 const CAMPOS = ['title', 'description', 'keywords', 'copy'];
-
-const DIA_MS = 86400000;
-
-const iso = (fecha) => fecha.toISOString().slice(0, 10);
 
 const claveObjetivo = ({ dominio, ruta }, campo) => `${dominio}${ruta}#${campo}`;
 

@@ -18,7 +18,11 @@ const DISCARD_REASONS = Object.freeze({
   NO_OWNER_DOMAIN: 'NO_OWNER_DOMAIN',
   OWNER_ALREADY_FIRST: 'OWNER_ALREADY_FIRST',
   TARGET_IN_COOLDOWN: 'TARGET_IN_COOLDOWN',
-  OVER_LIST_LIMIT: 'OVER_LIST_LIMIT'
+  OVER_LIST_LIMIT: 'OVER_LIST_LIMIT',
+  POST_CHANGE_NO_DATA: 'POST_CHANGE_NO_DATA',
+  POST_CHANGE_RANK_OUT_OF_RANGE: 'POST_CHANGE_RANK_OUT_OF_RANGE',
+  POST_CHANGE_CTR_NORMAL: 'POST_CHANGE_CTR_NORMAL',
+  POST_CHANGE_OTHER_TYPE: 'POST_CHANGE_OTHER_TYPE'
 });
 
 const ubicacion = ({ fichero, numeroLinea }) => ({ fichero, numeroLinea });
@@ -156,12 +160,12 @@ const derivarAcciones = (
   // Los motivos van por orden: la demanda es el ultimo, porque una candidata que ademas
   // falla por otra cosa no esta en vigilancia, solo sin demanda. Las listas llegan
   // ordenadas por demanda, asi que el tope se queda con las de mas demanda.
-  const evaluar = (tipo, hallazgos, construir, motivoPrevio, enEspera, maximo = Infinity) => {
+  const evaluar = (tipo, hallazgos, construir, motivoPrevio, enCooldown, maximo = Infinity) => {
     let aceptadas = 0;
     return hallazgos.map((hallazgo) => {
       const motivo = motivoPrevio(hallazgo);
       if (motivo) return { tipo, hallazgo, motivo };
-      if (enEspera(hallazgo)) return { tipo, hallazgo, motivo: DISCARD_REASONS.TARGET_IN_COOLDOWN };
+      if (enCooldown(hallazgo)) return { tipo, hallazgo, motivo: DISCARD_REASONS.TARGET_IN_COOLDOWN };
       if (hallazgo.impresiones < IMPRESIONES_FIABLES) {
         return { tipo, hallazgo, motivo: DISCARD_REASONS.TOO_LITTLE_DEMAND };
       }
@@ -207,7 +211,7 @@ const derivarAcciones = (
       'ctrBajo',
       ctrBajo,
       reescribirTitle,
-      (h) => (h.variantes?.length ? DISCARD_REASONS.QUERY_VARIANT_PERFORMS : null),
+      (h) => h.descarte ?? (h.variantes?.length ? DISCARD_REASONS.QUERY_VARIANT_PERFORMS : null),
       (h) => enCooldown(h.reclaman.slice(0, 1), ['title', 'description']),
       MAXIMO_CTR
     )
@@ -236,4 +240,4 @@ const derivarAcciones = (
   };
 };
 
-module.exports = { derivarAcciones };
+module.exports = { derivarAcciones, DISCARD_REASONS };
