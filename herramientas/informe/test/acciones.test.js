@@ -81,7 +81,7 @@ test('la accion de reclamar apunta a una pagina del dominio que toca', () => {
   assert.equal(accion.donde[0].numeroLinea, 75);
 });
 
-test('el orden es primero lo que cuesta mas trafico', () => {
+test('el orden es el de demanda, sea cual sea el tipo', () => {
   const hallazgos = {
     ...vacio,
     malDominio: [
@@ -106,7 +106,7 @@ test('el orden es primero lo que cuesta mas trafico', () => {
         consulta: 'venta cartas magic',
         impresiones: 44,
         clics: 1,
-        mejor: { dominio: VENDER, posicion: 8.6 },
+        mejor: { dominio: VENDER, impresiones: 44, clics: 1, posicion: 8.6 },
         reclaman: [paginaVender]
       }
     ]
@@ -114,9 +114,9 @@ test('el orden es primero lo que cuesta mas trafico', () => {
   const acciones = derivarAcciones(hallazgos, indice);
 
   assert.equal(acciones.length, 3);
-  assert.match(acciones[0].titulo, /^Mover/);
-  assert.match(acciones[1].titulo, /^Reclamar/);
-  assert.match(acciones[2].titulo, /^Reescribir/);
+  assert.match(acciones[0].titulo, /^Reclamar/);
+  assert.match(acciones[1].titulo, /^Reescribir/);
+  assert.match(acciones[2].titulo, /^Mover/);
 });
 
 // Con este volumen una lista de cincuenta acciones no se lee, y por debajo del corte las

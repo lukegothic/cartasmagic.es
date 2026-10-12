@@ -85,7 +85,10 @@ const avisos = (porConsulta, porKeyword) => {
   const ctrBajo = [];
 
   for (const [consulta, apariciones] of porConsulta) {
-    const impresiones = apariciones.reduce((t, a) => t + a.impresiones, 0);
+    // La demanda es la del dominio que mas impresiones ve: dos dominios en la misma pagina de
+    // resultados son una sola busqueda, y sumarlos la contaba dos veces. El campo se llama
+    // impresiones porque asi lo leen todos los consumidores de los avisos.
+    const impresiones = Math.max(...apariciones.map((a) => a.impresiones));
     if (impresiones < MINIMO_IMPRESIONES) continue;
 
     const clics = apariciones.reduce((t, a) => t + a.clics, 0);
@@ -104,17 +107,19 @@ const avisos = (porConsulta, porKeyword) => {
     }
 
     if (deberia && mejor.dominio !== deberia) {
-      malDominio.push({ consulta, impresiones, actual: mejor, deberia });
+      malDominio.push({ consulta, impresiones, apariciones, actual: mejor, deberia });
       continue;
     }
 
     if (!reclaman.length && mejor.posicion <= POSICION_ALCANZABLE) {
-      sinDuenno.push({ consulta, impresiones, clics, mejor, deberia });
+      sinDuenno.push({ consulta, impresiones, clics, apariciones, mejor, deberia });
       continue;
     }
 
-    if (mejor.posicion <= 10 && impresiones >= MINIMO_IMPRESIONES && clics / impresiones < CTR_POBRE) {
-      ctrBajo.push({ consulta, impresiones, clics, mejor, reclaman });
+    // El CTR es el de quien rankea, no el de las dos cifras mezcladas: los clics de un
+    // dominio no se reparten entre las impresiones del otro.
+    if (mejor.posicion <= 10 && mejor.clics / mejor.impresiones < CTR_POBRE) {
+      ctrBajo.push({ consulta, impresiones, clics, apariciones, mejor, reclaman });
     }
   }
 

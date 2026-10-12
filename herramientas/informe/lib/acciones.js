@@ -25,21 +25,22 @@ const naceDentroDeLaVentana = (paginas, ventana) =>
 const declaradaDondeToca = (duenno, deberia) =>
   duenno.length > 0 && duenno.every(({ dominio }) => dominio === deberia);
 
-const moverDeDominio = ({ consulta, impresiones, actual, deberia }, porKeyword) => {
+const moverDeDominio = ({ consulta, impresiones, apariciones, actual, deberia }, porKeyword) => {
   const duenno = porKeyword.get(consulta) || [];
   const yaEstaBien = declaradaDondeToca(duenno, deberia);
 
   return {
     firma: `dominio:${consulta}:${deberia}`,
     impresiones,
+    apariciones,
     titulo: yaEstaBien
       ? `Ganar posicion para "${consulta}" en ${deberia}`
       : `Mover "${consulta}" a ${deberia}`,
     porque: yaEstaBien
-      ? `${numero(impresiones)} impresiones en posicion ${decimal(actual.posicion)}: la declara ` +
-        `${deberia}, que es de quien es, pero quien rankea es ${actual.dominio}.`
-      : `${numero(impresiones)} impresiones en posicion ${decimal(actual.posicion)}, pero rankea ` +
-        `${actual.dominio} y segun el reparto es de ${deberia}.`,
+      ? `${numero(impresiones)} impresiones de demanda: la declara ${deberia}, que es de ` +
+        `quien es, pero quien rankea es ${actual.dominio}, en posicion ${decimal(actual.posicion)}.`
+      : `${numero(impresiones)} impresiones de demanda, pero rankea ${actual.dominio}, en ` +
+        `posicion ${decimal(actual.posicion)}, y segun el reparto es de ${deberia}.`,
     donde: duenno.map(ubicacion),
     hacer: yaEstaBien
       ? `Reforzar ${duenno.map(({ ruta }) => ruta).join(', ')} con esas palabras en el copy visible, y comprobar que ${actual.dominio} no las lleva en su meta.`
@@ -57,6 +58,7 @@ const resolverCompetencia = ({ consulta, impresiones, apariciones, deberia }, po
     {
       consulta,
       impresiones,
+      apariciones,
       actual: apariciones
         .filter(({ dominio }) => dominio !== deberia)
         .reduce((a, b) => (a.posicion <= b.posicion ? a : b)),
@@ -67,34 +69,36 @@ const resolverCompetencia = ({ consulta, impresiones, apariciones, deberia }, po
   firma: `canibal:${consulta}`
 });
 
-const reclamar = ({ consulta, impresiones, clics, mejor, deberia }, paginas) => {
+const reclamar = ({ consulta, impresiones, clics, apariciones, mejor, deberia }, paginas) => {
   const destino = paginas.filter(({ dominio }) => dominio === deberia);
 
   return {
     firma: `huerfana:${consulta}`,
     impresiones,
+    apariciones,
     titulo: `Reclamar "${consulta}"`,
     porque:
-      `${numero(impresiones)} impresiones y ${numero(clics)} clics en posicion ` +
-      `${decimal(mejor.posicion)}, y ninguna pagina la declara.`,
+      `${numero(impresiones)} impresiones de demanda y ${numero(clics)} clics, con ${mejor.dominio} ` +
+      `en posicion ${decimal(mejor.posicion)}, y ninguna pagina la declara.`,
     donde: destino.slice(0, 1).map(ubicacion),
     hacer: `Anadir "${consulta}" al meta keywords y usar esas palabras en el copy visible.`
   };
 };
 
-const reescribirTitle = ({ consulta, impresiones, clics, mejor, reclaman }) => ({
+const reescribirTitle = ({ consulta, impresiones, apariciones, mejor, reclaman }) => ({
   firma: `ctr:${consulta}`,
   impresiones,
+  apariciones,
   titulo: `Reescribir el title de "${consulta}"`,
   porque:
-    `Posicion ${decimal(mejor.posicion)} con ${numero(impresiones)} impresiones y solo ` +
-    `${numero(clics)} clics: sale arriba pero no convence.`,
+    `${mejor.dominio} en posicion ${decimal(mejor.posicion)} con ${numero(mejor.impresiones)} ` +
+    `impresiones y solo ${numero(mejor.clics)} clics: sale arriba pero no convence.`,
   donde: reclaman.slice(0, 1).map(ubicacion),
   hacer: 'Reescribir title y description para que respondan a esa busqueda.'
 });
 
 // Cada accion sale con su ubicacion en el codigo, para poder aplicarla sin buscar nada.
-// El orden es el de impresiones perdidas: primero lo que cuesta mas trafico.
+// El orden es el de demanda, la misma para todos los tipos: primero lo que mas se busca.
 //
 // El adjunto llega cada dia con las mismas acciones hasta que se aplican, asi que cada
 // una dice si ya estaba ayer. Sin eso no hay forma de separar lo hecho de lo pendiente.
@@ -120,7 +124,7 @@ const derivarAcciones = (
     return declaradaDondeToca(porKeyword.get(consulta) || [], deberia) && mejor.dominio === deberia;
   };
 
-  return [
+  const candidatas = [
     // Las de compra no tienen dominio que las responda, asi que no hay a quien darle la razon.
     ...canibalizacion
       .filter((h) => h.deberia && !faltaSoloTiempo(h) && !vaDelanteQuienToca(h))
@@ -133,11 +137,15 @@ const derivarAcciones = (
       .slice(0, MAXIMO_HUERFANAS)
       .map((h) => reclamar(h, paginas)),
     ...ctrBajo.slice(0, MAXIMO_CTR).map(reescribirTitle)
-  ].map((accion) => ({
-    ...accion,
-    esNueva: !vistas.has(accion.firma),
-    esRuido: accion.impresiones < IMPRESIONES_FIABLES
-  }));
+  ];
+
+  return candidatas
+    .map((accion) => ({
+      ...accion,
+      esNueva: !vistas.has(accion.firma),
+      esRuido: accion.impresiones < IMPRESIONES_FIABLES
+    }))
+    .sort((a, b) => b.impresiones - a.impresiones);
 };
 
 module.exports = { derivarAcciones };

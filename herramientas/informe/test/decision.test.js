@@ -48,19 +48,62 @@ const FIRMAS_DE_HOY = ['dominio:tasar cartas magic:cartasmagic.es', 'huerfana:ve
 const decide = (extra = {}) =>
   decidir({ consultas, indice, estado: { firmas: [], fecha: null }, hoy: martes, ventana, ...extra });
 
-test('the actions come ordered by type with their file and line', () => {
+test('the actions come with their file and line', () => {
   const { acciones } = decide();
+  const reclamar = acciones.find(({ titulo }) => titulo === 'Reclamar "vender cartas"');
+  const mover = acciones.find(({ titulo }) => titulo === 'Mover "tasar cartas magic" a cartasmagic.es');
+
+  assert.deepEqual(mover.donde, []);
+  assert.deepEqual(reclamar.donde, [{ fichero: 'apps/vender/lib/metadatos.js', numeroLinea: 75 }]);
+  assert.equal(mover.impresiones, 25);
+  assert.equal(mover.esRuido, true);
+  assert.equal(reclamar.impresiones, 97);
+  assert.equal(reclamar.esRuido, false);
+});
+
+// Types in the order the old code emitted them: move (25), claim (97), rewrite (60).
+// By Demand the claim comes first, then the rewrite, then the move.
+test('the actions are ordered by Demand whatever their type', () => {
+  const { acciones } = decide({
+    consultas: [
+      fila(VENDER, 'tasar cartas magic', 25, 15.3),
+      fila(VENDER, 'vender cartas', 97, 16.2),
+      fila(VENDER, 'vender cartas magic online', 60, 8, 1)
+    ]
+  });
 
   assert.deepEqual(
     acciones.map(({ titulo }) => titulo),
-    ['Mover "tasar cartas magic" a cartasmagic.es', 'Reclamar "vender cartas"']
+    ['Reclamar "vender cartas"', 'Reescribir el title de "vender cartas magic online"', 'Mover "tasar cartas magic" a cartasmagic.es']
   );
-  assert.deepEqual(acciones[0].donde, []);
-  assert.deepEqual(acciones[1].donde, [{ fichero: 'apps/vender/lib/metadatos.js', numeroLinea: 75 }]);
-  assert.equal(acciones[0].impresiones, 25);
-  assert.equal(acciones[0].esRuido, true);
-  assert.equal(acciones[1].impresiones, 97);
-  assert.equal(acciones[1].esRuido, false);
+});
+
+// One search shown on both domains is one search: 7 and 5 impressions are a Demand of 7,
+// below the minimum of 10, so there is nothing to act on.
+test('a query seen 7 times on the hub and 5 on vender has a Demand of 7 and is not a Candidate', () => {
+  const { acciones, hallazgos } = decide({
+    consultas: [fila(HUB, 'vender cartas', 7, 12), fila(VENDER, 'vender cartas', 5, 16)]
+  });
+  const { muertas, ...candidatos } = hallazgos;
+
+  assert.deepEqual(acciones, []);
+  assert.deepEqual(Object.values(candidatos).flat(), []);
+});
+
+test('an action carries the impressions and position of each domain', () => {
+  const { acciones } = decide({
+    consultas: [fila(HUB, 'vender cartas', 50, 12), fila(VENDER, 'vender cartas', 44, 16)]
+  });
+
+  assert.equal(acciones.length, 1);
+  assert.equal(acciones[0].impresiones, 50);
+  assert.deepEqual(
+    acciones[0].apariciones.map(({ dominio, impresiones, posicion }) => [dominio, impresiones, posicion]),
+    [
+      [HUB, 50, 12],
+      [VENDER, 44, 16]
+    ]
+  );
 });
 
 test('an action seen yesterday is not new', () => {
@@ -69,8 +112,8 @@ test('an action seen yesterday is not new', () => {
   assert.deepEqual(
     acciones.map(({ firma, esNueva }) => [firma, esNueva]),
     [
-      ['dominio:tasar cartas magic:cartasmagic.es', true],
-      ['huerfana:vender cartas', false]
+      ['huerfana:vender cartas', false],
+      ['dominio:tasar cartas magic:cartasmagic.es', true]
     ]
   );
 });

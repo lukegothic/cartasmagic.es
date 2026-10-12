@@ -63,7 +63,34 @@ test('avisa cuando los dos dominios rankean la misma consulta', () => {
   const { canibalizacion } = avisos(agrupar(filas), new Map());
   assert.equal(canibalizacion.length, 1);
   assert.equal(canibalizacion[0].consulta, 'donde vender cartas magic');
-  assert.equal(canibalizacion[0].impresiones, 53);
+  assert.equal(canibalizacion[0].impresiones, 41);
+});
+
+// Dos dominios en la misma pagina de resultados son una sola busqueda: 7 y 5 impresiones
+// son una consulta buscada 7 veces, no 12. Con 12 pasaria el minimo de 10 y se avisaria.
+test('la demanda es el maximo de los dominios, no su suma', () => {
+  const filas = [
+    { dominio: HUB, claves: ['donde vender cartas magic'], clics: 0, impresiones: 7, posicion: 12 },
+    { dominio: VENDER, claves: ['donde vender cartas magic'], clics: 0, impresiones: 5, posicion: 16 }
+  ];
+  const avisados = avisos(agrupar(filas), new Map());
+
+  assert.deepEqual(Object.values(avisados).flat(), []);
+});
+
+// Cada cifra de una accion tiene que decir de que dominio es, y para eso el aviso tiene
+// que llevar las de todos, no solo las de quien rankea mejor.
+test('cada aviso guarda las cifras de cada dominio', () => {
+  const filas = [
+    { dominio: HUB, claves: ['vender cartas magic'], clics: 0, impresiones: 30, posicion: 14 },
+    { dominio: VENDER, claves: ['vender cartas magic'], clics: 1, impresiones: 8, posicion: 40 }
+  ];
+  const { malDominio } = avisos(agrupar(filas), new Map());
+
+  assert.deepEqual(malDominio[0].apariciones, [
+    { dominio: HUB, clics: 0, impresiones: 30, posicion: 14 },
+    { dominio: VENDER, clics: 1, impresiones: 8, posicion: 40 }
+  ]);
 });
 
 // El informe del 23 de septiembre de 2026 salio sin acciones: el hub aparecia con una

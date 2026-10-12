@@ -56,6 +56,7 @@ test('the raw data page table lists "/" once when GSC returned several URL varia
   const markdown = componerMarkdown({
     ventana: { desde: '2026-07-10', hasta: '2026-10-07' },
     indice: { paginas: [], porKeyword: new Map() },
+    acciones: [],
     hallazgos: { canibalizacion: [], malDominio: [], sinDuenno: [], ctrBajo: [], muertas: [] },
     consultas: [],
     porDominio: [{ dominio: 'cartasmagic.es', total, consultas, paginas }],
@@ -66,4 +67,44 @@ test('the raw data page table lists "/" once when GSC returned several URL varia
   const pageRows = markdown.split('#### Paginas')[1].split('\n').filter((line) => line.startsWith('| /'));
 
   assert.equal(pageRows.length, 1);
+});
+
+const action = {
+  firma: 'canibal:vender cartas',
+  impresiones: 50,
+  apariciones: [
+    { dominio: 'cartasmagic.es', impresiones: 50, clics: 0, posicion: 12 },
+    { dominio: 'vendercartasmagic.es', impresiones: 44, clics: 2, posicion: 16.5 }
+  ],
+  titulo: 'Mover "vender cartas" a vendercartasmagic.es',
+  porque: '50 impresiones de demanda',
+  donde: [],
+  hacer: 'Anadirla al meta keywords',
+  esNueva: true,
+  esRuido: false
+};
+
+const actionsSection = (acciones) =>
+  componerMarkdown({
+    ventana: { desde: '2026-07-10', hasta: '2026-10-07' },
+    indice: { paginas: [], porKeyword: new Map() },
+    acciones,
+    hallazgos: { canibalizacion: [], malDominio: [], sinDuenno: [], ctrBajo: [], muertas: [] },
+    consultas: [],
+    porDominio: [],
+    llms: [],
+    embudo: null
+  })
+    .split('## Acciones')[1]
+    .split('\n## ')[0];
+
+test('the actions heading says they are ordered by Demand', () => {
+  assert.match(actionsSection([action]), /Ordenadas por demanda\./);
+});
+
+test('each action shows impressions and position labelled with their domain', () => {
+  const section = actionsSection([action]);
+
+  assert.match(section, /cartasmagic\.es: 50 impr, pos 12,0/);
+  assert.match(section, /vendercartasmagic\.es: 44 impr, pos 16,5/);
 });
