@@ -69,3 +69,36 @@ test('los articulos del hub traen su fecha de publicacion', () => {
   assert.ok(articulo, 'no se ha encontrado el articulo en el indice');
   assert.equal(articulo.fecha, '2026-09-05');
 });
+
+// The Cooldown needs the text a Target holds today to tell when it changed.
+test('every page carries its current title, description and visible copy', () => {
+  const { paginas } = construirIndice();
+  const portada = paginas.find(({ dominio, ruta }) => dominio === 'vendercartasmagic.es' && ruta === '/');
+  const hub = paginas.find(({ dominio, ruta }) => dominio === 'cartasmagic.es' && ruta === '/');
+
+  assert.match(portada.texto.title, /^Vender cartas Magic/);
+  assert.match(portada.texto.description, /^Vende tu colecci/);
+  assert.ok(portada.texto.copy.length > 100);
+  assert.match(hub.texto.title, /^CartasMagic\.es/);
+  assert.match(hub.texto.description, /^Gu/);
+});
+
+test('an article carries its title, description and body', () => {
+  const { paginas } = construirIndice();
+  const articulo = paginas.find(({ ruta }) => ruta === '/blog/que-colecciones-antiguas-valen-dinero');
+
+  assert.match(articulo.texto.title, / \| CartasMagic\.es$/);
+  assert.ok(articulo.texto.description.length > 20);
+  assert.ok(articulo.texto.copy.length > 200);
+  assert.ok(!articulo.texto.copy.startsWith('---'));
+});
+
+test('the copy of an application page is read from the files that render it', () => {
+  const { paginas } = construirIndice();
+  const manabox = paginas.find(({ ruta }) => ruta === '/presupuesto-manabox');
+
+  assert.deepEqual(manabox.ficherosCopy, [
+    'apps/vender/views/presupuesto-manabox.ejs',
+    'apps/vender/lib/textos.js'
+  ]);
+});

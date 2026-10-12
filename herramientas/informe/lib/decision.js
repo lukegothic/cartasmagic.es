@@ -1,6 +1,7 @@
 const { hallazgos: calcularHallazgos } = require('./informe');
 const { derivarAcciones } = require('./acciones');
 const { comparar, esDiaDeEmbudo } = require('./estado');
+const { instantanea, cooldownDe } = require('./objetivos');
 
 // Entre traer los datos y pintarlos. No lee ni escribe nada: la fecha y el estado de ayer
 // entran como argumentos y el de hoy sale como resultado, para que quien llama decida
@@ -9,11 +10,24 @@ const { comparar, esDiaDeEmbudo } = require('./estado');
 // El correo depende solo de lo visible: las acciones y las alarmas de medicion. Que cambie
 // una candidata descartada no es una novedad que el fundador pueda atender. `alarmas` son
 // las firmas de las alarmas de medicion de hoy.
-const decidir = ({ consultas, indice, estado, hoy, ventana, alarmas = [] }) => {
+//
+// `ultimoCambioGit(fichero)` devuelve la fecha del ultimo cambio de un fichero en git, o
+// null. Entra de fuera para que esta funcion siga sin tocar nada: solo se llama la primera
+// vez que un Target no tiene entrada en el estado.
+const decidir = ({ consultas, indice, estado, hoy, ventana, ultimoCambioGit, alarmas = [] }) => {
   const hallazgos = calcularHallazgos(consultas, indice);
   const conEmbudo = esDiaDeEmbudo(hoy);
 
-  const { acciones, descartes, vigilancia } = derivarAcciones(hallazgos, indice, estado.acciones, ventana);
+  // El estado anterior a la foto de Targets no trae `targets`.
+  const targets = instantanea({ paginas: indice.paginas, previos: estado.targets, hoy, ultimoCambioGit });
+
+  const { acciones, descartes, vigilancia } = derivarAcciones(
+    hallazgos,
+    indice,
+    estado.acciones,
+    ventana,
+    cooldownDe(targets, hoy)
+  );
 
   const firmasAcciones = acciones.map(({ firma }) => firma);
   const delAnterior = comparar(firmasAcciones, estado.acciones);
@@ -31,10 +45,11 @@ const decidir = ({ consultas, indice, estado, hoy, ventana, alarmas = [] }) => {
     vigilancia,
     hallazgos,
     nuevas,
+    targets,
     conEmbudo,
     enviar: hayCambio || conEmbudo,
     resumen: { acciones: acciones.length, descartes: descartes.length, vigilancia: vigilancia.length },
-    siguiente: { acciones: firmasAcciones, alarmas }
+    siguiente: { acciones: firmasAcciones, alarmas, targets }
   };
 };
 

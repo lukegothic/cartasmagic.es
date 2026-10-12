@@ -47,7 +47,7 @@ const ESTADO_VACIO = { acciones: [], alarmas: [], fecha: null };
 const FIRMAS_DE_HOY = ['dominio:tasar cartas magic:cartasmagic.es', 'huerfana:vender cartas'];
 
 const decide = (extra = {}) =>
-  decidir({ consultas, indice, estado: ESTADO_VACIO, hoy: martes, ventana, ...extra });
+  decidir({ consultas, indice, estado: ESTADO_VACIO, hoy: martes, ventana, ultimoCambioGit: () => null, ...extra });
 
 test('the actions come with their file and line', () => {
   const { acciones } = decide();

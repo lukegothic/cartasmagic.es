@@ -3,6 +3,7 @@ const { construirIndice, leerLlms } = require('./lib/keywords');
 const { SITIOS, fechas, bloqueGSC, bloqueGA4 } = require('./lib/informe');
 const { decidir } = require('./lib/decision');
 const { leer, guardar } = require('./lib/estado');
+const { ultimoCambioGit } = require('./lib/git');
 const { enviar } = require('./lib/correo');
 const { componerMarkdown } = require('./lib/markdown');
 
@@ -26,7 +27,8 @@ const principal = async () => {
     indice,
     estado: leer(),
     hoy: new Date(),
-    ventana
+    ventana,
+    ultimoCambioGit
   });
 
   if (!enviar) {
