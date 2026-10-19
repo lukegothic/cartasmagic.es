@@ -751,6 +751,36 @@ ol.plain-list li::before {
 
 /* La direccion se pide junto al resto de campos, no detras de una casilla: es el dato que
    permite mandar la etiqueta en el primer correo, asi que se ensena y se deja opcional. */
+.sugerencias-cp {
+    position: relative;
+}
+
+.sugerencias-cp ul {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    z-index: 10;
+    max-height: 16rem;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0.25rem 0;
+    list-style: none;
+    background: var(--mtg-bg-card);
+    border: 1px solid var(--mtg-primary);
+    border-radius: var(--radius-md);
+}
+
+.sugerencias-cp li {
+    padding: 0.5rem 0.8rem;
+    cursor: pointer;
+}
+
+.sugerencias-cp li:hover,
+.sugerencias-cp li[aria-selected="true"] {
+    background: var(--mtg-primary-glow);
+}
+
 .atajo-envio {
     background: rgba(245, 144, 30, 0.08);
     border: 1px solid var(--mtg-primary);

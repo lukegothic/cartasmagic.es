@@ -7,12 +7,12 @@ const { componerCorreoMazo } = require('../lib/correo-manabox');
 const { componerCorreoPostal } = require('../lib/correo-postal');
 
 const mazo = {
-  lead: { nombre: 'Pepe', email: 'pepe@correo.com', url: 'https://manabox.app/decks/AZ7', idMazo: 'AZ7', mensaje: '' },
+  lead: { nombre: 'Pepe', email: 'pepe@correo.com', codigoPostal: { codigo: '46110', localidad: 'Godella' }, url: 'https://manabox.app/decks/AZ7', idMazo: 'AZ7', mensaje: '' },
   mazo: { nombre: 'Venta', formato: 'Commander' },
   cartas: [{ nombre: 'Sol Ring', cantidad: 1, esFoil: false, set: 'C21', rareza: 'Uncommon', precio: 1.5 }]
 };
 
-const postal = { nombre: 'Ana', email: 'ana@correo.com', mensaje: '', volumen: { corto: '1 caja', largo: 'una caja' } };
+const postal = { nombre: 'Ana', email: 'ana@correo.com', codigoPostal: { codigo: '46110', localidad: 'Godella' }, mensaje: '', volumen: { corto: '1 caja', largo: 'una caja' } };
 
 const enlaces = (html) => [...html.matchAll(/href="([^"]+)"/g)].map((m) => new URL(m[1]));
 

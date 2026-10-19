@@ -7,16 +7,16 @@ const { componerCorreo } = require('../lib/lead');
 const { componerCorreoMazo } = require('../lib/correo-manabox');
 const { leerDireccion } = require('../lib/direccion');
 
-const direccion = leerDireccion({ direccion: 'Calle Mayor 1\n46110 Godella (Valencia)' });
+const direccion = leerDireccion({ direccion: 'Calle Mayor 1\n46110 Godella (Valencia)' }, { codigo: '46110', localidad: 'Godella' });
 
 const postal = (extra = {}) => componerCorreo({
-  nombre: 'Jordi', email: 'jordi@correo.com',
+  nombre: 'Jordi', email: 'jordi@correo.com', codigoPostal: { codigo: '46110', localidad: 'Godella' },
   volumen: '500-1000', mensaje: 'varios mazos',
   ...extra
 });
 
 const manabox = (extra = {}) => componerCorreoMazo({
-  lead: { nombre: 'Ana', email: 'ana@correo.com', url: 'https://manabox.app/decks/A', idMazo: 'A', mensaje: '', ...extra },
+  lead: { nombre: 'Ana', email: 'ana@correo.com', codigoPostal: { codigo: '46110', localidad: 'Godella' }, url: 'https://manabox.app/decks/A', idMazo: 'A', mensaje: '', ...extra },
   mazo: { nombre: 'M', formato: 'Commander' },
   cartas: [{ nombre: 'x', cantidad: 1, esFoil: false, set: 's', rareza: 'r', precio: 100 }]
 });

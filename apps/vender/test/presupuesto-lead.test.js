@@ -2,7 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { validarLeadMazo } = require('../lib/lead');
 
-const valido = { nombre: 'Iván Pérez', email: 'ivan@correo.com', url: 'https://manabox.app/decks/AZ7lfIfhflqh2vgQaCEtkg' };
+const valido = { nombre: 'Iván Pérez', email: 'ivan@correo.com', codigoPostal: '28001', url: 'https://manabox.app/decks/AZ7lfIfhflqh2vgQaCEtkg' };
 
 test('validarLeadMazo acepta un lead correcto y normaliza el id', () => {
   const { lead, error } = validarLeadMazo(valido);

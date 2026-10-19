@@ -132,10 +132,11 @@ const FORMULARIO = {
       { valor: 'ni-idea', texto: 'Ni idea' }
     ]
   },
+  codigoPostal: { label: 'Código postal', placeholder: 'ej. 28001 Madrid' },
   url: { label: 'Enlace del mazo en ManaBox', placeholder: 'ej. https://manabox.app/decks/AZ7lfIfhflqh2vgQaCEtkg' },
   direccion: {
     label: 'Dirección para mandarte la etiqueta',
-    placeholder: 'ej. Calle Mayor 1, 3º B&#10;28001 Madrid (Madrid)',
+    placeholder: 'ej. Calle Mayor 1, 3º B',
     nota: 'Si la dejas, te mando la etiqueta ya en el primer correo. Si prefieres no darla todavía, déjala en blanco y te contesto igual'
   },
   legal: {
@@ -380,6 +381,7 @@ const PRIVADA = {
 const ERRORES = {
   CAMPOS_OBLIGATORIOS: 'Faltan campos por rellenar',
   EMAIL_NO_VALIDO: 'El correo no es válido',
+  CODIGO_POSTAL_NO_VALIDO: 'El código postal no es válido. Tienen que ser los cinco números de un código de España',
   OPCION_NO_VALIDA: 'Elige una opción en las dos listas',
   ENLACE_NO_VALIDO: 'El enlace no es de un mazo de ManaBox. Tiene que empezar por manabox.app/decks/',
   MAZO_NO_ACCESIBLE: 'No se ha podido abrir el mazo. Comprueba que el enlace es público y vuelve a probar',

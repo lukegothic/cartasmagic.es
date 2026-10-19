@@ -8,6 +8,7 @@ const { NOTAS_INTERNAS, LIMITES_PAQUETE, APROVECHAR_CAJA, MANABOX } = require('.
 const { calcularPresupuesto } = require('./presupuesto');
 const { componerDesgloseCsv } = require('./desglose');
 const { componerNotas, nombreDeFichero } = require('./notas');
+const { lineaCodigoPostal, lugarCodigoPostal } = require('./codigo-postal');
 
 const SEPARADOR = ' - ';
 
@@ -67,6 +68,7 @@ const notas = ({ lead, mazo, presupuesto, csv }) =>
     asuntoCliente: MANABOX.asuntoCliente,
     lineas: [
       `${NOTAS_INTERNAS.correo} ${lead.email}`,
+      `${NOTAS_INTERNAS.codigoPostal} ${lineaCodigoPostal(lead.codigoPostal)}`,
       `${MANABOX.notas.enlace} ${lead.url}`,
       `${MANABOX.notas.mazo} ${[mazo.nombre, mazo.formato].filter(Boolean).join(SEPARADOR)}`,
       `${MANABOX.notas.mercado} ${euros(presupuesto.valorMercado)} EUR${SEPARADOR}${MANABOX.notas.sePaga(Math.round((presupuesto.oferta / presupuesto.valorMercado) * 100))}`,
@@ -85,7 +87,7 @@ const componerCorreoMazo = ({ lead, mazo, cartas, entorno = process.env }) => {
   return {
     subject: MANABOX.asunto({
       nombre: lead.nombre,
-      donde: lead.direccion?.localidad ? ` (${lead.direccion.localidad})` : '',
+      donde: ` (${lugarCodigoPostal(lead.codigoPostal)})`,
       oferta: euros(presupuesto.oferta),
       bajoMinimo: presupuesto.bajoMinimo,
       conDireccion: Boolean(lead.direccion)

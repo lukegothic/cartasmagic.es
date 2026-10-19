@@ -4,17 +4,17 @@ const { componerCorreo } = require('../lib/lead');
 const { componerCorreoMazo } = require('../lib/correo-manabox');
 const { leerDireccion } = require('../lib/direccion');
 
-const direccion = leerDireccion({ direccion: 'Calle Baron de Santa Barbara 17, 46110 Godella (Valencia)' });
+const direccion = leerDireccion({ direccion: 'Calle Baron de Santa Barbara 17, 46110 Godella (Valencia)' }, { codigo: '46110', localidad: 'Godella' });
 
 const postal = (extra = {}) => componerCorreo({
-  nombre: 'Jordi', email: 'jordi@correo.com',
+  nombre: 'Jordi', email: 'jordi@correo.com', codigoPostal: { codigo: '46110', localidad: 'Godella' },
   volumen: '500-1000', mensaje: 'varios mazos de Commander',
   ...extra
 });
 
 const mazo = (extra = {}) => componerCorreoMazo({
   lead: {
-    nombre: 'Pepe', email: 'pepe@correo.com', url: 'https://manabox.app/decks/AZ7',
+    nombre: 'Pepe', email: 'pepe@correo.com', codigoPostal: { codigo: '46110', localidad: 'Godella' }, url: 'https://manabox.app/decks/AZ7',
     idMazo: 'AZ7', mensaje: 'algunas jugadas', ...extra
   },
   mazo: { nombre: 'Venta', formato: 'Commander' },
@@ -117,6 +117,13 @@ test('las notas de ManaBox llevan todos los datos del formulario y del presupues
   assert.match(content, /algunas jugadas/);
   assert.match(content, /Venta/, 'el nombre del mazo tambien es un dato');
   assert.match(content, /365,28|Mercado/, 'la valoracion que sustenta la oferta');
+});
+
+test('una direccion con otro codigo postal se marca en las notas adjuntas', () => {
+  const otra = { texto: 'Calle Mayor 1, 28002 Madrid\n46110 Godella', pareceIncompleta: false, tieneOtroCodigoPostal: true };
+  const { content } = notasDe(postal({ direccion: otra }));
+  assert.match(content, /otro c[oó]digo postal/i);
+  assert.doesNotMatch(notasDe(postal({ direccion })).content, /otro c[oó]digo postal/i);
 });
 
 test('una direccion dudosa se marca en las notas adjuntas', () => {

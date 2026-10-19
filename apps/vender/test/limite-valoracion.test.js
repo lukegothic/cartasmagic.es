@@ -42,7 +42,7 @@ const enviarValoracion = (puerto, email) =>
   fetch(`http://127.0.0.1:${puerto}/valoracion-cartas-magic`, {
     method: 'POST',
     headers: { 'content-type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams({ nombre: 'Iván Pérez', email, volumen: 'menos-500' }),
+    body: new URLSearchParams({ nombre: 'Iván Pérez', email, codigoPostal: '28001', volumen: 'menos-500' }),
     redirect: 'manual'
   });
 

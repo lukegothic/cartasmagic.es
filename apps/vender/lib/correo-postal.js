@@ -6,6 +6,7 @@ const {
 } = require('./correo-plantilla');
 const { NOTAS_INTERNAS, LIMITES_PAQUETE, PEDIR_DIRECCION, POSTAL } = require('./textos-correo');
 const { componerNotas } = require('./notas');
+const { lineaCodigoPostal, lugarCodigoPostal } = require('./codigo-postal');
 
 const cuerpoHtml = ({ nombre, direccion }) => [
   parrafo(POSTAL.saludo(escaparHtml(nombre))),
@@ -36,7 +37,7 @@ const cuerpoTexto = ({ nombre, direccion }) => [
   ...firmaTexto()
 ].join('\n');
 
-const notas = ({ nombre, email, volumen, mensaje, direccion }) =>
+const notas = ({ nombre, email, volumen, mensaje, codigoPostal, direccion }) =>
   componerNotas({
     nombre,
     direccion,
@@ -44,15 +45,16 @@ const notas = ({ nombre, email, volumen, mensaje, direccion }) =>
     asuntoCliente: POSTAL.asuntoCliente,
     lineas: [
       `${NOTAS_INTERNAS.correo} ${email}`,
+      `${NOTAS_INTERNAS.codigoPostal} ${lineaCodigoPostal(codigoPostal)}`,
       `${NOTAS_INTERNAS.volumen} ${volumen.largo}`
     ]
   });
 
-const asunto = ({ nombre, volumen, direccion }) =>
+const asunto = ({ nombre, volumen, codigoPostal, direccion }) =>
   POSTAL.asunto({
     nombre,
     volumen: volumen.corto,
-    donde: direccion?.localidad ? `, ${direccion.localidad}` : '',
+    donde: `, ${lugarCodigoPostal(codigoPostal)}`,
     conDireccion: Boolean(direccion)
   });
 

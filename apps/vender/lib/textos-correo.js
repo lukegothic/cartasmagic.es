@@ -39,8 +39,10 @@ const PASOS_REENVIO = {
 const NOTAS_INTERNAS = {
   titulo: 'Datos del formulario',
   nombre: 'Nombre:',
+  codigoPostal: 'Código postal:',
   direccion: 'Dirección para la etiqueta:',
   direccionIncompleta: 'Parece incompleta: conviene revisar antes de generar la etiqueta',
+  otroCodigoPostal: 'Lleva escrito otro código postal distinto del campo: conviene confirmar cuál es el bueno antes de generar la etiqueta',
   correo: 'Correo:',
   volumen: 'Volumen:',
   diceCliente: 'Dice el cliente:',
@@ -108,7 +110,7 @@ const POSTAL = {
   intro: 'Gracias por escribirnos. Te cuento cómo funciona cuando hay que valorar una colección entera.',
   proceso: 'Te generamos un código de envío a nuestra dirección, así que solo tienes que dejar el paquete en cualquier oficina de Correos. El envío lo pagamos nosotros. Cuando llega, lo revisamos y te escribimos con el presupuesto en un día laborable. Si te encaja, te hacemos la transferencia en 24 horas. Si no, te lo devolvemos, y en ese caso los costes de la devolución son a tu cargo (10 €, que cubren el envío de ida, el de vuelta y la preparación del paquete).',
   // El asunto es lo unico que se lee antes de decidir si la etiqueta sale ya, asi que lleva
-  // el volumen, que marca el tamaño de la etiqueta, y la localidad cuando se puede generar.
+  // el volumen, que marca el tamaño de la etiqueta, y la localidad del codigo postal.
   asunto: ({ nombre, volumen, donde, conDireccion }) =>
     `Nueva colección: ${nombre} (${volumen}${donde})${conDireccion ? ' - con dirección' : ''}`,
   // El que se copia al reenviar. Sin datos de triaje: el cliente no tiene por que leer el

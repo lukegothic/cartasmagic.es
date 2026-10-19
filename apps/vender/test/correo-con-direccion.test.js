@@ -5,13 +5,13 @@ const { componerCorreoMazo } = require('../lib/correo-manabox');
 const { leerDireccion } = require('../lib/direccion');
 
 const postal = (extra = {}) => componerCorreo({
-  nombre: 'Jordi', email: 'jordi@correo.com', provincia: 'Valencia',
+  nombre: 'Jordi', email: 'jordi@correo.com', codigoPostal: { codigo: '46110', localidad: 'Godella' }, provincia: 'Valencia',
   tipo: 'mazos-albumes', volumen: '500-1000', mensaje: 'varios mazos',
   ...extra
 });
 
 // Se construye con la funcion de verdad: a mano se quedaba sin localidad y el asunto no lo notaba.
-const direccion = leerDireccion({ direccion: 'Calle Baron de Santa Barbara 17, 46110 Godella (Valencia)' });
+const direccion = leerDireccion({ direccion: 'Calle Baron de Santa Barbara 17, 46110 Godella (Valencia)' }, { codigo: '46110', localidad: 'Godella' });
 
 test('sin direccion el correo la pide, como hasta ahora', () => {
   const { html } = postal();
@@ -41,7 +41,7 @@ test('una direccion dudosa se marca en las notas', () => {
 });
 
 test('la via de ManaBox se comporta igual', () => {
-  const lead = { nombre: 'Pepe', email: 'pepe@correo.com', url: 'https://manabox.app/decks/AZ7', idMazo: 'AZ7', mensaje: '' };
+  const lead = { nombre: 'Pepe', email: 'pepe@correo.com', codigoPostal: { codigo: '46110', localidad: 'Godella' }, url: 'https://manabox.app/decks/AZ7', idMazo: 'AZ7', mensaje: '' };
   const cartas = [{ nombre: 'x', cantidad: 1, esFoil: false, set: 's', rareza: 'r', precio: 100 }];
   const sin = componerCorreoMazo({ lead, mazo: { nombre: 'M', formato: 'Commander' }, cartas });
   const con = componerCorreoMazo({ lead: { ...lead, direccion }, mazo: { nombre: 'M', formato: 'Commander' }, cartas });
@@ -53,7 +53,7 @@ test('la via de ManaBox se comporta igual', () => {
 });
 
 test('con direccion no se pide la direccion por ningun lado, en ninguna de las dos vias', () => {
-  const lead = { nombre: 'P', email: 'p@x.es', url: 'https://manabox.app/decks/A', idMazo: 'A', mensaje: '', direccion };
+  const lead = { nombre: 'P', email: 'p@x.es', codigoPostal: { codigo: '46110', localidad: 'Godella' }, url: 'https://manabox.app/decks/A', idMazo: 'A', mensaje: '', direccion };
   const mb = componerCorreoMazo({ lead, mazo: { nombre: 'M', formato: 'C' }, cartas: [{ nombre: 'x', cantidad: 1, esFoil: false, set: 's', rareza: 'r', precio: 100 }] });
 
   [mb, postal({ direccion })].forEach(({ html, text }) => {
@@ -64,11 +64,20 @@ test('con direccion no se pide la direccion por ningun lado, en ninguna de las d
 
 // El asunto de ManaBox ya lleva la oferta, que es lo que decide; la localidad ahorra abrir
 // el correo para saber si la etiqueta se puede generar ya.
-test('el asunto de ManaBox lleva la localidad cuando hay direccion', () => {
-  const lead = { nombre: 'Ana', email: 'a@x.es', url: 'https://manabox.app/decks/A', idMazo: 'A', mensaje: '', direccion };
+test('el asunto de ManaBox lleva la localidad aunque no haya direccion', () => {
+  const lead = { nombre: 'Ana', email: 'a@x.es', codigoPostal: { codigo: '46110', localidad: 'Godella' }, url: 'https://manabox.app/decks/A', idMazo: 'A', mensaje: '' };
   const { subject } = componerCorreoMazo({
     lead, mazo: { nombre: 'M', formato: 'C' },
     cartas: [{ nombre: 'x', cantidad: 1, esFoil: false, set: 's', rareza: 'r', precio: 100 }]
   });
   assert.match(subject, /Godella/);
+});
+
+test('las notas de ManaBox llevan el codigo postal', () => {
+  const lead = { nombre: 'Ana', email: 'a@x.es', codigoPostal: { codigo: '46110', localidad: null }, url: 'https://manabox.app/decks/A', idMazo: 'A', mensaje: '' };
+  const { attachments } = componerCorreoMazo({
+    lead, mazo: { nombre: 'M', formato: 'C' },
+    cartas: [{ nombre: 'x', cantidad: 1, esFoil: false, set: 's', rareza: 'r', precio: 100 }]
+  });
+  assert.match(attachments[0].content, /C[oó]digo postal: 46110\n/);
 });

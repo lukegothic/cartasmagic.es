@@ -31,6 +31,7 @@ test('la valoracion conserva lo tecleado cuando el envio se rechaza', () => {
       nombre: 'Juan García',
       email: 'juan@correo',
       volumen: '500-1000',
+      codigoPostal: '46110 Godella',
       direccion: 'Calle Mayor 1',
       mensaje: 'cuatro mazos'
     }
@@ -39,6 +40,7 @@ test('la valoracion conserva lo tecleado cuando el envio se rechaza', () => {
   assert.match(html, /name="nombre"[^>]*value="Juan García"/);
   assert.match(html, /name="email"[^>]*value="juan@correo"/);
   assert.match(html, /<option value="500-1000" selected>/);
+  assert.match(html, /name="codigoPostal"[^>]*value="46110 Godella"/);
   assert.match(html, /name="direccion"[^>]*>Calle Mayor 1<\/textarea>/);
   assert.match(html, /name="mensaje"[^>]*>cuatro mazos<\/textarea>/);
 });
@@ -52,6 +54,7 @@ test('el presupuesto de manabox conserva lo tecleado cuando el envio se rechaza'
       url: 'https://manabox.app/decks/abc',
       nombre: 'Ana Ruiz',
       email: 'ana@correo',
+      codigoPostal: '28001',
       direccion: 'Calle Mayor 2',
       mensaje: 'dos albumes'
     }
@@ -60,6 +63,7 @@ test('el presupuesto de manabox conserva lo tecleado cuando el envio se rechaza'
   assert.match(html, /name="url"[^>]*value="https:\/\/manabox.app\/decks\/abc"/);
   assert.match(html, /name="nombre"[^>]*value="Ana Ruiz"/);
   assert.match(html, /name="email"[^>]*value="ana@correo"/);
+  assert.match(html, /name="codigoPostal"[^>]*value="28001"/);
   assert.match(html, /name="direccion"[^>]*>Calle Mayor 2<\/textarea>/);
   assert.match(html, /name="mensaje"[^>]*>dos albumes<\/textarea>/);
 });

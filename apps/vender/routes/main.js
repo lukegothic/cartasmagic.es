@@ -4,6 +4,7 @@ const { descargarMazo } = require('../lib/manabox-fetch');
 const { crearLimitador } = require('../lib/limite');
 const { enviarAviso } = require('../lib/mailer');
 const { mensajeDeError } = require('../lib/mensajes-error');
+const { buscarCodigosPostales } = require('../lib/codigo-postal');
 const textos = require('../lib/textos');
 const meta = require('../lib/metadatos');
 const { ACTUALIZADA, CARTAS, formatoPrecio } = require('../lib/hotlist-cartas');
@@ -152,6 +153,13 @@ module.exports = (app) => {
   });
 
   mountConfirmation(app, '/presupuesto-manabox', vistaManabox);
+
+  // El listado solo cambia al regenerar data/codigos-postales.tsv, asi que el navegador puede
+  // guardar cada respuesta un dia y no repetir la peticion al borrar y volver a teclear.
+  app.get('/codigos-postales', (req, res) => {
+    res.set('Cache-Control', 'public, max-age=86400');
+    res.json(buscarCodigosPostales(req.query.q));
+  });
 
   // El enlace a la guia de estados va al hub, que es donde vive el contenido. Con utm para
   // saber cuanta gente cruza de un dominio al otro, igual que el enlace del pie.

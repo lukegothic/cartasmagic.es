@@ -15,7 +15,7 @@ test('todas las opciones del desplegable las acepta el validador', () => {
   assert.ok(volumenes.length >= 4);
 
   volumenes.forEach((volumen) => {
-    const { error } = validarLead({ nombre: 'X', email: 'x@y.es', volumen });
+    const { error } = validarLead({ nombre: 'X', email: 'x@y.es', codigoPostal: '28001', volumen });
     assert.equal(error, undefined, `el validador rechaza volumen=${volumen}`);
   });
 });

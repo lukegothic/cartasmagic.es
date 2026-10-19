@@ -13,7 +13,8 @@ const nombreDeFichero = (texto, siVacio) =>
 const bloqueDireccion = (direccion) => [
   NOTAS_INTERNAS.direccion,
   ...direccion.texto.split('\n').map((l) => `  ${l.trim()}`),
-  ...(direccion.pareceIncompleta ? [`  ${NOTAS_INTERNAS.direccionIncompleta}`] : [])
+  ...(direccion.pareceIncompleta ? [`  ${NOTAS_INTERNAS.direccionIncompleta}`] : []),
+  ...(direccion.tieneOtroCodigoPostal ? [`  ${NOTAS_INTERNAS.otroCodigoPostal}`] : [])
 ];
 
 // El orden es el del reenvio: lo que se puede olvidar del todo va antes que lo que se ve al

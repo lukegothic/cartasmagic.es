@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const { componerCorreoMazo } = require('../lib/correo-manabox');
 
 const base = {
-  lead: { nombre: 'Pepe', email: 'pepe@correo.com', url: 'https://manabox.app/decks/AZ7', idMazo: 'AZ7', mensaje: 'algunas jugadas' },
+  lead: { nombre: 'Pepe', email: 'pepe@correo.com', codigoPostal: { codigo: '46110', localidad: 'Godella' }, url: 'https://manabox.app/decks/AZ7', idMazo: 'AZ7', mensaje: 'algunas jugadas' },
   mazo: { nombre: 'Venta', formato: 'Commander' },
   cartas: [
     { nombre: 'Ancient Tomb', cantidad: 1, esFoil: true, set: 'Zendikar Expeditions', rareza: 'Mythic', precio: 365.28 },

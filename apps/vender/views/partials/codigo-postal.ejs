@@ -1,0 +1,104 @@
+<label for="codigoPostal" id="codigoPostal-etiqueta"><%= textos.FORMULARIO.codigoPostal.label %></label>
+<div class="sugerencias-cp">
+    <input type="text" id="codigoPostal" name="codigoPostal" required autocomplete="off" maxlength="100" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="codigos-postales" placeholder="<%= textos.FORMULARIO.codigoPostal.placeholder %>" value="<%= valores.codigoPostal || '' %>">
+    <ul id="codigos-postales" role="listbox" aria-labelledby="codigoPostal-etiqueta" hidden></ul>
+</div>
+<script>
+// El listado entero pesa unos 800 KB, asi que no viaja con la pagina: se piden al servidor
+// las sugerencias de lo tecleado. Se pintan en una lista propia y no en un datalist porque el
+// navegador vuelve a filtrar el datalist sin ignorar tildes, y escondia "A Coruña" a quien
+// tecleaba "coruna". Si la peticion falla, el campo sigue siendo un texto normal y el
+// servidor valida igual.
+(function () {
+    var campo = document.getElementById('codigoPostal');
+    var lista = document.getElementById('codigos-postales');
+    var opciones = [];
+    var activa = -1;
+    var espera;
+
+    var marcar = function (indice) {
+        if (activa >= 0) opciones[activa].setAttribute('aria-selected', 'false');
+        activa = indice;
+        if (activa < 0) return campo.removeAttribute('aria-activedescendant');
+        opciones[activa].setAttribute('aria-selected', 'true');
+        campo.setAttribute('aria-activedescendant', opciones[activa].id);
+        opciones[activa].scrollIntoView({ block: 'nearest' });
+    };
+
+    var cerrar = function () {
+        marcar(-1);
+        lista.hidden = true;
+        campo.setAttribute('aria-expanded', 'false');
+    };
+
+    var abrir = function () {
+        if (!opciones.length) return;
+        lista.hidden = false;
+        campo.setAttribute('aria-expanded', 'true');
+    };
+
+    // El valor se pone a mano, asi que no dispara input y no se vuelve a buscar lo elegido.
+    var elegir = function (indice) {
+        campo.value = opciones[indice].textContent;
+        cerrar();
+    };
+
+    var pintar = function (sugerencias) {
+        opciones = sugerencias.map(function (sugerencia, i) {
+            var opcion = document.createElement('li');
+            opcion.id = 'codigos-postales-' + i;
+            opcion.setAttribute('role', 'option');
+            opcion.setAttribute('aria-selected', 'false');
+            opcion.textContent = sugerencia;
+            // Con mousedown y no con click: el click llega despues del blur, que ya ha
+            // cerrado la lista.
+            opcion.addEventListener('mousedown', function (e) {
+                e.preventDefault();
+                elegir(i);
+            });
+            return opcion;
+        });
+        activa = -1;
+        lista.replaceChildren.apply(lista, opciones);
+        if (opciones.length) abrir(); else cerrar();
+    };
+
+    campo.addEventListener('input', function () {
+        clearTimeout(espera);
+        var consulta = campo.value.trim();
+        if (consulta.length < 2) return pintar([]);
+
+        espera = setTimeout(function () {
+            fetch('/codigos-postales?q=' + encodeURIComponent(consulta))
+                .then(function (respuesta) { return respuesta.json(); })
+                .then(function (sugerencias) {
+                    // Una respuesta lenta no pisa la de lo que se ha tecleado despues.
+                    if (campo.value.trim() !== consulta) return;
+                    pintar(sugerencias);
+                });
+        }, 200);
+    });
+
+    campo.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            if (!opciones.length) return;
+            e.preventDefault();
+            abrir();
+            var total = opciones.length;
+            var paso = e.key === 'ArrowDown' ? 1 : -1;
+            marcar(activa < 0 ? (paso > 0 ? 0 : total - 1) : (activa + paso + total) % total);
+            return;
+        }
+        if (lista.hidden) return;
+        // Intro elige la sugerencia marcada en vez de enviar el formulario a medias.
+        if (e.key === 'Enter' && activa >= 0) {
+            e.preventDefault();
+            elegir(activa);
+            return;
+        }
+        if (e.key === 'Escape') cerrar();
+    });
+
+    campo.addEventListener('blur', cerrar);
+})();
+</script>

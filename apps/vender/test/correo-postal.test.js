@@ -4,7 +4,7 @@ const { componerCorreo } = require('../lib/lead');
 const { leerDireccion } = require('../lib/direccion');
 
 const base = {
-  nombre: 'Jordi', email: 'jordi@correo.com',
+  nombre: 'Jordi', email: 'jordi@correo.com', codigoPostal: { codigo: '46110', localidad: 'Godella' },
   volumen: '500-1000', mensaje: 'varios mazos de Commander'
 };
 
@@ -14,8 +14,26 @@ test('el asunto identifica al cliente y el volumen que dice tener', () => {
   assert.match(c.subject, /500/);
 });
 
+// El codigo postal es obligatorio, asi que la localidad sale en el asunto aunque el cliente
+// no haya dejado la direccion entera.
+test('el asunto lleva la localidad del codigo postal aunque no haya direccion', () => {
+  const c = componerCorreo(base);
+  assert.match(c.subject, /Godella/);
+  assert.doesNotMatch(c.subject, /con direcci[oó]n/i);
+});
+
+test('sin localidad conocida el asunto lleva el codigo postal', () => {
+  const c = componerCorreo({ ...base, codigoPostal: { codigo: '46110', localidad: null } });
+  assert.match(c.subject, /46110/);
+});
+
+test('el codigo postal va en las notas adjuntas', () => {
+  const [notas] = componerCorreo(base).attachments;
+  assert.match(notas.content, /C[oó]digo postal: 46110 Godella/);
+});
+
 test('el asunto lleva la localidad cuando el cliente ha dejado la direccion', () => {
-  const direccion = leerDireccion({ direccion: 'Calle Mayor 1\n46110 Godella (Valencia)' });
+  const direccion = leerDireccion({ direccion: 'Calle Mayor 1\n46110 Godella (Valencia)' }, { codigo: '46110', localidad: 'Godella' });
   const c = componerCorreo({ ...base, direccion });
   assert.match(c.subject, /Godella/);
   assert.match(c.subject, /con direcci[oó]n/i);

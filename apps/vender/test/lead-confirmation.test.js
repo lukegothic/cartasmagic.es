@@ -41,13 +41,13 @@ const startApp = async () => {
 const FORMS = [
   {
     route: '/valoracion-cartas-magic',
-    valid: { nombre: 'Iván Pérez', email: 'ivan@correo.com', volumen: 'menos-500' },
-    invalid: { nombre: 'Iván Pérez', email: 'no-es-un-correo', volumen: 'menos-500' }
+    valid: { nombre: 'Iván Pérez', email: 'ivan@correo.com', codigoPostal: '28001', volumen: 'menos-500' },
+    invalid: { nombre: 'Iván Pérez', email: 'no-es-un-correo', codigoPostal: '28001', volumen: 'menos-500' }
   },
   {
     route: '/presupuesto-manabox',
-    valid: { nombre: 'Ana Ruiz', email: 'ana@correo.com', url: 'https://manabox.app/decks/AZ7lfIfhflqh2vgQaCEtkg' },
-    invalid: { nombre: 'Ana Ruiz', email: 'no-es-un-correo', url: 'https://manabox.app/decks/AZ7lfIfhflqh2vgQaCEtkg' }
+    valid: { nombre: 'Ana Ruiz', email: 'ana@correo.com', codigoPostal: '28001', url: 'https://manabox.app/decks/AZ7lfIfhflqh2vgQaCEtkg' },
+    invalid: { nombre: 'Ana Ruiz', email: 'no-es-un-correo', codigoPostal: '28001', url: 'https://manabox.app/decks/AZ7lfIfhflqh2vgQaCEtkg' }
   }
 ];
 

@@ -16,6 +16,8 @@
             <label for="email"><%= textos.FORMULARIO.email.label %></label>
             <input type="email" id="email" name="email" required autocomplete="email" placeholder="<%= textos.FORMULARIO.email.placeholder %>" value="<%= valores.email || '' %>">
 
+            <%- include('partials/codigo-postal') %>
+
             <%- include('partials/atajo-envio') %>
 
             <label for="mensaje"><%= textos.FORMULARIO.mensaje.label %></label>
