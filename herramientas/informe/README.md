@@ -112,6 +112,14 @@ los eventos del embudo, para las alarmas de medición: un paso con más eventos 
 anterior (más leads que intentos de envío, por ejemplo) quiere decir que los datos están
 mal, y manda el correo el día que aparece o se resuelve.
 
+Los lunes también abre con los leads de esta semana y de la anterior, por formulario,
+contados con `lead_confirmado`. Ese evento lo manda el servidor de vender, así que
+cuenta también a quien rechaza las cookies: es la cifra de leads de verdad. Por eso
+mismo no es un paso del embudo, que solo cuenta a quien acepta. Para que GA4 lo
+desglose por formulario hay que dar de alta `formulario` como dimensión personalizada
+de evento (**Administrar > Definiciones personalizadas**). Mientras no esté, el informe
+lo dice en esa línea y sigue con el resto.
+
 ### Cooldown y foto de Targets
 
 Una acción es una candidata que ha pasado todos los motivos de descarte. Uno de ellos es

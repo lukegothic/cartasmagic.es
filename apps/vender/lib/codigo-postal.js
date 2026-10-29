@@ -70,4 +70,20 @@ const buscarCodigosPostales = (consulta) => {
   return LISTADO.filter(coincide).slice(0, MAXIMO_SUGERENCIAS).map(({ sugerencia }) => sugerencia);
 };
 
-module.exports = { PATRON_CODIGO, leerCodigoPostal, buscarCodigosPostales, lineaCodigoPostal, lugarCodigoPostal };
+// En el orden de los codigos: la posicion mas uno es el prefijo, del 01 al 52.
+const PROVINCIAS = [
+  'Álava', 'Albacete', 'Alicante', 'Almería', 'Ávila', 'Badajoz', 'Illes Balears', 'Barcelona',
+  'Burgos', 'Cáceres', 'Cádiz', 'Castellón', 'Ciudad Real', 'Córdoba', 'A Coruña', 'Cuenca',
+  'Girona', 'Granada', 'Guadalajara', 'Gipuzkoa', 'Huelva', 'Huesca', 'Jaén', 'León', 'Lleida',
+  'La Rioja', 'Lugo', 'Madrid', 'Málaga', 'Murcia', 'Navarra', 'Ourense', 'Asturias', 'Palencia',
+  'Las Palmas', 'Pontevedra', 'Salamanca', 'Santa Cruz de Tenerife', 'Cantabria', 'Segovia',
+  'Sevilla', 'Soria', 'Tarragona', 'Teruel', 'Toledo', 'Valencia', 'Valladolid', 'Bizkaia',
+  'Zamora', 'Zaragoza', 'Ceuta', 'Melilla'
+];
+
+// El codigo ya viene validado por leerCodigoPostal, asi que el prefijo siempre es una provincia.
+const provinciaDeCodigo = (codigo) => PROVINCIAS[Number(codigo.slice(0, 2)) - 1];
+
+module.exports = {
+  PATRON_CODIGO, leerCodigoPostal, buscarCodigosPostales, lineaCodigoPostal, lugarCodigoPostal, provinciaDeCodigo
+};

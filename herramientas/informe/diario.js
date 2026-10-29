@@ -1,6 +1,6 @@
 const { cliente } = require('./lib/google');
 const { construirIndice, leerLlms } = require('./lib/keywords');
-const { SITIOS, fechas, bloqueGSC, bloqueGA4, alarmasDeEmbudo, consultasPostCambio } = require('./lib/informe');
+const { SITIOS, fechas, bloqueGSC, bloqueGA4, bloqueLeads, alarmasDeEmbudo, consultasPostCambio } = require('./lib/informe');
 const { decidir, fechasPostCambio } = require('./lib/decision');
 const { leer, guardar } = require('./lib/estado');
 const { ultimoCambioGit } = require('./lib/git');
@@ -64,8 +64,11 @@ const principal = async () => {
 
   // El embudo necesita acumular semanas para que sus ratios digan algo, asi que solo
   // entra en el informe de los lunes.
+  // Los leads de la semana van delante: son la cifra que se compara de una semana a otra.
   const bloquesEmbudo = [];
   if (conEmbudo) {
+    const leads = await bloqueLeads(auth, process.env.GA4_PROPIEDAD, hoy);
+    if (leads) bloquesEmbudo.push(leads);
     for (const sitio of SITIOS) bloquesEmbudo.push(await bloqueGA4(auth, sitio, ventana));
   }
 

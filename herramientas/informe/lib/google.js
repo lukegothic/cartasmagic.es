@@ -46,17 +46,28 @@ const consultaGSC = async (auth, dominio, { desde, hasta, dimensiones, limite = 
   }));
 };
 
-// Los dos dominios mandan a la misma propiedad, asi que sin filtro por hostName cada
-// uno saldria con las cifras de los dos sumadas.
-const filtroDominio = (dominio) => ({
-  filter: { fieldName: 'hostName', stringFilter: { matchType: 'EXACT', value: dominio } }
+const filtroExacto = (fieldName, value) => ({
+  filter: { fieldName, stringFilter: { matchType: 'EXACT', value } }
 });
+
+// Los dos dominios mandan a la misma propiedad, asi que sin filtro por hostName cada
+// uno saldria con las cifras de los dos sumadas. El de evento es para lo que manda el
+// servidor, que no lleva hostName.
+const filtroGA4 = ({ dominio, evento }) => {
+  const filtros = [
+    ...(dominio ? [filtroExacto('hostName', dominio)] : []),
+    ...(evento ? [filtroExacto('eventName', evento)] : [])
+  ];
+  if (filtros.length < 2) return filtros[0];
+  return { andGroup: { expressions: filtros } };
+};
 
 const consultaGA4 = async (
   auth,
   propiedad,
-  { desde, hasta, dimensiones = [], metricas, limite = 200, dominio }
+  { desde, hasta, dimensiones = [], metricas, limite = 200, dominio, evento }
 ) => {
+  const filtro = filtroGA4({ dominio, evento });
   const datos = await pedir(
     auth,
     `https://analyticsdata.googleapis.com/v1beta/properties/${propiedad}:runReport`,
@@ -64,7 +75,7 @@ const consultaGA4 = async (
       dateRanges: [{ startDate: desde, endDate: hasta }],
       dimensions: dimensiones.map((name) => ({ name })),
       metrics: metricas.map((name) => ({ name })),
-      ...(dominio ? { dimensionFilter: filtroDominio(dominio) } : {}),
+      ...(filtro ? { dimensionFilter: filtro } : {}),
       limit: limite
     }
   );

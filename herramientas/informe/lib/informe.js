@@ -2,7 +2,7 @@ const { cliente, consultaGSC, consultaGA4, GSC_MAXIMO_FILAS } = require('./googl
 const { construirIndice } = require('./keywords');
 const { agrupar, avisos, keywordsMuertas, intencion } = require('./analisis');
 const { diaSiguiente } = require('./postcambio');
-const { iso } = require('./dias');
+const { DIA_MS, iso } = require('./dias');
 const { numero, decimal, porcentaje, titulo, seccion, tabla } = require('./formato');
 
 // Una sola propiedad de GA4 para los dos dominios, cada uno con su flujo de datos. Se
@@ -165,6 +165,67 @@ const alarmasDeEmbudo = async (auth, sitios, ventana, pedirGA4 = consultaGA4) =>
       })
   );
   return porSitio.flat();
+};
+
+// Leads por semana desde lead_confirmado, que manda el servidor de vender y por eso cuenta
+// tambien a quien rechaza las cookies. Es la fuente de verdad de leads, pero no un paso
+// del embudo: los pasos de cliente solo cuentan a quien acepta, y ponerlo detras de ellos
+// dispararia la alarma de mas eventos que el paso anterior todos los dias.
+const FORMULARIOS_LEAD = ['valoracion', 'manabox'];
+
+// Las dos semanas completas antes de hoy. El informe sale los lunes, asi que son de lunes
+// a domingo.
+const semanasLeads = (hoy) => {
+  const dia = (n) => iso(new Date(hoy.getTime() - n * DIA_MS));
+  return [
+    { etiqueta: 'Esta semana', desde: dia(7), hasta: dia(1) },
+    { etiqueta: 'Semana anterior', desde: dia(14), hasta: dia(8) }
+  ];
+};
+
+const lineaSemanaLeads = ({ etiqueta, desde, hasta }, filas) => {
+  const porFormulario = new Map();
+  for (const { claves: [evento, formulario], valores: [veces] } of filas) {
+    if (evento === 'lead_confirmado') porFormulario.set(formulario, (porFormulario.get(formulario) || 0) + veces);
+  }
+  const total = [...porFormulario.values()].reduce((suma, veces) => suma + veces, 0);
+  // Las dimensiones personalizadas no son retroactivas: lo enviado antes de dar de alta
+  // formulario llega como (not set), y sin esta cifra el desglose no sumaria el total.
+  const conocidos = FORMULARIOS_LEAD.reduce((suma, f) => suma + (porFormulario.get(f) || 0), 0);
+  const desglose = [
+    ...FORMULARIOS_LEAD.map((f) => `${f} ${numero(porFormulario.get(f) || 0)}`),
+    ...(total > conocidos ? [`sin formulario ${numero(total - conocidos)}`] : [])
+  ].join(', ');
+  return `  ${etiqueta}, ${desde} a ${hasta}: ${numero(total)} (${desglose})`;
+};
+
+// Sin filtro por dominio: el Measurement Protocol no lleva hostName, y filtrar como el
+// resto del informe dejaria fuera todos los leads.
+const bloqueLeads = async (auth, ga4, hoy, pedirGA4 = consultaGA4) => {
+  if (!ga4) return null;
+
+  const cabecera = seccion('Leads confirmados (lead_confirmado)');
+  const semanas = semanasLeads(hoy);
+  try {
+    const filas = await Promise.all(
+      semanas.map(({ desde, hasta }) =>
+        pedirGA4(auth, ga4, {
+          desde,
+          hasta,
+          evento: 'lead_confirmado',
+          dimensiones: ['eventName', 'customEvent:formulario'],
+          metricas: ['eventCount']
+        })
+      )
+    );
+    return [cabecera, ...semanas.map((semana, i) => lineaSemanaLeads(semana, filas[i]))].join('\n');
+  } catch ({ message }) {
+    return (
+      `${cabecera}\n  No se pudo leer: ${message}\n` +
+      '  Si GA4 no reconoce customEvent:formulario, falta darlo de alta como dimension personalizada\n' +
+      '  de evento en Administrar > Definiciones personalizadas.'
+    );
+  }
 };
 
 const bloqueGA4 = async (auth, { dominio, ga4 }, ventana, pedirGA4 = consultaGA4) => {
@@ -374,4 +435,4 @@ const bloqueKeywords = (consultas, indice) => {
   return lineas.join('\n');
 };
 
-module.exports = { SITIOS, EMBUDO, fechas, bloqueGSC, bloqueGA4, alarmasDeEmbudo, bloqueKeywords, hallazgos, consultasPostCambio };
+module.exports = { SITIOS, EMBUDO, fechas, bloqueGSC, bloqueGA4, bloqueLeads, alarmasDeEmbudo, bloqueKeywords, hallazgos, consultasPostCambio };

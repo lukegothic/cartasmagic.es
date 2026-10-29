@@ -1,3 +1,4 @@
+const { randomUUID } = require('node:crypto');
 const { validarLead, componerCorreo, validarLeadMazo } = require('../lib/lead');
 const { componerCorreoMazo } = require('../lib/correo-manabox');
 const { descargarMazo } = require('../lib/manabox-fetch');
@@ -5,6 +6,8 @@ const { crearLimitador } = require('../lib/limite');
 const { enviarAviso } = require('../lib/mailer');
 const { mensajeDeError } = require('../lib/mensajes-error');
 const { buscarCodigosPostales } = require('../lib/codigo-postal');
+const { componerLeadConfirmado, rangoDeCartas } = require('../lib/lead-confirmado');
+const { enviarEventoGa4 } = require('../lib/ga4-servidor');
 const textos = require('../lib/textos');
 const meta = require('../lib/metadatos');
 const { ACTUALIZADA, CARTAS, formatoPrecio } = require('../lib/hotlist-cartas');
@@ -34,6 +37,13 @@ const redirectToConfirmation = (req, res) => {
   const route = req.route.path;
   res.cookie(RECEIVED_MARKER, '1', { ...markerOptions(route), maxAge: MARKER_LIFETIME_MS });
   res.redirect(303, confirmationPath(route));
+};
+
+// Sin await: el lead ya esta aceptado y el correo enviado, y GA4 no puede hacer esperar al
+// visitante. enviarEventoGa4 no lanza, asi que la promesa suelta no deja un rechazo sin
+// atender. Un client_id nuevo por lead, porque el servidor no sabe nada del navegador.
+const confirmarLead = ({ formulario, rangoCartas, codigoPostal }) => {
+  enviarEventoGa4(componerLeadConfirmado({ formulario, rangoCartas, codigoPostal, clientId: randomUUID() }));
 };
 
 const mountConfirmation = (app, route, view) =>
@@ -100,6 +110,7 @@ module.exports = (app) => {
       return vistaValoracion(res.status(500), { errorCode: 'ENVIO_FALLIDO', valores });
     }
 
+    confirmarLead({ formulario: 'valoracion', rangoCartas: lead.volumen, codigoPostal: lead.codigoPostal });
     redirectToConfirmation(req, res);
   });
 
@@ -149,6 +160,11 @@ module.exports = (app) => {
       return vistaManabox(res.status(500), { errorCode: 'ENVIO_FALLIDO', valores });
     }
 
+    confirmarLead({
+      formulario: 'manabox',
+      rangoCartas: rangoDeCartas(mazo.cartas.reduce((total, { cantidad }) => total + cantidad, 0)),
+      codigoPostal: lead.codigoPostal
+    });
     redirectToConfirmation(req, res);
   });
 
