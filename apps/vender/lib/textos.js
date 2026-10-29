@@ -133,14 +133,16 @@ const FORMULARIO = {
     placeholderValoracion: 'ej. lo dejé en 2018, tengo cuatro mazos de Commander y dos álbumes llenos',
     placeholderManabox: 'ej. tengo también dos mazos de Commander en Manabox, y algunas cartas están usadas'
   },
+  // Ni idea va primera y viene marcada: el desplegable no obliga a pararse a elegir, y quien
+  // sabe cuantas tiene la cambia. La que importa es mas de 1.000, que pasa de 2 kg.
   volumen: {
     label: '¿Cuántas cartas, más o menos?',
-    vacia: 'Elige una opción',
+    porDefecto: 'ni-idea',
     opciones: [
+      { valor: 'ni-idea', texto: 'Ni idea' },
       { valor: 'menos-500', texto: 'Menos de 500' },
       { valor: '500-1000', texto: 'Entre 500 y 1.000' },
-      { valor: 'mas-1000', texto: 'Más de 1.000' },
-      { valor: 'ni-idea', texto: 'Ni idea' }
+      { valor: 'mas-1000', texto: 'Más de 1.000' }
     ]
   },
   codigoPostal: { label: 'Código postal', placeholder: 'ej. 28001 Madrid' },

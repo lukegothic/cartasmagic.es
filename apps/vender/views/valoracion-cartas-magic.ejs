@@ -12,10 +12,9 @@
             medida contra la fuga de #11, que se revisa a las 6 semanas del despliegue. %>
         <form class="lead-form" method="post" action="/valoracion-cartas-magic">
             <label for="volumen"><%= textos.FORMULARIO.volumen.label %></label>
-            <select id="volumen" name="volumen" required>
-                <option value=""><%= textos.FORMULARIO.volumen.vacia %></option>
+            <select id="volumen" name="volumen">
                 <% textos.FORMULARIO.volumen.opciones.forEach(({ valor, texto }) => { %>
-                <option value="<%= valor %>"<% if (valores.volumen === valor) { %> selected<% } %>><%= texto %></option>
+                <option value="<%= valor %>"<% if ((valores.volumen || textos.FORMULARIO.volumen.porDefecto) === valor) { %> selected<% } %>><%= texto %></option>
                 <% }) %>
             </select>
 
