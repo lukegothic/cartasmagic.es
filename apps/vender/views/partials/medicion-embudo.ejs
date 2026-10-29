@@ -9,6 +9,8 @@
 
     var formulario = '<%= etiquetaConversion %>';
     var empezado = false;
+    var ultimoCampo = null;
+    var terminado = false;
 
     var evento = function (nombre, extra) {
         gtag('event', nombre, Object.assign({ event_category: 'formulario', event_label: formulario }, extra || {}));
@@ -24,12 +26,32 @@
     // Delegado en el formulario: asi vale para cualquier campo sin enumerarlos, y sigue
     // valiendo si manana se anade uno.
     form.addEventListener('input', function (e) {
-        if (empezado || !e.target.name) return;
+        if (!e.target.name) return;
+        ultimoCampo = e.target.name;
+        if (empezado) return;
         empezado = true;
         evento('empezar_formulario', { primer_campo: e.target.name });
     }, true);
 
+    <% if (!enviado && !errorCode) { %>
+    // Quien empieza y se va sin enviar, y en que campo lo dejo: es lo que decide como atacar
+    // la fuga entre empezar y enviar. Con pagehide y no con visibilitychange, que salta
+    // tambien al cambiar de pestana y contaria como abandono a quien vuelve y envia.
+    window.addEventListener('pagehide', function () {
+        if (!empezado || terminado) return;
+        terminado = true;
+        evento('abandonar_formulario', { ultimo_campo: ultimoCampo });
+    });
+    <% } %>
+
+    // Un envio que el navegador frena por un campo obligatorio vacio no llega a lanzar
+    // submit, pero es un intento de enviar y no un abandono.
+    form.addEventListener('invalid', function () {
+        terminado = true;
+    }, true);
+
     form.addEventListener('submit', function () {
+        terminado = true;
         // El navegador bloquea el envio si hay campos obligatorios sin rellenar, asi que
         // se distingue el intento valido del que ni siquiera sale del navegador.
         evento('intento_envio', { valido: form.checkValidity() });

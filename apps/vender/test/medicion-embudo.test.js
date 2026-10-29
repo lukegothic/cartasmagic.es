@@ -56,4 +56,15 @@ VISTAS.forEach((caso) => {
     const html = pintar(caso);
     assert.match(html, /evento\('ver_formulario'\)/);
   });
+
+  // El abandono solo tiene sentido en la visita al formulario. La confirmacion y el error
+  // repintan la misma vista despues de un envio, y salir de ellas no es abandonar nada.
+  test(`${caso.vista} mide el abandono cuando la pagina se abre sin enviar nada`, () => {
+    assert.match(pintar(caso), /'abandonar_formulario'/);
+  });
+
+  test(`${caso.vista} no mide el abandono al confirmar el lead ni al mostrar un error`, () => {
+    assert.doesNotMatch(pintar(caso, { enviado: true, textoRecibido: 'ok' }), /'abandonar_formulario'/);
+    assert.doesNotMatch(pintar(caso, { errorCode: 'DATOS_INVALIDOS', mensajeError: 'error' }), /'abandonar_formulario'/);
+  });
 });
