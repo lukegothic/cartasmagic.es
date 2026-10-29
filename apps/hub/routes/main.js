@@ -15,6 +15,7 @@ module.exports = (app) => {
   // habria que acordarse de pasarlo en cada una, y la que se olvidase se quedaria sin el
   // enlace al aviso legal sin que fallase nada.
   app.locals.avisoLegal = enlaceVender(AVISO_LEGAL, 'pie-legal');
+  app.locals.avisoCookies = enlaceVender(`${AVISO_LEGAL}#cookies`, 'aviso-cookies');
 
   app.get('/', (req, res) => {
     res.render('index', {

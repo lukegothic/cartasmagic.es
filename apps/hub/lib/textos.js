@@ -22,7 +22,18 @@ const PIE = {
   // vender, donde vive la identidad fiscal completa.
   titular: 'Iván (ivan-the-seller), Navarra',
   avisoLegal: 'Aviso legal y condiciones',
-  correo: 'contacto@vendercartasmagic.es'
+  correo: 'contacto@vendercartasmagic.es',
+  cookies: 'Configurar cookies'
+};
+
+// Aceptar y rechazar llevan el mismo peso a proposito: la AEPD no admite que rechazar
+// cueste mas que aceptar.
+const AVISO_COOKIES = {
+  etiqueta: 'Aviso de cookies',
+  texto: 'Este sitio usa Google Analytics para medir cuánta gente lo visita. Solo se activa si se acepta.',
+  masInfo: 'Más información',
+  aceptar: 'Aceptar',
+  rechazar: 'Rechazar'
 };
 
 const MANA = {
@@ -90,4 +101,4 @@ const CIERRE = {
   }
 };
 
-module.exports = { MARCA, NAV, PIE, MANA, PORTADA, BLOG, NO_ENCONTRADA, CIERRE };
+module.exports = { MARCA, NAV, PIE, AVISO_COOKIES, MANA, PORTADA, BLOG, NO_ENCONTRADA, CIERRE };

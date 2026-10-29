@@ -1,16 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6PJYPF57RF"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-6PJYPF57RF');
-    </script>
-    <link rel="stylesheet" href="/style.css">
     <meta charset="UTF-8">
+    <script src="/consentimiento.js" data-ga="G-6PJYPF57RF"></script>
+    <link rel="stylesheet" href="/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title><%= title %></title>
     <link rel="icon" href="/favicon.ico" sizes="any">
@@ -69,10 +62,18 @@
             <p class="footer-legal">
                 <%- textos.PIE.titular %><br>
                 <a href="mailto:<%= textos.MARCA.correo %>"><%= textos.MARCA.correo %></a> &middot;
-                <a href="/aviso-legal"><%= textos.PIE.avisoLegal %></a>
+                <a href="/aviso-legal"><%= textos.PIE.avisoLegal %></a> &middot;
+                <button type="button" class="enlace-cookies" data-abrir-cookies><%= textos.PIE.cookies %></button>
             </p>
         </div>
     </footer>
+    <div id="aviso-cookies" class="aviso-cookies" role="region" aria-label="<%= textos.AVISO_COOKIES.etiqueta %>" hidden>
+        <p><%= textos.AVISO_COOKIES.texto %> <a href="/aviso-legal#cookies"><%= textos.AVISO_COOKIES.masInfo %></a></p>
+        <div class="aviso-cookies-botones">
+            <button type="button" class="aviso-cookies-boton" data-consentimiento="aceptar"><%= textos.AVISO_COOKIES.aceptar %></button>
+            <button type="button" class="aviso-cookies-boton" data-consentimiento="rechazar"><%= textos.AVISO_COOKIES.rechazar %></button>
+        </div>
+    </div>
     <script>
     // Mide el paso anterior al formulario: de los que entran por la portada, cuantos
     // llegan siquiera a verlo. La posicion distingue los tres botones que llevan al

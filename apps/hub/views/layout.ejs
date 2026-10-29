@@ -1,15 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-F2JK45VQS3"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-F2JK45VQS3');
-    </script>
     <meta charset="UTF-8">
+    <script src="/consentimiento.js" data-ga="G-F2JK45VQS3"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
     <meta name="description" content="<%= description %>">
@@ -71,8 +64,16 @@
         <footer>
             <p>&copy; <%= textos.PIE.copyright %> &mdash; <%= textos.PIE.titular %>
                 &middot; <a href="mailto:<%= textos.PIE.correo %>"><%= textos.PIE.correo %></a>
-                &middot; <a href="<%= avisoLegal %>" rel="noopener"><%= textos.PIE.avisoLegal %></a></p>
+                &middot; <a href="<%= avisoLegal %>" rel="noopener"><%= textos.PIE.avisoLegal %></a>
+                &middot; <button type="button" class="enlace-cookies" data-abrir-cookies><%= textos.PIE.cookies %></button></p>
         </footer>
     </main>
+    <div id="aviso-cookies" class="aviso-cookies" role="region" aria-label="<%= textos.AVISO_COOKIES.etiqueta %>" hidden>
+        <p><%= textos.AVISO_COOKIES.texto %> <a href="<%= avisoCookies %>" rel="noopener"><%= textos.AVISO_COOKIES.masInfo %></a></p>
+        <div class="aviso-cookies-botones">
+            <button type="button" class="aviso-cookies-boton" data-consentimiento="aceptar"><%= textos.AVISO_COOKIES.aceptar %></button>
+            <button type="button" class="aviso-cookies-boton" data-consentimiento="rechazar"><%= textos.AVISO_COOKIES.rechazar %></button>
+        </div>
+    </div>
 </body>
 </html>

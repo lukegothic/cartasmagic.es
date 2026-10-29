@@ -248,6 +248,73 @@ footer p {
     opacity: 0.5;
 }
 
+/* Es un boton porque no navega, pero en el pie se lee como un enlace mas. */
+.enlace-cookies {
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    color: var(--accent-2);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+}
+
+/* Barra fija abajo y sin capa encima: la pagina se sigue leyendo y usando sin elegir. */
+.aviso-cookies {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem 1.5rem;
+    padding: 1rem 1.25rem calc(1rem + env(safe-area-inset-bottom));
+    background: var(--bg-secondary);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    font-size: 0.9rem;
+}
+
+.aviso-cookies[hidden] {
+    display: none;
+}
+
+.aviso-cookies p {
+    margin: 0;
+}
+
+.aviso-cookies-botones {
+    display: flex;
+    gap: 0.75rem;
+}
+
+/* Los dos botones comparten clase, tamano, peso y color: la AEPD no admite que rechazar
+   destaque menos que aceptar. */
+.aviso-cookies-boton {
+    min-width: 7rem;
+    padding: 0.6rem 1.25rem;
+    font: inherit;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: transparent;
+    border: 1px solid var(--text-primary);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.aviso-cookies-boton:hover {
+    background: var(--bg-card-hover);
+}
+
+.enlace-cookies:focus-visible,
+.aviso-cookies-boton:focus-visible {
+    outline: 2px solid var(--accent-1);
+    outline-offset: 2px;
+}
+
 /* ===== TABLET (>= 600px) ===== */
 @media (min-width: 600px) {
     .container {

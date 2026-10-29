@@ -25,7 +25,18 @@ const PIE = {
   // se enlaza justo debajo, no en el pie de cada pagina. El alias es con el que se le
   // conoce en Cardmarket, que es donde puede comprobarse quien hay detras.
   titular: 'Iván (ivan-the-seller) &middot; Navarra',
-  avisoLegal: 'Aviso legal y condiciones'
+  avisoLegal: 'Aviso legal y condiciones',
+  cookies: 'Configurar cookies'
+};
+
+// Aceptar y rechazar llevan el mismo peso a proposito: la AEPD no admite que rechazar
+// cueste mas que aceptar.
+const AVISO_COOKIES = {
+  etiqueta: 'Aviso de cookies',
+  texto: 'Este sitio usa Google Analytics para medir cuánta gente lo visita. Solo se activa si se acepta.',
+  masInfo: 'Más información',
+  aceptar: 'Aceptar',
+  rechazar: 'Rechazar'
 };
 
 // Las preguntas se pintan en la portada y ademas alimentan el FAQPage de schema.org, que
@@ -396,6 +407,6 @@ const ERRORES = {
 const ERROR_GENERICO = 'No se ha podido completar la operación. Prueba otra vez o escribe a contacto@vendercartasmagic.es';
 
 module.exports = {
-  MARCA, PIE, PROCESO_FAQ, PORTADA, FORMULARIO, ENVIANDO, VALORACION, MANABOX,
+  MARCA, PIE, AVISO_COOKIES, PROCESO_FAQ, PORTADA, FORMULARIO, ENVIANDO, VALORACION, MANABOX,
   ATAJO_MANABOX, COMPARATIVA, HOTLIST, AVISO_LEGAL, CONTACTO, PRIVADA, ERRORES, ERROR_GENERICO
 };
