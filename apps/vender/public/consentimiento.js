@@ -6,7 +6,8 @@
 // esto, quien acepta en su primera visita perderia los eventos de esa misma pagina. Por
 // eso este fichero va sin async en el head, antes que ellos.
 //
-// El hub tiene una copia de este fichero: son dos despliegues sin nada compartido.
+// El hub tiene una copia de este fichero: son dos despliegues sin nada compartido. Esta
+// lleva ademas Microsoft Clarity, que solo se usa en vender.
 (function () {
     var CLAVE = 'consentimiento-cookies';
     var VIGENCIA_MS = 365 * 24 * 60 * 60 * 1000;
@@ -38,6 +39,8 @@
     }
 
     var idGa = document.currentScript.getAttribute('data-ga');
+    var idClarity = document.currentScript.getAttribute('data-clarity');
+    var clarityCargado = false;
     var activo = false;
     var cargado = false;
 
@@ -102,8 +105,46 @@
         });
     };
 
+    // El fragmento de instalacion de Clarity, con la cola para las llamadas que lleguen
+    // antes que el script. Solo se pide analitica, igual que en GA4.
+    var cargarClarity = function () {
+        if (!idClarity) return;
+        if (clarityCargado) {
+            window.clarity('consentv2', { ad_Storage: 'denied', analytics_Storage: 'granted' });
+            return;
+        }
+        clarityCargado = true;
+        window.clarity = window.clarity || function () {
+            (window.clarity.q = window.clarity.q || []).push(arguments);
+        };
+        window.clarity('consentv2', { ad_Storage: 'denied', analytics_Storage: 'granted' });
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.clarity.ms/tag/' + idClarity;
+        document.head.appendChild(script);
+    };
+
+    // Clarity no tiene forma de pararse una vez cargado. consent false borra sus cookies y,
+    // segun su documentacion, deja de grabar hasta un nuevo consentimiento. En las paginas
+    // siguientes ya no se carga.
+    var retirarClarity = function () {
+        if (!clarityCargado) return;
+        window.clarity('consentv2', { ad_Storage: 'denied', analytics_Storage: 'denied' });
+        window.clarity('consent', false);
+    };
+
+    var aceptar = function () {
+        cargarGa();
+        cargarClarity();
+    };
+
+    var rechazar = function () {
+        retirarGa();
+        retirarClarity();
+    };
+
     var eleccion = eleccionVigente(leer(), Date.now());
-    if (eleccion === 'aceptar') cargarGa();
+    if (eleccion === 'aceptar') aceptar();
 
     document.addEventListener('DOMContentLoaded', function () {
         var aviso = document.getElementById('aviso-cookies');
@@ -124,8 +165,8 @@
             boton.addEventListener('click', function () {
                 var elegida = boton.getAttribute('data-consentimiento');
                 escribir(elegida);
-                if (elegida === 'aceptar') cargarGa();
-                else retirarGa();
+                if (elegida === 'aceptar') aceptar();
+                else rechazar();
                 ocultar();
             });
         });

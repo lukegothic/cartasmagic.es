@@ -54,6 +54,9 @@ const mountConfirmation = (app, route, view) =>
   });
 
 module.exports = (app) => {
+  // Lo pinta el layout en todas las paginas: como local de ruta habria que pasarlo en cada una.
+  app.locals.clarityId = process.env.CLARITY_PROJECT_ID;
+
   app.get('/', (req, res) => {
     res.render('index', {
       ...meta.INDEX,

@@ -1,7 +1,8 @@
 <label for="codigoPostal" id="codigoPostal-etiqueta"><%= textos.FORMULARIO.codigoPostal.label %></label>
 <div class="sugerencias-cp">
     <input type="text" id="codigoPostal" name="codigoPostal" required autocomplete="off" maxlength="100" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="codigos-postales" placeholder="<%= textos.FORMULARIO.codigoPostal.placeholder %>" value="<%= valores.codigoPostal || '' %>">
-    <ul id="codigos-postales" role="listbox" aria-labelledby="codigoPostal-etiqueta" hidden></ul>
+    <%# Las sugerencias repiten lo tecleado como texto de la pagina, que Clarity no enmascara en Balanced. %>
+    <ul id="codigos-postales" role="listbox" aria-labelledby="codigoPostal-etiqueta" data-clarity-mask="true" hidden></ul>
 </div>
 <script>
 // El listado entero pesa unos 800 KB, asi que no viaja con la pagina: se piden al servidor

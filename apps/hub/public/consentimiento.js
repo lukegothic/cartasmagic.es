@@ -6,7 +6,8 @@
 // esto, quien acepta en su primera visita perderia los eventos de esa misma pagina. Por
 // eso este fichero va sin async en el head, antes que ellos.
 //
-// vender tiene una copia de este fichero: son dos despliegues sin nada compartido.
+// vender tiene una copia de este fichero: son dos despliegues sin nada compartido. La
+// suya lleva ademas Microsoft Clarity, que en el hub no se usa.
 (function () {
     var CLAVE = 'consentimiento-cookies';
     var VIGENCIA_MS = 365 * 24 * 60 * 60 * 1000;

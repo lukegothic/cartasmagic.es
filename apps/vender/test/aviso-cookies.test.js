@@ -2,6 +2,9 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
+const ejs = require('ejs');
+const textos = require('../lib/textos');
+const meta = require('../lib/metadatos');
 const { eleccionVigente, serializarEleccion } = require('../public/consentimiento');
 
 const layout = fs.readFileSync(path.join(__dirname, '../views/layout.ejs'), 'utf8');
@@ -38,7 +41,7 @@ test('una eleccion con fecha futura no cuenta', () => {
 
 test('el layout no carga Google Analytics por su cuenta', () => {
   assert.doesNotMatch(layout, /<script[^>]+googletagmanager\.com/);
-  assert.match(layout, /<script src="\/consentimiento\.js" data-ga="G-6PJYPF57RF"><\/script>/);
+  assert.match(layout, /<script src="\/consentimiento\.js" data-ga="G-6PJYPF57RF"/);
 });
 
 // La AEPD no admite que rechazar cueste mas que aceptar: mismo boton para los dos.
@@ -55,4 +58,18 @@ test('el aviso legal explica el aviso de cookies en los dos dominios', () => {
   assert.match(avisoLegal, /vendercartasmagic\.es y para cartasmagic\.es/);
   assert.match(avisoLegal, /12 meses/);
   assert.match(avisoLegal, /textos\.PIE\.cookies/);
+});
+
+const pintarLayout = (clarityId) =>
+  ejs.render(layout, { ...meta.INDEX, ld_json: '{}', textos, body: '', clarityId }, { filename: path.join(__dirname, '../views/layout.ejs') });
+
+// El ID de Clarity sale del entorno. Sin la variable no se pinta, y sin el no hay nada
+// que cargar aunque el visitante acepte.
+test('el layout pasa el proyecto de Clarity solo si existe la variable', () => {
+  assert.match(pintarLayout('z5e32uoxej'), /<script src="\/consentimiento\.js" data-ga="G-6PJYPF57RF" data-clarity="z5e32uoxej"><\/script>/);
+  assert.match(pintarLayout(undefined), /<script src="\/consentimiento\.js" data-ga="G-6PJYPF57RF"><\/script>/);
+});
+
+test('el aviso legal nombra Microsoft Clarity', () => {
+  assert.match(avisoLegal, /Microsoft Clarity/);
 });

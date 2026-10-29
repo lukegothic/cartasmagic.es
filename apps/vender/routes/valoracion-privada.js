@@ -37,6 +37,8 @@ const montarValoracionPrivada = (app, { descargarMazo = descargarMazoReal, entor
       textos,
       faq: null,
       noindex: true,
+      // Herramienta interna con precios que Clarity grabaria legibles: no es un visitante.
+      clarityId: null,
       url: '',
       errorCode: null,
       mensajeError: null,
