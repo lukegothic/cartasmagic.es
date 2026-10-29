@@ -7,13 +7,10 @@
     <div class="mtg-card mtg-card-margin">
         <%- include('partials/feedback') %>
         <%- include('partials/atajo-manabox') %>
+        <%# Primero lo que no compromete a nada: cuantas cartas y desde donde. El nombre y el
+            correo van despues, cuando el visitante ya ha empezado. El orden es la primera
+            medida contra la fuga de #11, que se revisa a las 6 semanas del despliegue. %>
         <form class="lead-form" method="post" action="/valoracion-cartas-magic">
-            <label for="nombre"><%= textos.FORMULARIO.nombre.label %></label>
-            <input type="text" id="nombre" name="nombre" required autocomplete="name" placeholder="<%= textos.FORMULARIO.nombre.placeholder %>" value="<%= valores.nombre || '' %>">
-
-            <label for="email"><%= textos.FORMULARIO.email.label %></label>
-            <input type="email" id="email" name="email" required autocomplete="email" placeholder="<%= textos.FORMULARIO.email.placeholder %>" value="<%= valores.email || '' %>">
-
             <label for="volumen"><%= textos.FORMULARIO.volumen.label %></label>
             <select id="volumen" name="volumen" required>
                 <option value=""><%= textos.FORMULARIO.volumen.vacia %></option>
@@ -23,6 +20,12 @@
             </select>
 
             <%- include('partials/codigo-postal') %>
+
+            <label for="nombre"><%= textos.FORMULARIO.nombre.label %></label>
+            <input type="text" id="nombre" name="nombre" required autocomplete="name" placeholder="<%= textos.FORMULARIO.nombre.placeholder %>" value="<%= valores.nombre || '' %>">
+
+            <label for="email"><%= textos.FORMULARIO.email.label %></label>
+            <input type="email" id="email" name="email" required autocomplete="email" placeholder="<%= textos.FORMULARIO.email.placeholder %>" value="<%= valores.email || '' %>">
 
             <%- include('partials/atajo-envio') %>
 
