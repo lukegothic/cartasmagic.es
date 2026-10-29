@@ -435,4 +435,4 @@ const bloqueKeywords = (consultas, indice) => {
   return lineas.join('\n');
 };
 
-module.exports = { SITIOS, EMBUDO, fechas, bloqueGSC, bloqueGA4, bloqueLeads, alarmasDeEmbudo, bloqueKeywords, hallazgos, consultasPostCambio };
+module.exports = { SITIOS, EMBUDO, fechas, bloqueGSC, bloqueGA4, bloqueLeads, lineaSemanaLeads, alarmasDeEmbudo, bloqueKeywords, hallazgos, consultasPostCambio };

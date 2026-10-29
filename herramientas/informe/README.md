@@ -120,6 +120,11 @@ desglose por formulario hay que dar de alta `formulario` como dimensión persona
 de evento (**Administrar > Definiciones personalizadas**). Mientras no esté, el informe
 lo dice en esa línea y sigue con el resto.
 
+Del 2026-12-14 al 2026-12-31, los lunes añaden además la revisión de 6 semanas de los
+formularios (#11): leads por semana antes y después del cambio del 2026-10-29 y los
+abandonos por último campo tocado. Está en `lib/revision-formulario.js`, y se quita
+sola pasada esa fecha.
+
 ### Cooldown y foto de Targets
 
 Una acción es una candidata que ha pasado todos los motivos de descarte. Uno de ellos es

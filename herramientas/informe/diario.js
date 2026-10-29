@@ -1,6 +1,7 @@
 const { cliente } = require('./lib/google');
 const { construirIndice, leerLlms } = require('./lib/keywords');
 const { SITIOS, fechas, bloqueGSC, bloqueGA4, bloqueLeads, alarmasDeEmbudo, consultasPostCambio } = require('./lib/informe');
+const { bloqueRevision } = require('./lib/revision-formulario');
 const { decidir, fechasPostCambio } = require('./lib/decision');
 const { leer, guardar } = require('./lib/estado');
 const { ultimoCambioGit } = require('./lib/git');
@@ -69,6 +70,9 @@ const principal = async () => {
   if (conEmbudo) {
     const leads = await bloqueLeads(auth, process.env.GA4_PROPIEDAD, hoy);
     if (leads) bloquesEmbudo.push(leads);
+    // Las fechas en que sale las decide el propio bloque.
+    const revision = await bloqueRevision(auth, process.env.GA4_PROPIEDAD, hoy);
+    if (revision) bloquesEmbudo.push(revision);
     for (const sitio of SITIOS) bloquesEmbudo.push(await bloqueGA4(auth, sitio, ventana));
   }
 
