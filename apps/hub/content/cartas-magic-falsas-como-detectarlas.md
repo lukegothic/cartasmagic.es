@@ -2,7 +2,7 @@
 titulo: "Cartas Magic falsas: cómo detectarlas"
 descripcion: Los tres tests que distinguen una carta Magic auténtica de una falsificación, con fotos comparativas de cada detalle
 fecha: 2026-09-08
-keywords: cartas magic falsas, detectar cartas magic falsas, falsificaciones magic, carta magic autentica, test peso carta magic
+keywords: cartas magic falsas, detectar cartas magic falsas, falsificaciones magic, carta magic autentica, test peso carta magic, como saber si una carta de magic es falsa, como saber si una carta magic es falsa
 ---
 
 Distinguir una carta Magic auténtica de una falsificación es más fácil de lo que parece.
