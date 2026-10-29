@@ -10,13 +10,13 @@
             <label for="url"><%= textos.FORMULARIO.url.label %></label>
             <input type="url" id="url" name="url" required placeholder="<%= textos.FORMULARIO.url.placeholder %>" value="<%= valores.url || '' %>">
 
+            <%- include('partials/codigo-postal') %>
+
             <label for="nombre"><%= textos.FORMULARIO.nombre.label %></label>
             <input type="text" id="nombre" name="nombre" required autocomplete="name" placeholder="<%= textos.FORMULARIO.nombre.placeholder %>" value="<%= valores.nombre || '' %>">
 
             <label for="email"><%= textos.FORMULARIO.email.label %></label>
             <input type="email" id="email" name="email" required autocomplete="email" placeholder="<%= textos.FORMULARIO.email.placeholder %>" value="<%= valores.email || '' %>">
-
-            <%- include('partials/codigo-postal') %>
 
             <%- include('partials/atajo-envio') %>
 
