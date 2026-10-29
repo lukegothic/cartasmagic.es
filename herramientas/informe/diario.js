@@ -42,7 +42,7 @@ const principal = async () => {
     console.warn(`No se pudo leer el embudo de GA4, se mantienen las alarmas de ayer: ${message}`);
   }
 
-  const { acciones, descartes, vigilancia, hallazgos, nuevas, conEmbudo, enviar, resumen, siguiente } = decidir({
+  const { acciones, descartes, vigilancia, hallazgos, nuevas, conEmbudo, enviar: debeEnviar, resumen, siguiente } = decidir({
     consultas,
     indice,
     estado,
@@ -53,7 +53,7 @@ const principal = async () => {
     consultasPostCambio: await consultasPostCambio(auth, cambios, ventana)
   });
 
-  if (!enviar) {
+  if (!debeEnviar) {
     console.log(
       `Sin cambios visibles: ${resumen.acciones} acciones, ${resumen.descartes} descartes, ` +
         `${resumen.vigilancia} en vigilancia. No se envia correo.`
