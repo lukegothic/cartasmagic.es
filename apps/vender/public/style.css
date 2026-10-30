@@ -927,6 +927,37 @@ ol.plain-list li::before {
     max-width: 40rem;
 }
 
+/* En un movil de 360px el contenedor, la tarjeta y el form sumaban 61px de relleno por
+   cada lado, los campos se quedaban en dos tercios de la pantalla y el titular en cuatro
+   lineas dejaba el primer campo por debajo de la primera pantalla. */
+@media (max-width: 479px) {
+    .main-container-narrow {
+        padding: 12px;
+    }
+
+    .main-container-narrow h1 {
+        font-size: 1.6rem;
+        margin: 0.5em 0;
+    }
+
+    .main-container-narrow .contact-intro {
+        font-size: 1rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .main-container-narrow .mtg-card {
+        padding: 16px;
+    }
+
+    .main-container-narrow .mtg-card-margin {
+        margin-top: 24px;
+    }
+
+    .main-container-narrow .lead-form {
+        padding: 0;
+    }
+}
+
 /* Desvio a ManaBox. Se pone antes del formulario porque quien tiene la lista hecha no
    deberia rellenar nada: el enlace en texto que habia debajo no lo veia casi nadie. */
 .atajo-manabox {
