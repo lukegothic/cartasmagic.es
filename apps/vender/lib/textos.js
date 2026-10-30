@@ -33,7 +33,7 @@ const PIE = {
 // cueste mas que aceptar.
 const AVISO_COOKIES = {
   etiqueta: 'Aviso de cookies',
-  texto: 'Este sitio usa Google Analytics para medir cuánta gente lo visita. Solo se activa si se acepta.',
+  texto: 'Esta web usa cookies para medir las visitas',
   masInfo: 'Más información',
   aceptar: 'Aceptar',
   rechazar: 'Rechazar'

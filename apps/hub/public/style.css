@@ -315,6 +315,31 @@ footer p {
     outline-offset: 2px;
 }
 
+/* En el movil la barra tapaba casi un cuarto de la pantalla. Los dos botones se reparten la
+   fila a partes iguales, asi que siguen pesando lo mismo. */
+@media (max-width: 479px) {
+    .aviso-cookies {
+        gap: 0.5rem;
+        padding: 0.6rem 1rem calc(0.6rem + env(safe-area-inset-bottom));
+        font-size: 0.85rem;
+    }
+
+    .aviso-cookies p {
+        text-align: center;
+    }
+
+    .aviso-cookies-botones {
+        width: 100%;
+    }
+
+    .aviso-cookies-boton {
+        flex: 1;
+        margin: 0;
+        min-width: 0;
+        padding: 0.45rem 1rem;
+    }
+}
+
 /* ===== TABLET (>= 600px) ===== */
 @media (min-width: 600px) {
     .container {
