@@ -92,6 +92,26 @@ const PORTADA = {
     ]
   },
   llamadaEtiqueta: 'Pedir mi etiqueta de envío',
+  // Solo testimonios reales, copiados tal cual, de vendedores que han dado permiso para
+  // salir con estos datos. La seccion no se pinta mientras la lista este vacia.
+  testimonios: {
+    titulo: 'Quienes ya nos han vendido su colección',
+    etiquetaCartas: 'Colección:',
+    etiquetaPagado: 'Pagado:',
+    etiquetaCartaTop: 'Carta más cara:',
+    nota: 'Son vendedores reales que nos han dado permiso para publicar su opinión, sus datos y la foto de su carta. Las opiniones se copian tal cual las escribieron.',
+    lista: [
+      {
+        nombre: 'Daniel',
+        ciudad: 'Madrid',
+        fecha: 'octubre de 2026',
+        pagado: '600 €',
+        cartas: 'unas 1.000 cartas',
+        cartaTop: { nombre: 'Badlands (Revised)', foto: '/testimonios/badlands-revised.jpg', alt: 'Badlands, edición Revised' },
+        cita: 'Rápido, cómodo y comunicación fluida. Unos buenos profesional en los que confiar y repetir.'
+      }
+    ]
+  },
   sinTienda: {
     titulo: 'Vender cartas Magic sin montar una tienda',
     parrafos: [

@@ -20,6 +20,28 @@
         <p class="center-text"><a href="/valoracion-cartas-magic" class="btn-mythic"><%= textos.PORTADA.llamadaEtiqueta %></a></p>
     </div>
 
+    <% const testimonios = textos.PORTADA.testimonios %>
+    <% if (testimonios.lista.length) { %>
+    <div class="mtg-card mtg-card-margin">
+        <h2><%= testimonios.titulo %></h2>
+        <% testimonios.lista.forEach(({ nombre, ciudad, fecha, pagado, cartas, cartaTop, cita }) => { %>
+        <figure class="testimonio">
+            <img class="testimonio-carta" src="<%= cartaTop.foto %>" alt="<%= cartaTop.alt %>" width="146" height="204" loading="lazy">
+            <div>
+                <blockquote><p><%= cita %></p></blockquote>
+                <figcaption><strong><%= nombre %></strong>, <%= ciudad %> &middot; <%= fecha %></figcaption>
+                <ul class="testimonio-datos">
+                    <li><%= testimonios.etiquetaCartas %> <%= cartas %></li>
+                    <li><%= testimonios.etiquetaPagado %> <%= pagado %></li>
+                    <li><%= testimonios.etiquetaCartaTop %> <%= cartaTop.nombre %></li>
+                </ul>
+            </div>
+        </figure>
+        <% }) %>
+        <p class="text-muted"><%= testimonios.nota %></p>
+    </div>
+    <% } %>
+
     <div class="mtg-card mtg-card-margin">
         <h2><%= textos.PORTADA.sinTienda.titulo %></h2>
         <% textos.PORTADA.sinTienda.parrafos.forEach((parrafo) => { %>
