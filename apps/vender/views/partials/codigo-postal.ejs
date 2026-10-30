@@ -1,4 +1,4 @@
-<label for="codigoPostal" id="codigoPostal-etiqueta"><%= textos.FORMULARIO.codigoPostal.label %></label>
+<label for="codigoPostal" id="codigoPostal-etiqueta" class="campo-obligatorio"><%= textos.FORMULARIO.codigoPostal.label %></label>
 <div class="sugerencias-cp">
     <input type="text" id="codigoPostal" name="codigoPostal" required autocomplete="off" maxlength="100" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="codigos-postales" placeholder="<%= textos.FORMULARIO.codigoPostal.placeholder %>" value="<%= valores.codigoPostal || '' %>">
     <%# Las sugerencias repiten lo tecleado como texto de la pagina, que Clarity no enmascara en Balanced. %>

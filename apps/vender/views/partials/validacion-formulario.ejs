@@ -1,0 +1,75 @@
+<script>
+// El globo de validacion del navegador apenas se ve en el movil: sale un instante, o no
+// sale en algunos navegadores, y el campo vacio queda pegado al borde de arriba con la
+// etiqueta fuera de la pantalla. Quien pulsaba enviar creia que el boton no hacia nada.
+// Aqui se sustituye por un aviso fijo debajo de cada campo. La validacion sigue siendo la
+// nativa, asi que un formulario incompleto sigue sin lanzar submit y ni bloqueo-envio ni
+// medicion-embudo cambian de comportamiento.
+(function () {
+    var form = document.querySelector('.lead-form');
+    if (!form) return;
+
+    var MENSAJES = <%- JSON.stringify(textos.FORMULARIO.validacion) %>;
+    var primero = null;
+
+    var mensaje = function (campo) {
+        if (campo.validity.valueMissing) return MENSAJES.obligatorio;
+        if (campo.type === 'email') return MENSAJES.correo;
+        if (campo.type === 'url') return MENSAJES.enlace;
+        return MENSAJES.obligatorio;
+    };
+
+    // El aviso va detras del envoltorio del codigo postal y no dentro: la lista de
+    // sugerencias se posiciona contra ese envoltorio y lo taparia.
+    var ancla = function (campo) {
+        return campo.closest('.sugerencias-cp') || campo;
+    };
+
+    var marcar = function (campo) {
+        var id = campo.id + '-error';
+        var aviso = document.getElementById(id);
+        if (!aviso) {
+            aviso = document.createElement('p');
+            aviso.id = id;
+            aviso.className = 'campo-error-texto';
+            ancla(campo).insertAdjacentElement('afterend', aviso);
+        }
+        aviso.textContent = mensaje(campo);
+        campo.classList.add('campo-error');
+        campo.setAttribute('aria-invalid', 'true');
+        campo.setAttribute('aria-describedby', id);
+    };
+
+    var desmarcar = function (campo) {
+        var aviso = document.getElementById(campo.id + '-error');
+        if (aviso) aviso.remove();
+        campo.classList.remove('campo-error');
+        campo.removeAttribute('aria-invalid');
+        campo.removeAttribute('aria-describedby');
+    };
+
+    // Cancelar invalid solo quita el globo: el envio sigue frenado. Como el navegador
+    // tampoco mueve ya el foco, se lleva a mano al primer campo, centrado para que se lea
+    // su etiqueta.
+    form.addEventListener('invalid', function (e) {
+        e.preventDefault();
+        marcar(e.target);
+        if (primero) return;
+        primero = e.target;
+        setTimeout(function () {
+            primero.scrollIntoView({ block: 'center' });
+            primero.focus({ preventScroll: true });
+            primero = null;
+        }, 0);
+    }, true);
+
+    form.addEventListener('input', function (e) {
+        var campo = e.target;
+        if (!campo.classList.contains('campo-error')) return;
+        // validity y no checkValidity(): este dispara invalid y moveria la pagina mientras
+        // se escribe.
+        if (campo.validity.valid) desmarcar(campo);
+        else marcar(campo);
+    }, true);
+})();
+</script>

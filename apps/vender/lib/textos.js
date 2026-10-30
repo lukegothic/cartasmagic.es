@@ -152,6 +152,13 @@ const FORMULARIO = {
     placeholder: 'ej. Calle Mayor 1, 3º B',
     nota: 'Si la dejas, te mando la etiqueta ya en el primer correo. Si prefieres no darla todavía, déjala en blanco y te contesto igual'
   },
+  // Se pintan debajo del campo en vez del globo del navegador, que en el movil apenas se
+  // ve: quien pulsaba enviar con un campo vacio creia que el boton no hacia nada.
+  validacion: {
+    obligatorio: 'Este campo es obligatorio',
+    correo: 'El correo no es válido',
+    enlace: 'El enlace no es válido'
+  },
   legal: {
     antes: 'Al enviar aceptas que tratemos tus datos para responderte. No se ceden a nadie ni se usan para otra cosa. Puedes pedir que se borren escribiendo a contacto@vendercartasmagic.es. Más detalle en el',
     enlace: 'aviso legal'

@@ -644,6 +644,24 @@ ol.plain-list li::before {
     box-shadow: 0 0 0 3px var(--mtg-primary-glow);
 }
 
+/* El texto alternativo vacio evita que el lector de pantalla diga "asterisco": el campo ya
+   se anuncia como obligatorio por su atributo required. */
+.campo-obligatorio::after {
+    content: " *";
+    content: " *" / "";
+    color: var(--mtg-primary);
+}
+
+.lead-form .campo-error {
+    border-color: #ff6b6b;
+}
+
+.campo-error-texto {
+    margin: 0;
+    color: #ff6b6b;
+    font-size: 0.88rem;
+}
+
 .form-feedback:focus {
     outline: 2px solid var(--mtg-primary);
     outline-offset: 2px;

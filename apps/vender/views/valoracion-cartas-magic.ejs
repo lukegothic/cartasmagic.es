@@ -20,10 +20,10 @@
 
             <%- include('partials/codigo-postal') %>
 
-            <label for="nombre"><%= textos.FORMULARIO.nombre.label %></label>
+            <label for="nombre" class="campo-obligatorio"><%= textos.FORMULARIO.nombre.label %></label>
             <input type="text" id="nombre" name="nombre" required autocomplete="name" placeholder="<%= textos.FORMULARIO.nombre.placeholder %>" value="<%= valores.nombre || '' %>">
 
-            <label for="email"><%= textos.FORMULARIO.email.label %></label>
+            <label for="email" class="campo-obligatorio"><%= textos.FORMULARIO.email.label %></label>
             <input type="email" id="email" name="email" required autocomplete="email" placeholder="<%= textos.FORMULARIO.email.placeholder %>" value="<%= valores.email || '' %>">
 
             <%- include('partials/atajo-envio') %>
@@ -36,6 +36,7 @@
 
             <%- include('partials/form-legal') %>
         </form>
+        <%- include('partials/validacion-formulario') %>
         <%- include('partials/bloqueo-envio') %>
         <%- include('partials/medicion-embudo') %>
     </div>
