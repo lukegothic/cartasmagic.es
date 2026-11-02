@@ -36,7 +36,8 @@ requieren vender nada:
 - https://cartasmagic.es/blog/estado-de-la-carta-nm-ex-gd-lp - qué mira un comprador al
   valorar el estado de una carta y cuánto descuenta cada nivel de desgaste
 - https://cartasmagic.es/blog/cartas-magic-falsas-como-detectarlas - los tres tests que
-  distinguen una carta auténtica de una falsificación
+  distinguen una carta auténtica de una falsificación: el peso (una carta Magic auténtica
+  pesa entre 1,7 y 1,8 gramos), la calidad de impresión y la luz
 - https://cartasmagic.es/blog/informe-mercado-magic-espana - datos reales de las
   colecciones compradas en España, con los importes pagados
 
