@@ -11,16 +11,16 @@ aparecen en ninguna parte. Estos son nuestros datos.
 
 ![Una colección de Magic recién llegada, dentro de la caja en la que la envió su dueño](/blog/informe-mercado-magic-espana/portada-coleccion-recibida.pendiente.svg)
 
-Una de las diecinueve colecciones, tal y como llegó.
+Una de las veinticinco colecciones, tal y como llegó.
 
 ## El resumen
 
-Diecinueve colecciones compradas y pagadas, entre enero y septiembre de 2026:
+Veinticinco colecciones compradas y pagadas, entre enero y octubre de 2026:
 
 | | |
 |---|---|
-| Colecciones compradas | 19 |
-| Pagado en total | 9.298 euros |
+| Colecciones compradas | 25 |
+| Pagado en total | 11.578 euros |
 
 ## Qué proporción de una colección tiene valor
 
