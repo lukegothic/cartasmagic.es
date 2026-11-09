@@ -49,12 +49,12 @@ const grafo = (...nodos) =>
   JSON.stringify({ '@context': 'https://schema.org', '@graph': [ORGANIZACION, SITIO, ...nodos] });
 
 const INDEX = {
-  title: 'CartasMagic.es | Cuánto valen tus cartas Magic',
+  title: 'Valor de las cartas Magic y cómo tasarlas | CartasMagic.es',
   description:
-    'Guías para tasar cartas Magic y saber cuánto valen en España. Qué determina el precio de una carta, qué colecciones valen dinero y cómo vender la tuya sin listarla.',
+    'Qué da valor a una carta Magic y cómo tasarla en España: edición, estado, idioma y demanda. Precios reales y qué colecciones antiguas valen dinero.',
   keywords: 'valor cartas magic, valorar cartas magic, tasar cartas magic, precio cartas magic antiguas',
   canonical: `${PORTADA}/`,
-  og_title: 'CartasMagic.es | Cuánto valen tus cartas Magic',
+  og_title: 'Valor de las cartas Magic y cómo tasarlas | CartasMagic.es',
   og_description:
     'Qué determina el precio de una carta Magic, qué colecciones valen dinero y cómo vender la tuya sin listarla.'
 };
