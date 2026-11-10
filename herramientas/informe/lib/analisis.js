@@ -17,7 +17,7 @@ const COMPRA = /\b(comprar|compra|compro|compramos)\b/;
 const ANUNCIO = /\b(venta|vendo)\b/;
 const VERBO_VENDER = /\bvender\b/;
 const TRANSACCIONAL = /\b(vender|vendo|venta|pagan|precio que|quien compra|donde vender)\b/;
-const INFORMACIONAL = /\b(valor|vale|valen|valorar|tasar|tasacion|valoracion|estado|near mint|nm|edicion|ediciones|antiguas?|cuanto)\b/;
+const INFORMACIONAL = /\b(valor|vale|valen|valorar|tasar|tasacion|valoracion|estado|near mint|nm|edicion|ediciones|antiguas?|cuanto|precios?)\b/;
 
 const intencion = (consulta) => {
   if (POSESIVO.test(consulta) && INFORMACIONAL.test(consulta)) return 'transaccional';

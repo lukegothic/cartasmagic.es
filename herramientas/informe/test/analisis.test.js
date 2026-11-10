@@ -55,6 +55,15 @@ test('el posesivo lleva una consulta de valor a vender', () => {
   assert.equal(dominioQueTocaria('cuanto valen mis cartas magic'), VENDER);
 });
 
+// Sin declarar, una consulta de precio caia en 'otra' y el informe la descartaba como si
+// fuera de compra. El informe del 2026-11-07 lo hizo con "cartas magic precios".
+test('las consultas de precio sin declarar son del hub', () => {
+  for (const consulta of ['cartas magic precios', 'precio de cartas magic', 'precios magic']) {
+    assert.equal(dominioQueTocaria(consulta, new Map()), HUB, consulta);
+  }
+  assert.equal(dominioQueTocaria('precio que pagan por cartas magic', new Map()), VENDER);
+});
+
 test('avisa cuando los dos dominios rankean la misma consulta', () => {
   const filas = [
     { dominio: VENDER, claves: ['donde vender cartas magic'], clics: 4, impresiones: 41, posicion: 6 },
