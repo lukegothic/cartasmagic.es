@@ -1,5 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 const { componerDesgloseCsv } = require('../lib/desglose');
 const { calcularPresupuesto } = require('../lib/presupuesto');
 const mazoValorado = require('./fixtures/mazo-valorado-en-mtginvestor.json');
@@ -60,8 +62,36 @@ test('el bulk comun se paga a su tarifa y no a la de rara', () => {
     carta({ precio: 0.02, cantidad: 100, rareza: 'Common' }),
     carta({ precio: 0.01, cantidad: 100, rareza: 'Rare' })
   ]).split('\r\n');
-  assert.match(filas[1], /;0,30$/);
-  assert.match(filas[2], /;5,00$/);
+  assert.ok(filas.includes('SUBTOTAL;100 cartas a 0,003 EUR;;;;;;Bulk de común o infrecuente (menos de 0,50 EUR);0,30'));
+  assert.ok(filas.includes('SUBTOTAL;100 cartas a 0,05 EUR;;;;;;Bulk de rara o mitica (menos de 0,50 EUR);5,00'));
+});
+
+// Una carta de bulk se paga a 0,003 EUR: redondeada sola sale a 0,00, y cien filas asi no
+// suman lo que se paga por ellas. El bulk se redondea una vez, en el subtotal de su tramo.
+test('la carta de bulk no lleva pago propio, que va en el subtotal del tramo', () => {
+  const filas = componerDesgloseCsv([carta({ precio: 0.1, rareza: 'Common' })]).split('\r\n');
+  assert.equal(filas[1], '1;Sol Ring;C21;Common;No;0,10;0,10;Bulk de común o infrecuente (menos de 0,50 EUR);');
+});
+
+const numero = (celda) => Number(celda.replace(',', '.'));
+
+const cartasDelDesglose = (csv) =>
+  csv.trim().split(/\r?\n/).slice(1).map((l) => l.split(';'))
+    .filter(([cantidad]) => !['ENVIO', 'TOTAL'].includes(cantidad))
+    .map(([cantidad, nombre, set, rareza, foil, precio]) =>
+      ({ cantidad: numero(cantidad), nombre, set, rareza, esFoil: foil === 'Si', precio: numero(precio) }));
+
+// Fixture: el desglose real de un lote de 237 cartas, casi todo bulk, cuya columna sumaba
+// 7,71 EUR contra un total y un correo de 7,92.
+test('la columna de lo que se paga suma el total, que es la oferta del correo', () => {
+  const cartas = cartasDelDesglose(fs.readFileSync(path.join(__dirname, 'fixtures/desglose-coleccion-bulk.csv'), 'utf8'));
+  const filas = componerDesgloseCsv(cartas, {}).split('\r\n').map((f) => f.split(';'));
+  const centimos = (celda) => Math.round(numero(celda || '0') * 100);
+  const suma = filas.slice(1, -1).reduce((s, f) => s + centimos(f[8]), 0);
+  const total = centimos(filas.at(-1)[8]);
+
+  assert.equal(suma, total);
+  assert.equal(total, Math.round(calcularPresupuesto(cartas, {}).oferta * 100));
 });
 
 test('la carta sin precio sale sin valorar y sin pago', () => {
