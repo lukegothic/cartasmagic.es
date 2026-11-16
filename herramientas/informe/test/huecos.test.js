@@ -97,7 +97,7 @@ test('una palabra que sale en todo el texto no tapa el hueco real', () => {
 
 test('sigue dando por cubierta una consulta que si esta', () => {
   const llm = 'Compramos colecciones completas de cartas Magic a particulares en Espana.';
-  const { cubiertas } = coberturaLlm(llm, [{ consulta: 'comprar colecciones magic', impresiones: 20 }]);
+  const { cubiertas } = coberturaLlm(llm, [{ consulta: 'colecciones completas magic', impresiones: 20 }]);
   assert.equal(cubiertas.length, 1);
 });
 
@@ -138,6 +138,16 @@ test('una consulta con palabras que no estan sale como hueco', () => {
 test('una consulta de otro producto no es un hueco', () => {
   const { cubiertas, huecos } = coberturaLlm(LLM_REALISTA, [
     { consulta: 'venta swap magic', impresiones: 23 }
+  ]);
+  assert.equal(huecos.length, 0);
+  assert.equal(cubiertas.length, 0);
+});
+
+// La compra se queda sin dominio a proposito (docs/reparto-keywords.md). Pedir que el
+// llm.txt la responda es meter "venta" en el texto y atraer a quien quiere comprar.
+test('una consulta de intencion de compra no es un hueco', () => {
+  const { cubiertas, huecos } = coberturaLlm(LLM_REALISTA, [
+    { consulta: 'venta cartas magic', impresiones: 5 }
   ]);
   assert.equal(huecos.length, 0);
   assert.equal(cubiertas.length, 0);

@@ -101,6 +101,7 @@ const coberturaLlm = (textoLlm, consultas) => {
       .split(' ')
       .filter((p) => !SIN_CONTENIDO.has(p) && p.length > 2);
     if (!palabras.length || palabras.some((p) => OTRO_PRODUCTO.has(p))) continue;
+    if (intencion(fila.consulta) === 'compra') continue;
 
     const apariciones = palabras.map((p) => vecesEn(texto, p));
     const presentes = apariciones.filter((n) => n > 0).length;
